@@ -7,6 +7,7 @@
 //
 
 #import "secondChannelView.h"
+#import "AppDelegate.h"
 
 @implementation secondChannelView
 
@@ -14,7 +15,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+    
     }
     return self;
 }
@@ -27,5 +28,12 @@
     // Drawing code
 }
 */
+
+
+
+
+
+
+
 
 @end

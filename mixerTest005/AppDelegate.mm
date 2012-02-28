@@ -33,6 +33,7 @@
 @synthesize searchController = _searchController;
 @synthesize secChView = _secChView;
 @synthesize chTwoActive;
+@synthesize chTwoViewController;
 
 
 int labelWidth = 300;
@@ -45,6 +46,8 @@ int labelWidth = 300;
     
     
     self.searchController = [[searchViewController alloc]init];
+    self.chTwoViewController = [[secondChannelUIViewController alloc]init];
+    
     
     
     //  searchTableViewController *rootView = [[searchTableViewController alloc]init];
@@ -166,6 +169,7 @@ int labelWidth = 300;
 	
 }
 
+
 -(void)newChannel:(UITapGestureRecognizer *)gesture{
     
     CGRect bounds = self.plbackView.bounds;
@@ -182,6 +186,7 @@ int labelWidth = 300;
         [UIView beginAnimations : @"Display notif" context:nil];
         [UIView setAnimationDuration:1];
         [UIView setAnimationBeginsFromCurrentState:YES];
+        
     
         self.plbackView.frame = CGRectMake(0, 0, bounds.size.width, bounds.size.height/2);
         self.secChView.frame = CGRectMake(0, bounds.size.height/2, bounds.size.width, bounds.size.height/2);
@@ -192,6 +197,8 @@ int labelWidth = 300;
         self.plbackView.trackControlBG.frame = CGRectMake(400, bounds.size.height-700, self.plbackView.trackControlBG.bounds.size.width, self.plbackView.trackControlBG.bounds.size.height);
     
         [UIView commitAnimations];
+        
+        [self.chTwoViewController createChannelTwoUI];
     }
     else{
         chTwoActive = NO;
@@ -199,6 +206,7 @@ int labelWidth = 300;
                          animations:^{
                              //     self.tableView.alpha = 1;
                              //     self.tableView.hidden = YES;
+                             [self.chTwoViewController removeChannelTwoUI];
                          }];
         
         [UIView beginAnimations : @"Display notif" context:nil];
@@ -305,11 +313,11 @@ int labelWidth = 300;
     self.secChView.frame = CGRectMake(0, self.plbackView.bounds.size.height-70, self.plbackView.bounds.size.width, 50);
     self.secChView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
     
-    [self.mainViewController.view insertSubview:self.secChView aboveSubview:self.plbackView];
+ //   [self.mainViewController.view insertSubview:self.secChView aboveSubview:self.plbackView];
     
     UITapGestureRecognizer *secChTouch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(newChannel:)];
     secChTouch.numberOfTapsRequired = 1;
-    
+   
     UILabel *secChLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.plbackView.bounds.size.width, 40)];
     secChLbl.backgroundColor = [UIColor clearColor];
     secChLbl.textColor = [UIColor blackColor];
@@ -318,12 +326,16 @@ int labelWidth = 300;
     secChLbl.text = [NSString stringWithFormat:@"Channel 2"];
     [secChLbl addGestureRecognizer:secChTouch];
     secChLbl.UserInteractionEnabled = YES;
+    [secChLbl setTag:10];
     [self.secChView addSubview:secChLbl];
     
     [secChLbl release];
     [secChTouch release];
     
     
+    
+    self.chTwoViewController.view = self.secChView;
+    [self.mainViewController.view insertSubview:self.chTwoViewController.view aboveSubview:self.plbackView];
     
 }
 
@@ -591,6 +603,7 @@ NSUInteger loadTrack;
 	[self removeObserver:self forKeyPath:@"currentTrack.album.cover.image"];
 	[self removeObserver:self forKeyPath:@"playbackManager.trackPosition"];
     */
+    [self.chTwoViewController release];
     [_loadingView release];
     [_playlistLabel release];
     [_playbackLabel release];

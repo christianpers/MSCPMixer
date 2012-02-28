@@ -18,7 +18,7 @@
 #import "searchViewController.h"
 #import "playlistViewController.h"
 #import "secondChannelView.h"
-
+#import "secondChannelUIViewController.h"
 
 @interface AppDelegate : NSObject <UIApplicationDelegate, SPSessionDelegate> {
     UIViewController *_mainViewController;
@@ -37,6 +37,7 @@
     searchTableViewController *searchTViewController;
     secondChannelView *secChView;
     BOOL chTwoActive;
+    secondChannelUIViewController *chTwoViewController;
     
 }
 
@@ -64,6 +65,7 @@
 
 @property (nonatomic, retain) searchViewController *searchController;
 @property (nonatomic, retain) secondChannelView *secChView;
+@property (nonatomic, retain) secondChannelUIViewController *chTwoViewController;
 
 
 - (void)userLogout;
@@ -81,6 +83,7 @@
 
 - (void)setTrackPosition:(double)newVal;
 - (void)newChannel:(UITapGestureRecognizer *)gesture;
+
 
 @end
 

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		AA2D5D0414FB17E000F1DAAA /* secondChannelView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2D5D0314FB17E000F1DAAA /* secondChannelView.m */; };
+		AA58C0ED14FC839C0074837F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EC14FC839C0074837F /* CoreMedia.framework */; };
+		AA58C0F014FC83CA0074837F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */; };
+		AA58C0F314FC86090074837F /* secondChannelUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA58C0F214FC86090074837F /* secondChannelUIViewController.m */; };
 		AA83DAD914F7327300BF43F0 /* playlistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83DAD814F7327300BF43F0 /* playlistViewController.m */; };
 		AA97EEE914F0B06400A2B892 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA97EEE814F0B06400A2B892 /* UIKit.framework */; };
 		AA97EEEB14F0B06400A2B892 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA97EEEA14F0B06400A2B892 /* Foundation.framework */; };
@@ -67,6 +70,10 @@
 /* Begin PBXFileReference section */
 		AA2D5D0214FB17E000F1DAAA /* secondChannelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secondChannelView.h; sourceTree = "<group>"; };
 		AA2D5D0314FB17E000F1DAAA /* secondChannelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = secondChannelView.m; sourceTree = "<group>"; };
+		AA58C0EC14FC839C0074837F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		AA58C0F114FC86090074837F /* secondChannelUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secondChannelUIViewController.h; sourceTree = "<group>"; };
+		AA58C0F214FC86090074837F /* secondChannelUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = secondChannelUIViewController.m; sourceTree = "<group>"; };
 		AA83DAD714F7327300BF43F0 /* playlistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playlistViewController.h; sourceTree = "<group>"; };
 		AA83DAD814F7327300BF43F0 /* playlistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = playlistViewController.m; sourceTree = "<group>"; };
 		AA97EEE414F0B06400A2B892 /* mixerTest005.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mixerTest005.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,6 +189,8 @@
 				AA97EF0614F0B0F000A2B892 /* CFNetwork.framework in Frameworks */,
 				AA97EF0814F0B0FE00A2B892 /* AVFoundation.framework in Frameworks */,
 				AA97EF0A14F0B1B400A2B892 /* libspotify.framework in Frameworks */,
+				AA58C0ED14FC839C0074837F /* CoreMedia.framework in Frameworks */,
+				AA58C0F014FC83CA0074837F /* MediaPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +202,8 @@
 			children = (
 				AA2D5D0214FB17E000F1DAAA /* secondChannelView.h */,
 				AA2D5D0314FB17E000F1DAAA /* secondChannelView.m */,
+				AA58C0F114FC86090074837F /* secondChannelUIViewController.h */,
+				AA58C0F214FC86090074837F /* secondChannelUIViewController.m */,
 			);
 			name = secondChannel;
 			sourceTree = "<group>";
@@ -219,6 +230,8 @@
 		AA97EEE714F0B06400A2B892 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */,
+				AA58C0EC14FC839C0074837F /* CoreMedia.framework */,
 				AA97EF0714F0B0FE00A2B892 /* AVFoundation.framework */,
 				AA97EF0514F0B0F000A2B892 /* CFNetwork.framework */,
 				AA97EF0114F0B0C100A2B892 /* CoreAudio.framework */,
@@ -530,6 +543,7 @@
 				AA97EFA014F0D9A100A2B892 /* CAStreamBasicDescription.cpp in Sources */,
 				AA83DAD914F7327300BF43F0 /* playlistViewController.m in Sources */,
 				AA2D5D0414FB17E000F1DAAA /* secondChannelView.m in Sources */,
+				AA58C0F314FC86090074837F /* secondChannelUIViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

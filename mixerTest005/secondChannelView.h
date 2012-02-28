@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface secondChannelView : UIView
+@interface secondChannelView : UIView{
+    
+    
+}
+
+
+
 
 @end
