@@ -70,6 +70,19 @@ typedef struct {
     AudioUnit                   timePitchUnit;
     AudioUnit                   reverbUnit;
     AudioUnit                   hipassUnit;
+    
+    AudioUnit                   lopassUnitChOne;
+    AudioUnit                   hipassUnitChOne;
+    AudioUnit                   timePitchUnitChOne;
+    
+    AudioUnit                   lopassUnitChTwo;
+    AudioUnit                   hipassUnitChTwo;
+    AudioUnit                   timePitchUnitChTwo;
+    
+    AudioUnit                   mixerUnitChOne;
+    AudioUnit                   mixerUnitChTwo;
+    AudioUnit                   converterUnitChOne;
+    AudioUnit                   converterUnitChTwo;
     NSTimer                     *timer;
     AudioUnitParameterValue     masterVol;
     SPCircularBuffer            *audioBufferCh1, *audioBufferCh2;
