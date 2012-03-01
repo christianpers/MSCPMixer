@@ -84,6 +84,7 @@
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
         [main.playbackManager readAudioFilesIntoMemory:assetURL];
+        
     //	[self exportAssetAtURL:assetURL withTitle:title withArtist:artist];
 	}
 }

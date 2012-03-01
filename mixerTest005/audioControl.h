@@ -66,6 +66,7 @@ typedef struct {
     
     AudioUnit                   mixerUnitChOne;
     AudioUnit                   mixerUnitChTwo;
+    AUNode                      mixerNodeChTwo;
     AudioUnit                   converterUnitChOne;
     AudioUnit                   converterUnitChTwo;
     NSTimer                     *timer;
@@ -77,6 +78,8 @@ typedef struct {
     soundStruct                     soundStructArray[1];
     AudioStreamBasicDescription     stereoStreamFormat;
     AudioStreamBasicDescription     monoStreamFormat;
+    AURenderCallbackStruct          rcbsSec; //second channel
+    
 	
 }
 
@@ -147,6 +150,7 @@ typedef struct {
 - (void) readAudioFilesIntoMemory:(NSURL *)url;
 - (void) setupStereoStreamFormat;
 - (void) setMasterVolCh2:(AudioUnitParameterValue)val;
+- (void) connectSecChannelCallback;
 @property (readwrite)           AudioStreamBasicDescription stereoStreamFormat;
 @property (readwrite)           AudioStreamBasicDescription monoStreamFormat;
 

@@ -382,10 +382,20 @@ NSUInteger loadTrack;
     {
         playlistsAttempts++;
         
-        if (playlistsAttempts < 10000) 
+        if (playlistsAttempts < 50) 
         {
             [self performSelector:_cmd withObject:nil afterDelay:1.0];
             return;
+        }
+        else{
+            self.cueView.hidden = NO;
+            self.playlistLabel.hidden = NO;
+            self.searchLabel.hidden = NO;
+            self.playbackLabel.hidden = NO;
+            
+            [self.loadingView removeFromSuperview];
+            
+            
         }
     }
     else{

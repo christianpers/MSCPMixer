@@ -381,11 +381,30 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     }
 }
 
+-(void)removeSecChannelCallback{
+    
+    OSStatus result;
+    result = AUGraphUpdate(graph, NULL);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+}
+
+-(void)connectSecChannelCallback{
+    
+    rcbsSec.inputProc = &inputRenderCallback;
+    rcbsSec.inputProcRefCon = soundStructArray;
+    
+    OSStatus result;
+    // set a callback for the specified node's specified input
+    result = AUGraphSetNodeInputCallback(graph, mixerNodeChTwo, 0, &rcbsSec);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
+    result = AUGraphUpdate(graph, NULL);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+}
+
 
 /*second channel stuff !!!!!!!!!!! end
                                             */
-
-
 
 
 -(BOOL)playTrack:(SPTrack *)trackToPlay error:(NSError **)error {
@@ -630,7 +649,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     AUNode     mixerNode;
     
     AUNode      mixerNodeChOne;
-    AUNode      mixerNodeChTwo;
+   // AUNode      mixerNodeChTwo;
     AUNode      converterNodeChOne;
     AUNode      converterNodeChTwo;
      
@@ -973,7 +992,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
  
-	 result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbuses, sizeof(numbuses));
+    result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbuses, sizeof(numbuses));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
     UInt32 numbusesChOne = 1;
@@ -1002,23 +1021,18 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     rcbs.inputProc = AudioUnitRenderDelegateCallback;
     rcbs.inputProcRefCon = self;
     
-    AURenderCallbackStruct rcbsSec;
-    rcbsSec.inputProc = &inputRenderCallback;
-    rcbsSec.inputProcRefCon = soundStructArray;
+   // AURenderCallbackStruct rcbsSec;
+   // rcbsSec.inputProc = &inputRenderCallback;
+   // rcbsSec.inputProcRefCon = soundStructArray;
  
     // set a callback for the specified node's specified input
     result = AUGraphSetNodeInputCallback(graph, mixerNodeChOne, 0, &rcbs);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
-    result = AudioUnitSetParameter(mixerUnitChTwo,kMultiChannelMixerParam_Volume , kAudioUnitScope_Global, 0, 0, 0);
-    if (noErr != result){
-        
-        { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
-    }
-	
+   
     // set a callback for the specified node's specified input
-    result = AUGraphSetNodeInputCallback(graph, mixerNodeChTwo, 0, &rcbsSec);
-    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+ //   result = AUGraphSetNodeInputCallback(graph, mixerNodeChTwo, 0, &rcbsSec);
+  //  if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
  
     
@@ -1129,12 +1143,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     if(noErr != result) {
         NSLog(@"streamInputFormat failed mixerinput 1"); 
     }
-    
-    
-    
-    
-    
-   
     
     
     
@@ -1345,23 +1353,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         }
     }   
 }
-/*                                 
--(void)setInputASBD:(const sp_audioformat *)audioformat{
-    
-    
-    player.streamFormat.mSampleRate = (float)audioformat->sample_rate;
-    player.streamFormat.mFormatID = kAudioFormatLinearPCM;
-    player.streamFormat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked | kAudioFormatFlagsNativeEndian;
-    player.streamFormat.mBytesPerPacket = audioformat->channels * sizeof(SInt16);
-    player.streamFormat.mFramesPerPacket = 1;
-    player.streamFormat.mBytesPerFrame = player.streamFormat.mBytesPerPacket;
-    player.streamFormat.mChannelsPerFrame = audioformat->channels;
-    player.streamFormat.mBitsPerChannel = 16;
-    player.streamFormat.mReserved = 0;
-    
-    
-}
- */                                
+                              
 -(void)informDelegateOfAudioPlaybackStarting {
     if (![NSThread isMainThread]) {
         [self performSelectorOnMainThread:_cmd withObject:nil waitUntilDone:NO];
