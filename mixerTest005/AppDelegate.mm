@@ -233,8 +233,6 @@ int labelWidth = 300;
 }
 
 - (void)initLoadGUI{
-    
-    
     CGSize winSize = self.window.frame.size;
     
     UITapGestureRecognizer *menuTouchSearch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];

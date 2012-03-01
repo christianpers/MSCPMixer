@@ -7,6 +7,8 @@
 //
 
 #import "secondChannelUIViewController.h"
+#import <AVFoundation/AVAsset.h>
+#import "AppDelegate.h"
 
 @implementation secondChannelUIViewController
 
@@ -54,7 +56,7 @@
 		NSString* artist = [item valueForProperty:MPMediaItemPropertyArtist];
 		NSNumber* dur = [item valueForProperty:MPMediaItemPropertyPlaybackDuration]; 
 		//NSTimeInterval is a double
-	//	duration_ = [dur doubleValue]; 
+		duration_ = [dur doubleValue]; 
 		
 		//MPMediaItemPropertyArtist
 		NSURL* assetURL = [item valueForProperty:MPMediaItemPropertyAssetURL];
@@ -79,8 +81,10 @@
         self.view.frame = CGRectMake(0, self.view.bounds.size.height/2, self.view.bounds.size.width, self.view.bounds.size.height/2);
         
         [UIView commitAnimations];
+        AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
-	//	[self exportAssetAtURL:assetURL withTitle:title withArtist:artist];
+        [main.playbackManager readAudioFilesIntoMemory:assetURL];
+    //	[self exportAssetAtURL:assetURL withTitle:title withArtist:artist];
 	}
 }
 
@@ -136,6 +140,7 @@
 
 - (void)createChannelTwoUI{
     
+       
     UIButton *addtrack = [UIButton buttonWithType:UIButtonTypeCustom];
     addtrack.frame = CGRectMake(50, self.view.bounds.size.height-100, 200, 40);// position in the parent view and set the size of the
     addtrack.backgroundColor = [UIColor blackColor];

@@ -11,7 +11,9 @@
 	<key>CFBundleGetInfoString</key>
 	<string></string>
 	<key>CFBundleIconFiles</key>
-	<array/>
+	<array>
+		<string>appiconMSCP.png</string>
+	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.mscp.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>

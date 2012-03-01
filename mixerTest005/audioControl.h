@@ -19,23 +19,14 @@
 #import "CocoaLibSpotify.h"
 
 typedef struct {
-    AudioStreamBasicDescription streamFormat;
-    AUGraph                     graph;
-    AudioUnit                   ioUnit;
-    AudioUnit                   mixerUnit;
-    AudioUnit                   lopassUnit;
-    AudioUnit                   converterUnit;
     
-    SPCircularBuffer            *audioBufferCh1;
-    SPCircularBuffer            *audioBufferCh2;
+    BOOL                 isStereo;           // set to true if there is data in the audioDataRight member
+    UInt32               frameCount;         // the total number of frames in the audio data
+    UInt32               sampleNumber;       // the next audio sample to play
+    AudioUnitSampleType  *audioDataLeft;     // the complete left (or mono) channel of audio data read from an audio file
+    AudioUnitSampleType  *audioDataRight;    // the complete right channel of audio data read from an audio file
     
-    AudioBufferList             *inputBuffer;
-    Float64                     firstInputSampleTime;
-    Float64                     firstOutputSampleTime;
-    Float64                     inToOutSampleTimeOffset;
-
-    
-} myAUGraphPlayer, *myAUGraphPlayerPtr;
+} soundStruct, *soundStructPtr;
 
 @class audioControl;
 
@@ -53,7 +44,6 @@ typedef struct {
     SPSession                   *playbackSession;
     SPTrack                     *currentTrack;
     id<audioControlDelegate>    delegate;
-    myAUGraphPlayer             player;   
     NSMethodSignature           *incrementTrackPositionMethodSignature;
     NSInvocation                *incrementTrackPositionInvocation;
     NSTimeInterval              currentTrackPosition;
@@ -65,11 +55,6 @@ typedef struct {
     AUGraph                     graph;
     AudioUnit                   ioUnit;
     AudioUnit                   mixerUnit;
-    AudioUnit                   lopassUnit;
-    AudioUnit                   converterUnit;
-    AudioUnit                   timePitchUnit;
-    AudioUnit                   reverbUnit;
-    AudioUnit                   hipassUnit;
     
     AudioUnit                   lopassUnitChOne;
     AudioUnit                   hipassUnitChOne;
@@ -85,7 +70,13 @@ typedef struct {
     AudioUnit                   converterUnitChTwo;
     NSTimer                     *timer;
     AudioUnitParameterValue     masterVol;
-    SPCircularBuffer            *audioBufferCh1, *audioBufferCh2;
+   // SPCircularBuffer            *audioBufferCh1, *audioBufferCh2;
+    
+    //second channel stuff
+    CFURLRef                        sourceURLArray[1];
+    soundStruct                     soundStructArray[1];
+    AudioStreamBasicDescription     stereoStreamFormat;
+    AudioStreamBasicDescription     monoStreamFormat;
 	
 }
 
@@ -150,9 +141,16 @@ typedef struct {
 
 - (void)setPlaybackRate: (AudioUnitParameterValue)val;
 - (void)setPlaybackCents: (AudioUnitParameterValue)val;
-/*
- effect controls
- */
+
+
+//second channel stuff
+- (void) readAudioFilesIntoMemory:(NSURL *)url;
+- (void) setupStereoStreamFormat;
+- (void) setMasterVolCh2:(AudioUnitParameterValue)val;
+@property (readwrite)           AudioStreamBasicDescription stereoStreamFormat;
+@property (readwrite)           AudioStreamBasicDescription monoStreamFormat;
+
+
 
 - (void)incrementTrackPositionWithFrameCount:(UInt32)framesToAppend;
 
