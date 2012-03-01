@@ -64,7 +64,6 @@
 		AA97EF9A14F0D97000A2B892 /* CAComponentDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF9814F0D97000A2B892 /* CAComponentDescription.cpp */; };
 		AA97EFA014F0D9A100A2B892 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF9E14F0D9A100A2B892 /* CAStreamBasicDescription.cpp */; };
 		AAAD79C114F0EE6B00E337E9 /* mainwindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */; };
-		AAB8427914F1682A0064DE0C /* appiconMSCP.png in Resources */ = {isa = PBXBuildFile; fileRef = AAB8427814F168290064DE0C /* appiconMSCP.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -172,7 +171,6 @@
 		AA97EF9E14F0D9A100A2B892 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = DEVELOPER_DIR; };
 		AA97EF9F14F0D9A100A2B892 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.h; sourceTree = DEVELOPER_DIR; };
 		AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = mainwindow.xib; sourceTree = "<group>"; };
-		AAB8427814F168290064DE0C /* appiconMSCP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appiconMSCP.png; path = ../../../../Desktop/appiconMSCP.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -396,7 +394,6 @@
 		AA97EF5114F0D0DA00A2B892 /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				AAB8427814F168290064DE0C /* appiconMSCP.png */,
 				AA97EF5B14F0D1A800A2B892 /* pause.png */,
 				AA97EF5C14F0D1A800A2B892 /* play.png */,
 				AA97EF5D14F0D1A800A2B892 /* nextTrack.png */,
@@ -494,7 +491,6 @@
 				AA97EF6214F0D1A800A2B892 /* stopbtn.png in Resources */,
 				AA97EF8214F0D1F200A2B892 /* LoginViewController_iPad.xib in Resources */,
 				AAAD79C114F0EE6B00E337E9 /* mainwindow.xib in Resources */,
-				AAB8427914F1682A0064DE0C /* appiconMSCP.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

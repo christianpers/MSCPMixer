@@ -194,7 +194,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     OSStatus result = noErr;
     
     NSLog(@"setting mastervol");
-    result = AudioUnitSetParameter(mixerUnit,kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, val, 0);
+    result = AudioUnitSetParameter(mixerUnitChOne,kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, val, 0);
     if (noErr != result){
         
         { printf("mastervol result %lu %4.4s\n", result, (char*)&result); return; }
@@ -218,7 +218,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 
 -(void)fadeInMusic{
     OSStatus result = noErr;
-    result = AudioUnitSetParameter(mixerUnit, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
+    result = AudioUnitSetParameter(mixerUnitChOne, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
     self.volume+=.001; 
     NSLog(@"volume: %f",self.volume);
     if (self.volume < 1){
@@ -233,7 +233,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         OSStatus result = noErr;
         
         NSLog(@"setting the playbackRate");
-        result = AudioUnitSetParameter(timePitchUnit,kVarispeedParam_PlaybackCents , kAudioUnitScope_Global, 0, 0, 0);
+        result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackCents , kAudioUnitScope_Global, 0, 0, 0);
         if (noErr != result){
             
             { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
@@ -244,7 +244,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         OSStatus result = noErr;
         
         NSLog(@"setting the playbackRate");
-        result = AudioUnitSetParameter(timePitchUnit,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0,1, 0);
+        result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0,1, 0);
         if (noErr != result){
             
             { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
@@ -260,7 +260,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     OSStatus result = noErr;
     
     NSLog(@"setting the playbackRate");
-    result = AudioUnitSetParameter(timePitchUnit,kVarispeedParam_PlaybackCents , kAudioUnitScope_Global, 0, val, 0);
+    result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackCents , kAudioUnitScope_Global, 0, val, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
@@ -273,7 +273,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     OSStatus result = noErr;
     
     NSLog(@"setting the playbackRate");
-    result = AudioUnitSetParameter(timePitchUnit,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0, val, 0);
+    result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0, val, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
@@ -287,7 +287,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     OSStatus result = noErr;
     
     NSLog(@"setting the lopassfreq");
-    result = AudioUnitSetParameter(lopassUnit,kLowPassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
+    result = AudioUnitSetParameter(lopassUnitChOne,kLowPassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
@@ -299,7 +299,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     OSStatus result = noErr;
     
     NSLog(@"setting the lopassfreq");
-    result = AudioUnitSetParameter(lopassUnit,kLowPassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
+    result = AudioUnitSetParameter(lopassUnitChOne,kLowPassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
@@ -312,7 +312,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     OSStatus result = noErr;
     
     NSLog(@"setting the hipassfreq: %f",val);
-    result = AudioUnitSetParameter(hipassUnit,kHipassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
+    result = AudioUnitSetParameter(hipassUnitChOne,kHipassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
@@ -324,7 +324,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     OSStatus result = noErr;
     
     NSLog(@"setting the hipassresonance: %f",val);
-    result = AudioUnitSetParameter(hipassUnit,kHipassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
+    result = AudioUnitSetParameter(hipassUnitChOne,kHipassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
@@ -409,13 +409,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     printf("InitializeAUGraph\n");
     
-    /*Master ch effects
-     */
-    AUNode     lopassNode;
-    AUNode     pitchNode; 
-    AUNode     reverbNode; 
-    AUNode     hipassNode; 
-    
     /*ch 1 effects
      */
     AUNode      lopassNodeChOne;
@@ -431,7 +424,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     /*Generic AUs
      */
     AUNode     outputNode;
-    AUNode     converterNode;
     AUNode     mixerNode;
     
     AUNode      mixerNodeChOne;
@@ -523,25 +515,16 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	result = AUGraphAddNode(graph, &output_desc, &outputNode);
 	if (result) { printf("AUGraphNewNode 1 result %lu %4.4s\n", result, (char*)&result); return; }
     
-//    result = AUGraphAddNode(graph, &lopass_desc, &lopassNode);
-//    if (result) { printf("AUGraphNewNode 2 result %lu %4.4s\n", result, (char*)&result); return; }
-    
 	result = AUGraphAddNode(graph, &mixer_desc, &mixerNode);
 	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
     
-//    result = AUGraphAddNode(graph, &converter_desc, &converterNode);
-//	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
-    
-//    result = AUGraphAddNode(graph, &timePitch_desc, &pitchNode);
-//	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
-    
-//    result = AUGraphAddNode(graph, &reverb_desc, &reverbNode);
-//	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
-    
-//    result = AUGraphAddNode(graph, &hipass_desc, &hipassNode);
-//	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
-    
     //channel 1
+    result = AUGraphAddNode(graph, &mixer_desc, &mixerNodeChOne);
+	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
+    
+    result = AUGraphAddNode(graph, &converter_desc, &converterNodeChOne);
+	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
+    
     result = AUGraphAddNode(graph, &hipass_desc, &hipassNodeChOne);
 	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
 
@@ -550,8 +533,16 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     result = AUGraphAddNode(graph, &timePitch_desc, &pitchNodeChOne);
 	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
+    
+    
 
     //channel 2
+    result = AUGraphAddNode(graph, &mixer_desc, &mixerNodeChTwo);
+	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
+    
+    result = AUGraphAddNode(graph, &converter_desc, &converterNodeChTwo);
+	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
+
     result = AUGraphAddNode(graph, &hipass_desc, &hipassNodeChTwo);
 	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
     
@@ -560,21 +551,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     result = AUGraphAddNode(graph, &timePitch_desc, &pitchNodeChTwo);
 	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
-
-    
-    result = AUGraphAddNode(graph, &mixer_desc, &mixerNodeChOne);
-	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
-
-    result = AUGraphAddNode(graph, &mixer_desc, &mixerNodeChTwo);
-	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
-
-    result = AUGraphAddNode(graph, &converter_desc, &converterNodeChOne);
-	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
-
-    result = AUGraphAddNode(graph, &converter_desc, &converterNodeChTwo);
-	if (result) { printf("AUGraphNewNode 3 result %lu %4.4s\n", result, (char*)&result); return; }
-
-    
 
     // connect a node's output to a node's input
     // mixer -> eq -> output
@@ -594,7 +570,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     result = AUGraphConnectNodeInput(graph, pitchNodeChOne, 0, mixerNode, 0);
 	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
 	
-    
+   
     // CHANNEL 2
     result = AUGraphConnectNodeInput(graph, mixerNodeChTwo, 0, converterNodeChTwo, 0);
 	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
@@ -610,33 +586,13 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 
     result = AUGraphConnectNodeInput(graph, pitchNodeChTwo, 0, mixerNode, 1);
 	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
-    
+  
     
     result = AUGraphConnectNodeInput(graph, mixerNode, 0, outputNode, 0);
 	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
 	
-	
-    
-   /* 
-    result = AUGraphConnectNodeInput(graph, mixerNode, 0, converterNode, 0);
-	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
-	
-    result = AUGraphConnectNodeInput(graph, converterNode, 0, lopassNode, 0);
-    if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
-    
-    result = AUGraphConnectNodeInput(graph, lopassNode, 0, pitchNode, 0);
-    if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
-    
-    result = AUGraphConnectNodeInput(graph, pitchNode, 0, hipassNode, 0);
-    if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
-    
-    result = AUGraphConnectNodeInput(graph, hipassNode, 0, reverbNode, 0);
-    if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
-    
-    result = AUGraphConnectNodeInput(graph, reverbNode, 0, outputNode, 0);
-    if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
-  */
-    CAShow(graph);
+
+       CAShow(graph);
     // open the graph AudioUnits are open but not initialized (no resource allocation occurs here)
 	result = AUGraphOpen(graph);
 	if (result) { printf("AUGraphOpen result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
@@ -644,22 +600,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     // grab the audio unit instances from the nodes
 	result = AUGraphNodeInfo(graph, mixerNode, NULL, &mixerUnit);
     if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
-//    result = AUGraphNodeInfo(graph, lopassNode, NULL, &lopassUnit);
-//    if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
-//    result = AUGraphNodeInfo(graph, converterNode, NULL,&converterUnit);
-//    if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-  /*  
-    result = AUGraphNodeInfo(graph, pitchNode, NULL,&timePitchUnit);
-    if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
-    result = AUGraphNodeInfo(graph, reverbNode, NULL,&reverbUnit);
-    if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
-    result = AUGraphNodeInfo(graph, hipassNode, NULL,&hipassUnit);
-    if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-   */ 
     
     result = AUGraphNodeInfo(graph, hipassNodeChOne, NULL,&hipassUnitChOne);
     if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
@@ -669,8 +609,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     result = AUGraphNodeInfo(graph, pitchNodeChOne, NULL,&timePitchUnitChOne);
     if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
-    
+   
     result = AUGraphNodeInfo(graph, hipassNodeChTwo, NULL,&hipassUnitChTwo);
     if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
@@ -680,7 +619,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     result = AUGraphNodeInfo(graph, pitchNodeChTwo, NULL,&timePitchUnitChTwo);
     if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
-    
+  
     result = AUGraphNodeInfo(graph, mixerNodeChOne, NULL, &mixerUnitChOne);
     if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
@@ -689,10 +628,12 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
    
     result = AUGraphNodeInfo(graph, converterNodeChOne, NULL, &converterUnitChOne);
     if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
+     
     result = AUGraphNodeInfo(graph, converterNodeChTwo, NULL, &converterUnitChTwo);
     if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
+    result = AUGraphNodeInfo(graph, outputNode, NULL,&ioUnit);
+    if (result) { printf("AUGraphNodeInfo result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
     
     // set bus count
@@ -704,7 +645,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     //    larger slice size used when the screen is locked.
     UInt32 maximumFramesPerSlice = 4096; //4096 is supposed to be used during lockscreen. Should use 1024 during active mode
     UInt32 maximumFramesPerSliceActive = 1024;
-    
+     
     result = AudioUnitSetProperty (
                                    mixerUnit,
                                    kAudioUnitProperty_MaximumFramesPerSlice,
@@ -715,62 +656,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
                                    );
     
      if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
- /*   
-    result = AudioUnitSetProperty (
-                                   converterUnit,
-                                   kAudioUnitProperty_MaximumFramesPerSlice,
-                                   kAudioUnitScope_Global,
-                                   0,
-                                   &maximumFramesPerSlice,
-                                   sizeof (maximumFramesPerSlice)
-                                   );
-    
-    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
-    result = AudioUnitSetProperty (
-                                   lopassUnit,
-                                   kAudioUnitProperty_MaximumFramesPerSlice,
-                                   kAudioUnitScope_Global,
-                                   0,
-                                   &maximumFramesPerSlice,
-                                   sizeof (maximumFramesPerSlice)
-                                   );
-    
-    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-
-    result = AudioUnitSetProperty (
-                                   hipassUnit,
-                                   kAudioUnitProperty_MaximumFramesPerSlice,
-                                   kAudioUnitScope_Global,
-                                   0,
-                                   &maximumFramesPerSlice,
-                                   sizeof (maximumFramesPerSlice)
-                                   );
-    
-    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
-    result = AudioUnitSetProperty (
-                                   reverbUnit,
-                                   kAudioUnitProperty_MaximumFramesPerSlice,
-                                   kAudioUnitScope_Global,
-                                   0,
-                                   &maximumFramesPerSlice,
-                                   sizeof (maximumFramesPerSlice)
-                                   );
-    
-    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
-    result = AudioUnitSetProperty (
-                                   timePitchUnit,
-                                   kAudioUnitProperty_MaximumFramesPerSlice,
-                                   kAudioUnitScope_Global,
-                                   0,
-                                   &maximumFramesPerSlice,
-                                   sizeof (maximumFramesPerSlice)
-                                   );
-    
-    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-*/
+ 
     //ch1
     result = AudioUnitSetProperty (
                                    lopassUnitChOne,
@@ -839,7 +725,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
                                    );
     
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
+ 
     result = AudioUnitSetProperty (
                                    mixerUnitChOne,
                                    kAudioUnitProperty_MaximumFramesPerSlice,
@@ -851,7 +737,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
-    result = AudioUnitSetProperty (
+   result = AudioUnitSetProperty (
                                    mixerUnitChTwo,
                                    kAudioUnitProperty_MaximumFramesPerSlice,
                                    kAudioUnitScope_Global,
@@ -872,7 +758,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
                                    );
     
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
+ 
     result = AudioUnitSetProperty (
                                    converterUnitChOne,
                                    kAudioUnitProperty_MaximumFramesPerSlice,
@@ -884,9 +770,17 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
  
-	
-    result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbuses, sizeof(numbuses));
+	 result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbuses, sizeof(numbuses));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
+    UInt32 numbusesChOne = 1;
+    result = AudioUnitSetProperty(mixerUnitChOne, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbusesChOne, sizeof(numbusesChOne));
+    if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
+    UInt32 numbusesChTwo = 1;
+    result = AudioUnitSetProperty(mixerUnitChTwo, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbusesChTwo, sizeof(numbusesChTwo));
+    if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+   
     
     AudioStreamBasicDescription outputFormat;
     outputFormat.mSampleRate = (float)audioFormat->sample_rate;
@@ -914,13 +808,15 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
 	
     // set a callback for the specified node's specified input
-//   result = AUGraphSetNodeInputCallback(graph, mixerNodeChTwo, 0, &rcbsSec);
- //   if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    result = AUGraphSetNodeInputCallback(graph, mixerNodeChTwo, 0, &rcbsSec);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
  
     
     /* CHANNEL 1
-                    */
+                     */ 
+                   
+                    
     // set the input stream format, this is the format of the audio for mixer input
     result = AudioUnitSetProperty(mixerUnitChOne, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &outputFormat, sizeof(outputFormat));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
@@ -929,7 +825,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     // set the output stream format of the mixer
 	result = AudioUnitSetProperty(mixerUnitChOne, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &outputFormat, sizeof(outputFormat));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
+   
     result = AudioUnitSetProperty(converterUnitChOne
                                   ,kAudioUnitProperty_StreamFormat, 
                                   kAudioUnitScope_Input, 
@@ -959,9 +855,21 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         NSLog(@"streamInputFormat failed mixerinput 1"); 
     }
     
+    result = AudioUnitSetProperty(timePitchUnitChOne
+                                  ,kAudioUnitProperty_StreamFormat, 
+                                  kAudioUnitScope_Output, 
+                                  0,
+                                  &effectUnitInputFormat,
+                                  sizeof(effectUnitInputFormat));
     
-  /* CHANNEL 2
-                */
+    if(noErr != result) {
+        NSLog(@"streamInputFormat failed mixerinput 1"); 
+    }
+    
+    
+    
+    /* CHANNEL 2
+                  */ 
     
     // set the input stream format, this is the format of the audio for mixer input
     result = AudioUnitSetProperty(mixerUnitChTwo, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &outputFormat, sizeof(outputFormat));
@@ -982,8 +890,12 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     if(noErr != result) {
         NSLog(@"streamInputFormat failed converterUnit"); 
     } 
-    memset(&effectUnitInputFormat, 0, propSize);
-    result = AudioUnitGetProperty(lopassUnitChTwo, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &effectUnitInputFormat, &propSize);
+    AudioStreamBasicDescription effectUnitInputFormatCh2;
+    UInt32 propSizeCh2 = sizeof(AudioStreamBasicDescription);
+    
+    
+    memset(&effectUnitInputFormatCh2, 0, propSizeCh2);
+    result = AudioUnitGetProperty(lopassUnitChTwo, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &effectUnitInputFormatCh2, &propSizeCh2);
     // effectUnitInputFormat.Print();
     
     
@@ -991,126 +903,59 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
                                   ,kAudioUnitProperty_StreamFormat, 
                                   kAudioUnitScope_Output, 
                                   0,
-                                  &effectUnitInputFormat,
-                                  sizeof(effectUnitInputFormat));
+                                  &effectUnitInputFormatCh2,
+                                  sizeof(effectUnitInputFormatCh2));
     
     if(noErr != result) {
         NSLog(@"streamInputFormat failed mixerinput 1"); 
     }
     
-    
-    
-    
-    
-	
-   
-	for (int i = 0; i < numbuses; ++i) {
-		// setup render callback struct
-	//	AURenderCallbackStruct rcbs;
-	//	rcbs.inputProc = &SPPlaybackManagerAudioUnitRenderDelegateCallback;
-	//	rcbs.inputProcRefCon = &player;
-        
-    //   AURenderCallbackStruct rcbs;
-	//	rcbs.inputProc = AudioUnitRenderDelegateCallback;
-	//	rcbs.inputProcRefCon = self;
-        
-        
-        printf("set AUGraphSetNodeInputCallback\n");
-        
-        // set a callback for the specified node's specified input
-    //    result = AUGraphSetNodeInputCallback(graph, mixerNode, i, &rcbs);
-    //    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-		
-		printf("set input bus %d, client kAudioUnitProperty_StreamFormat\n", i);
-        
-               
-        // set the input stream format, this is the format of the audio for mixer input
-		result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, i, &effectUnitInputFormat, sizeof(effectUnitInputFormat));
-        if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-	}
- 
-    printf("set output kAudioUnitProperty_StreamFormat\n");
-    /* 
-    // set the output stream format of the mixer
-	result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &outputFormat, sizeof(outputFormat));
-    if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-   
-    result = AudioUnitSetProperty(converterUnit
-                                  ,kAudioUnitProperty_StreamFormat, 
-                                  kAudioUnitScope_Input, 
-                                  0,
-                                  &outputFormat,
-                                  sizeof(outputFormat));
-    
-    if(noErr != result) {
-        NSLog(@"streamInputFormat failed converterUnit"); 
-    } 
-    
-   //  ---- Get the format of the input bus of the effect unit --- this is the important bit 
-    
-   // CAStreamBasicDescription effectUnitInputFormat;
-    AudioStreamBasicDescription effectUnitInputFormatMaster;
-    UInt32 propSizemaster = sizeof(AudioStreamBasicDescription);
-    
-    memset(&effectUnitInputFormatMaster, 0, propSizemaster);
-    result = AudioUnitGetProperty(lopassUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &effectUnitInputFormatMaster, &propSizemaster);
-   // effectUnitInputFormat.Print();
-    
-    
-    result = AudioUnitSetProperty(converterUnit
+    result = AudioUnitSetProperty(timePitchUnitChTwo
                                   ,kAudioUnitProperty_StreamFormat, 
                                   kAudioUnitScope_Output, 
                                   0,
-                                  &effectUnitInputFormatMaster,
-                                  sizeof(effectUnitInputFormatMaster));
+                                  &effectUnitInputFormatCh2,
+                                  sizeof(effectUnitInputFormatCh2));
     
     if(noErr != result) {
         NSLog(@"streamInputFormat failed mixerinput 1"); 
     }
- 
-   
-    // ---- Get the format of the input bus of the effect unit --- this is the important bit 
     
-    result = AudioUnitSetProperty(lopassUnit
-                                  ,kAudioUnitProperty_StreamFormat, 
-                                  kAudioUnitScope_Output, 
-                                  0,
-                                  &effectUnitInputFormatMaster,
-                                  sizeof(effectUnitInputFormatMaster));
     
-    if(noErr != result) {
-        NSLog(@"streamInputFormat failed mixerinput 1"); 
-    }
-    */
+    
+    
+    
     result = AudioUnitSetParameter(mixerUnitChTwo,kMultiChannelMixerParam_Volume , kAudioUnitScope_Global, 0, 0, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
     }
     
-   /* result = AudioUnitSetParameter(timePitchUnit,kVarispeedParam_PlaybackCents , kAudioUnitScope_Global, 0, 0, 0);
+    
+    
+    result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackCents , kAudioUnitScope_Global, 0, 0, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
     }
-    result = AudioUnitSetParameter(timePitchUnit,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0, 1, 0);
+    result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0, 1, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
     }
     
-    result = AudioUnitSetParameter(hipassUnit,kHipassParam_CutoffFrequency , kAudioUnitScope_Global, 0, 40, 0);
+    result = AudioUnitSetParameter(hipassUnitChOne,kHipassParam_CutoffFrequency , kAudioUnitScope_Global, 0, 40, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
     }
-    result = AudioUnitSetParameter(hipassUnit,kHipassParam_Resonance , kAudioUnitScope_Global, 0, 10, 0);
+    result = AudioUnitSetParameter(hipassUnitChOne,kHipassParam_Resonance , kAudioUnitScope_Global, 0, 10, 0);
     if (noErr != result){
         
         { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
     }
     
-    */
+    
       
     CAShow(graph);
     
