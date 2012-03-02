@@ -555,7 +555,7 @@ NSUInteger loadTrack;
 -(void)userLogout{
     
     [[SPSession sharedSession] logout];
-    // [self performSelector:@selector(showLogin) withObject:nil afterDelay:0.0];
+    
     
 }
 

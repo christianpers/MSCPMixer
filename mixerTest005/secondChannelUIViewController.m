@@ -154,6 +154,23 @@
     
     [self.view addSubview:addtrack];
     
+    effectController *lopassChTwoController = [[effectController alloc]initWithFrame:CGRectMake(300, 30, 40, 40)];
+    lopassChTwoController.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:lopassChTwoController];
+    [lopassChTwoController setTag:6];
+    
+    UILabel *lblLopassChTwo = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
+    lblLopassChTwo.textAlignment =  UITextAlignmentCenter;
+    lblLopassChTwo.textColor = [UIColor blackColor];
+    lblLopassChTwo.backgroundColor = [UIColor clearColor];
+    lblLopassChTwo.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+    lblLopassChTwo.text = @"L";
+    [lopassChTwoController addSubview:lblLopassChTwo];
+    [lblLopassChTwo release];  
+    
+    [lopassChTwoController release];
+   
+    
     
 }
 

@@ -133,8 +133,8 @@ typedef struct {
 - (void)resetVarispeedUnit:(int)unit;
 - (void)setMasterVol:(AudioUnitParameterValue)val;
 
-- (void)setlopassEffectY: (AudioUnitParameterValue)val;
-- (void)setlopassEffectX: (AudioUnitParameterValue)val;
+- (void)setlopassEffectY: (AudioUnitParameterValue)val :(int)channel;
+- (void)setlopassEffectX: (AudioUnitParameterValue)val :(int)channel;
 
 -(void)sethipassEffectY:(AudioUnitParameterValue)val;
 -(void)sethipassEffectX:(AudioUnitParameterValue)val;

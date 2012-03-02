@@ -528,28 +528,55 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
 }
 
--(void)setlopassEffectY:(AudioUnitParameterValue)val{
+-(void)setlopassEffectY:(AudioUnitParameterValue)val:(int)channel{
     
     OSStatus result = noErr;
     
-    NSLog(@"setting the lopassfreq");
-    result = AudioUnitSetParameter(lopassUnitChOne,kLowPassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
-    if (noErr != result){
+    if (channel == 1){
+        NSLog(@"setting the lopassfreq");
+        result = AudioUnitSetParameter(lopassUnitChOne,kLowPassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
         
-        { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
     }
+    else if (channel == 2) {
+        NSLog(@"setting the lopassfreq");
+        result = AudioUnitSetParameter(lopassUnitChTwo,kLowPassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
+    }
+    
+    
     
 }
--(void)setlopassEffectX:(AudioUnitParameterValue)val{
+-(void)setlopassEffectX:(AudioUnitParameterValue)val:(int)channel{
     
     OSStatus result = noErr;
     
-    NSLog(@"setting the lopassfreq");
-    result = AudioUnitSetParameter(lopassUnitChOne,kLowPassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
-    if (noErr != result){
+    if (channel == 1){
+        NSLog(@"setting the lopassfreq");
+        result = AudioUnitSetParameter(lopassUnitChOne,kLowPassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
         
-        { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
     }
+    else if (channel == 2){
+        
+        NSLog(@"setting the lopassfreq");
+        result = AudioUnitSetParameter(lopassUnitChTwo,kLowPassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
+    }
+    
+  
     
 }
 

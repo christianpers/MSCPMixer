@@ -100,6 +100,9 @@ CGSize parentSize;
             case 5:
                 [self masterVol];
                 break;    
+            case 6:
+                [self lopassUnitChTwo];
+                break;   
             default:
                 break;
         }
@@ -143,8 +146,8 @@ CGSize parentSize;
     NSLog(@"freq: %f, resonance: %f",paramVal1, paramVal2);
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [main.playbackManager setlopassEffectY:paramVal1];
-    [main.playbackManager setlopassEffectX:paramVal2];
+    [main.playbackManager setlopassEffectY:paramVal1:1];
+    [main.playbackManager setlopassEffectX:paramVal2:1];
     
 }
 
@@ -189,6 +192,25 @@ CGSize parentSize;
     [main.playbackManager setMasterVol:paramVal1];
     
 }
+- (void)lopassUnitChTwo{
+    paramVal1 = (setY/parentSize.height)*22000;
+    float twoThirds = (parentSize.width/3)*2;
+    if (setX < (parentSize.width/3)){
+        paramVal2 = (((parentSize.width/3)-setX)/-(parentSize.width/3))*20;
+        NSLog(@"positive side");
+    }
+    else{
+        paramVal2 = (((setX*2)-(twoThirds))/(twoThirds))*20;
+        NSLog(@"negative side");
+    }
+    NSLog(@"freq: %f, resonance: %f",paramVal1, paramVal2);
+    
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [main.playbackManager setlopassEffectY:paramVal1:2];
+    [main.playbackManager setlopassEffectX:paramVal2:2];
+    
+}
+
 
 - (void)drawEffectGrid:(int)tag{
     
@@ -254,7 +276,16 @@ CGSize parentSize;
             x = 0;
             y = 0;
             self.gridView.effectType = @"Volume";
-            break;    
+            break;
+        case 6:
+            /*
+             default val cutoff freq 6900
+             default val resonance 0.0
+             */
+            x = 260;
+            y = 330;
+            self.gridView.effectType = @"Lopass";
+            break;
         default:
             break;
     }

@@ -11,6 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Foundation/Foundation.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import "effectController.h"
 
 
 @interface secondChannelUIViewController : UIViewController <MPMediaPickerControllerDelegate> {

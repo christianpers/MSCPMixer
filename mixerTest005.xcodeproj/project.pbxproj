@@ -11,11 +11,8 @@
 		AA58C0ED14FC839C0074837F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EC14FC839C0074837F /* CoreMedia.framework */; };
 		AA58C0F014FC83CA0074837F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */; };
 		AA58C0F314FC86090074837F /* secondChannelUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA58C0F214FC86090074837F /* secondChannelUIViewController.m */; };
-		AA651B3115000B1F000DBF35 /* rad2fft.c in Sources */ = {isa = PBXBuildFile; fileRef = AA651B2E15000B1F000DBF35 /* rad2fft.c */; };
-		AA651B3215000B1F000DBF35 /* SpectrumAnalysis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA651B3015000B1F000DBF35 /* SpectrumAnalysis.cpp */; };
-		AA651B3515000B7F000DBF35 /* aurio_helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA651B3415000B7F000DBF35 /* aurio_helper.cpp */; };
-		AA651B3C15000B95000DBF35 /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA651B3715000B95000DBF35 /* EAGLView.m */; };
-		AA651B3D15000B95000DBF35 /* FFTBufferManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA651B3915000B95000DBF35 /* FFTBufferManager.cpp */; };
+		AA651B4015003051000DBF35 /* playNew.png in Resources */ = {isa = PBXBuildFile; fileRef = AA651B3F15003051000DBF35 /* playNew.png */; };
+		AA651B4215003C43000DBF35 /* prevTrack.png in Resources */ = {isa = PBXBuildFile; fileRef = AA651B4115003C43000DBF35 /* prevTrack.png */; };
 		AA83DAD914F7327300BF43F0 /* playlistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83DAD814F7327300BF43F0 /* playlistViewController.m */; };
 		AA97EEE914F0B06400A2B892 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA97EEE814F0B06400A2B892 /* UIKit.framework */; };
 		AA97EEEB14F0B06400A2B892 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA97EEEA14F0B06400A2B892 /* Foundation.framework */; };
@@ -49,7 +46,6 @@
 		AA97EF5914F0D19300A2B892 /* mastercueView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF5614F0D19300A2B892 /* mastercueView.mm */; };
 		AA97EF5A14F0D19300A2B892 /* masterCueTableView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF5814F0D19300A2B892 /* masterCueTableView.mm */; };
 		AA97EF5F14F0D1A800A2B892 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5B14F0D1A800A2B892 /* pause.png */; };
-		AA97EF6014F0D1A800A2B892 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5C14F0D1A800A2B892 /* play.png */; };
 		AA97EF6114F0D1A800A2B892 /* nextTrack.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5D14F0D1A800A2B892 /* nextTrack.png */; };
 		AA97EF6214F0D1A800A2B892 /* stopbtn.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5E14F0D1A800A2B892 /* stopbtn.png */; };
 		AA97EF6714F0D1C100A2B892 /* playlistView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF6414F0D1C100A2B892 /* playlistView.m */; };
@@ -66,8 +62,6 @@
 		AA97EF8714F0D20700A2B892 /* SPCircularBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF8414F0D20700A2B892 /* SPCircularBuffer.mm */; };
 		AA97EF8814F0D20700A2B892 /* audioControl.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF8614F0D20700A2B892 /* audioControl.mm */; };
 		AA97EF9414F0D26000A2B892 /* Shared.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF9314F0D25F00A2B892 /* Shared.mm */; };
-		AA97EF9A14F0D97000A2B892 /* CAComponentDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF9814F0D97000A2B892 /* CAComponentDescription.cpp */; };
-		AA97EFA014F0D9A100A2B892 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF9E14F0D9A100A2B892 /* CAStreamBasicDescription.cpp */; };
 		AAAD79C114F0EE6B00E337E9 /* mainwindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */; };
 /* End PBXBuildFile section */
 
@@ -78,16 +72,8 @@
 		AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		AA58C0F114FC86090074837F /* secondChannelUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secondChannelUIViewController.h; sourceTree = "<group>"; };
 		AA58C0F214FC86090074837F /* secondChannelUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = secondChannelUIViewController.m; sourceTree = "<group>"; };
-		AA651B2D15000B1F000DBF35 /* rad2fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rad2fft.h; sourceTree = "<group>"; };
-		AA651B2E15000B1F000DBF35 /* rad2fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rad2fft.c; sourceTree = "<group>"; };
-		AA651B2F15000B1F000DBF35 /* SpectrumAnalysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpectrumAnalysis.h; sourceTree = "<group>"; };
-		AA651B3015000B1F000DBF35 /* SpectrumAnalysis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpectrumAnalysis.cpp; sourceTree = "<group>"; };
-		AA651B3315000B7F000DBF35 /* aurio_helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aurio_helper.h; sourceTree = "<group>"; };
-		AA651B3415000B7F000DBF35 /* aurio_helper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = aurio_helper.cpp; sourceTree = "<group>"; };
-		AA651B3615000B95000DBF35 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
-		AA651B3715000B95000DBF35 /* EAGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EAGLView.m; sourceTree = "<group>"; };
-		AA651B3815000B95000DBF35 /* FFTBufferManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFTBufferManager.h; sourceTree = "<group>"; };
-		AA651B3915000B95000DBF35 /* FFTBufferManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FFTBufferManager.cpp; sourceTree = "<group>"; };
+		AA651B3F15003051000DBF35 /* playNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playNew.png; sourceTree = "<group>"; };
+		AA651B4115003C43000DBF35 /* prevTrack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = prevTrack.png; sourceTree = "<group>"; };
 		AA83DAD714F7327300BF43F0 /* playlistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playlistViewController.h; sourceTree = "<group>"; };
 		AA83DAD814F7327300BF43F0 /* playlistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = playlistViewController.m; sourceTree = "<group>"; };
 		AA97EEE414F0B06400A2B892 /* mixerTest005.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mixerTest005.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -150,7 +136,6 @@
 		AA97EF5714F0D19300A2B892 /* masterCueTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = masterCueTableView.h; sourceTree = "<group>"; };
 		AA97EF5814F0D19300A2B892 /* masterCueTableView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = masterCueTableView.mm; sourceTree = "<group>"; };
 		AA97EF5B14F0D1A800A2B892 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
-		AA97EF5C14F0D1A800A2B892 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
 		AA97EF5D14F0D1A800A2B892 /* nextTrack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nextTrack.png; sourceTree = "<group>"; };
 		AA97EF5E14F0D1A800A2B892 /* stopbtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopbtn.png; sourceTree = "<group>"; };
 		AA97EF6314F0D1C100A2B892 /* playlistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playlistView.h; sourceTree = "<group>"; };
@@ -181,10 +166,6 @@
 		AA97EF9214F0D25E00A2B892 /* Shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shared.h; sourceTree = "<group>"; };
 		AA97EF9314F0D25F00A2B892 /* Shared.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Shared.mm; sourceTree = "<group>"; };
 		AA97EF9714F0D78900A2B892 /* CocoaLibSpotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaLibSpotify.h; sourceTree = "<group>"; };
-		AA97EF9814F0D97000A2B892 /* CAComponentDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAComponentDescription.cpp; path = Extras/CoreAudio/PublicUtility/CAComponentDescription.cpp; sourceTree = DEVELOPER_DIR; };
-		AA97EF9914F0D97000A2B892 /* CAComponentDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAComponentDescription.h; path = Extras/CoreAudio/PublicUtility/CAComponentDescription.h; sourceTree = DEVELOPER_DIR; };
-		AA97EF9E14F0D9A100A2B892 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = DEVELOPER_DIR; };
-		AA97EF9F14F0D9A100A2B892 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.h; sourceTree = DEVELOPER_DIR; };
 		AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = mainwindow.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -219,31 +200,6 @@
 				AA58C0F214FC86090074837F /* secondChannelUIViewController.m */,
 			);
 			name = secondChannel;
-			sourceTree = "<group>";
-		};
-		AA651B2B15000A1A000DBF35 /* fftAnalyze */ = {
-			isa = PBXGroup;
-			children = (
-				AA651B3615000B95000DBF35 /* EAGLView.h */,
-				AA651B3715000B95000DBF35 /* EAGLView.m */,
-				AA651B3815000B95000DBF35 /* FFTBufferManager.h */,
-				AA651B3915000B95000DBF35 /* FFTBufferManager.cpp */,
-				AA651B3315000B7F000DBF35 /* aurio_helper.h */,
-				AA651B3415000B7F000DBF35 /* aurio_helper.cpp */,
-				AA651B2C15000B0D000DBF35 /* fft */,
-			);
-			name = fftAnalyze;
-			sourceTree = "<group>";
-		};
-		AA651B2C15000B0D000DBF35 /* fft */ = {
-			isa = PBXGroup;
-			children = (
-				AA651B2D15000B1F000DBF35 /* rad2fft.h */,
-				AA651B2E15000B1F000DBF35 /* rad2fft.c */,
-				AA651B2F15000B1F000DBF35 /* SpectrumAnalysis.h */,
-				AA651B3015000B1F000DBF35 /* SpectrumAnalysis.cpp */,
-			);
-			name = fft;
 			sourceTree = "<group>";
 		};
 		AA97EED914F0B06400A2B892 = {
@@ -284,11 +240,9 @@
 		AA97EEEE14F0B06400A2B892 /* mixerTest005 */ = {
 			isa = PBXGroup;
 			children = (
-				AA651B2B15000A1A000DBF35 /* fftAnalyze */,
 				AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */,
 				AA97EF9214F0D25E00A2B892 /* Shared.h */,
 				AA97EF9314F0D25F00A2B892 /* Shared.mm */,
-				AA97EF5414F0D16300A2B892 /* iPublicUtility */,
 				AA97EF5314F0D10900A2B892 /* playbackHelpers */,
 				AA97EF5214F0D0F400A2B892 /* loginViewController */,
 				AA97EF5114F0D0DA00A2B892 /* assets */,
@@ -435,8 +389,9 @@
 		AA97EF5114F0D0DA00A2B892 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				AA651B4115003C43000DBF35 /* prevTrack.png */,
+				AA651B3F15003051000DBF35 /* playNew.png */,
 				AA97EF5B14F0D1A800A2B892 /* pause.png */,
-				AA97EF5C14F0D1A800A2B892 /* play.png */,
 				AA97EF5D14F0D1A800A2B892 /* nextTrack.png */,
 				AA97EF5E14F0D1A800A2B892 /* stopbtn.png */,
 			);
@@ -462,17 +417,6 @@
 				AA97EF8614F0D20700A2B892 /* audioControl.mm */,
 			);
 			name = playbackHelpers;
-			sourceTree = "<group>";
-		};
-		AA97EF5414F0D16300A2B892 /* iPublicUtility */ = {
-			isa = PBXGroup;
-			children = (
-				AA97EF9E14F0D9A100A2B892 /* CAStreamBasicDescription.cpp */,
-				AA97EF9F14F0D9A100A2B892 /* CAStreamBasicDescription.h */,
-				AA97EF9814F0D97000A2B892 /* CAComponentDescription.cpp */,
-				AA97EF9914F0D97000A2B892 /* CAComponentDescription.h */,
-			);
-			name = iPublicUtility;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -527,11 +471,12 @@
 			files = (
 				AA97EEF314F0B06500A2B892 /* InfoPlist.strings in Resources */,
 				AA97EF5F14F0D1A800A2B892 /* pause.png in Resources */,
-				AA97EF6014F0D1A800A2B892 /* play.png in Resources */,
 				AA97EF6114F0D1A800A2B892 /* nextTrack.png in Resources */,
 				AA97EF6214F0D1A800A2B892 /* stopbtn.png in Resources */,
 				AA97EF8214F0D1F200A2B892 /* LoginViewController_iPad.xib in Resources */,
 				AAAD79C114F0EE6B00E337E9 /* mainwindow.xib in Resources */,
+				AA651B4015003051000DBF35 /* playNew.png in Resources */,
+				AA651B4215003C43000DBF35 /* prevTrack.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,16 +521,9 @@
 				AA97EF8714F0D20700A2B892 /* SPCircularBuffer.mm in Sources */,
 				AA97EF8814F0D20700A2B892 /* audioControl.mm in Sources */,
 				AA97EF9414F0D26000A2B892 /* Shared.mm in Sources */,
-				AA97EF9A14F0D97000A2B892 /* CAComponentDescription.cpp in Sources */,
-				AA97EFA014F0D9A100A2B892 /* CAStreamBasicDescription.cpp in Sources */,
 				AA83DAD914F7327300BF43F0 /* playlistViewController.m in Sources */,
 				AA2D5D0414FB17E000F1DAAA /* secondChannelView.m in Sources */,
 				AA58C0F314FC86090074837F /* secondChannelUIViewController.m in Sources */,
-				AA651B3115000B1F000DBF35 /* rad2fft.c in Sources */,
-				AA651B3215000B1F000DBF35 /* SpectrumAnalysis.cpp in Sources */,
-				AA651B3515000B7F000DBF35 /* aurio_helper.cpp in Sources */,
-				AA651B3C15000B95000DBF35 /* EAGLView.m in Sources */,
-				AA651B3D15000B95000DBF35 /* FFTBufferManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

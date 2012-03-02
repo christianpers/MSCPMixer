@@ -50,7 +50,7 @@
         NSString* imagePathPrev = [[NSBundle mainBundle] pathForResource:@"prevTrack" ofType:@"png"];
         NSString* imagePathStop = [[NSBundle mainBundle] pathForResource:@"stopbtn" ofType:@"png"];
         NSString* imagePathPause = [[NSBundle mainBundle] pathForResource:@"pause" ofType:@"png"];
-        NSString* imagePathPlay = [[NSBundle mainBundle] pathForResource:@"play" ofType:@"png"];
+        NSString* imagePathPlay = [[NSBundle mainBundle] pathForResource:@"playNew" ofType:@"png"];
         
         
         UIImage *nextImg = [UIImage imageWithContentsOfFile:imagePathNext];
@@ -59,7 +59,7 @@
         UIImage *pauseImg = [UIImage imageWithContentsOfFile:imagePathPause];
         UIImage *playImg = [UIImage imageWithContentsOfFile:imagePathPlay];
         
-        UIButton *playBtn = [[UIButton alloc]initWithFrame:CGRectMake(100, 400, 78, 90)];
+        UIButton *playBtn = [[UIButton alloc]initWithFrame:CGRectMake(180, 400, 43, 43)];
         [playBtn setBackgroundImage:playImg forState:UIControlStateNormal];
         [self addSubview:playBtn];
         [playBtn addTarget:self 
@@ -68,7 +68,7 @@
         
         [playBtn release];
         
-        UIButton *stopBtn = [[UIButton alloc]initWithFrame:CGRectMake(230, 400, 78, 90)];
+        UIButton *stopBtn = [[UIButton alloc]initWithFrame:CGRectMake(260, 400, 43, 43)];
         [stopBtn setBackgroundImage:stopImg forState:UIControlStateNormal];
         [self addSubview:stopBtn];
         [stopBtn addTarget:self 
@@ -77,7 +77,7 @@
         
         [stopBtn release];
         
-        UIButton *pauseBtn = [[UIButton alloc]initWithFrame:CGRectMake(360, 400, 78, 90)];
+        UIButton *pauseBtn = [[UIButton alloc]initWithFrame:CGRectMake(340, 400, 43, 43)];
         [pauseBtn setBackgroundImage:pauseImg forState:UIControlStateNormal];
         [self addSubview:pauseBtn];
         [pauseBtn addTarget:self 
@@ -86,7 +86,7 @@
         
         [pauseBtn release];
         
-        UIButton *prevBtn = [[UIButton alloc]initWithFrame:CGRectMake(490, 400, 78, 90)];
+        UIButton *prevBtn = [[UIButton alloc]initWithFrame:CGRectMake(420, 400, 43, 43)];
         [prevBtn setBackgroundImage:prevImg forState:UIControlStateNormal];
         [self addSubview:prevBtn];
         [prevBtn addTarget:self 
@@ -95,7 +95,7 @@
         
         [prevBtn release];
             
-        UIButton *nextBtn = [[UIButton alloc]initWithFrame:CGRectMake(620, 400, 78, 90)];
+        UIButton *nextBtn = [[UIButton alloc]initWithFrame:CGRectMake(500, 400, 43, 43)];
         [nextBtn setBackgroundImage:nextImg forState:UIControlStateNormal];
         [self addSubview:nextBtn];
         [nextBtn addTarget:self 
