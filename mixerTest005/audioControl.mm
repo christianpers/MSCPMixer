@@ -10,68 +10,133 @@
 #import "Shared.h"
 #import "AppDelegate.h"
 
-static OSStatus inputRenderCallback (
-                                     
-                                     void                        *inRefCon,      // A pointer to a struct containing the complete audio data 
-                                     //    to play, as well as state information such as the  
-                                     //    first sample to play on this invocation of the callback.
-                                     AudioUnitRenderActionFlags  *ioActionFlags, // Unused here. When generating audio, use ioActionFlags to indicate silence 
-                                     //    between sounds; for silence, also memset the ioData buffers to 0.
-                                     const AudioTimeStamp        *inTimeStamp,   // Unused here.
-                                     UInt32                      inBusNumber,    // The mixer unit input bus that is requesting some new
-                                     //        frames of audio data to play.
-                                     UInt32                      inNumberFrames, // The number of frames of audio to provide to the buffer(s)
-                                     //        pointed to by the ioData parameter.
-                                     AudioBufferList             *ioData         // On output, the audio data to play. The callback's primary 
-                                     //        responsibility is to fill the buffer(s) in the 
-                                     //        AudioBufferList.
-                                     ) {
+AudioBufferList* bufferList;
+BOOL startedCallback;
+BOOL noInterrupt; 
+
+static OSStatus playbackCallback(void *inRefCon, 
+								 AudioUnitRenderActionFlags *ioActionFlags, 
+								 const AudioTimeStamp *inTimeStamp, 
+								 UInt32 inBusNumber, 
+								 UInt32 inNumberFrames, 
+								 AudioBufferList *ioData) {  
+	
+	int i, j; 
+	
+	
     
-    soundStructPtr    soundStructPointerArray   = (soundStructPtr) inRefCon;
-    UInt32            frameTotalForSound        = soundStructPointerArray[inBusNumber].frameCount;
-    BOOL              isStereo                  = soundStructPointerArray[inBusNumber].isStereo;
-    
-    // Declare variables to point to the audio buffers. Their data type must match the buffer data type.
-    AudioUnitSampleType *dataInLeft;
-    AudioUnitSampleType *dataInRight;
-    
-    dataInLeft                 = soundStructPointerArray[inBusNumber].audioDataLeft;
-    if (isStereo) dataInRight  = soundStructPointerArray[inBusNumber].audioDataRight;
-    
-    // Establish pointers to the memory into which the audio from the buffers should go. This reflects
-    //    the fact that each Multichannel Mixer unit input bus has two channels, as specified by this app's
-    //    graphStreamFormat variable.
-    AudioUnitSampleType *outSamplesChannelLeft;
-    AudioUnitSampleType *outSamplesChannelRight;
-    
-    outSamplesChannelLeft                 = (AudioUnitSampleType *) ioData->mBuffers[0].mData;
-    if (isStereo) outSamplesChannelRight  = (AudioUnitSampleType *) ioData->mBuffers[1].mData;
-    
-    // Get the sample number, as an index into the sound stored in memory,
-    //    to start reading data from.
-    UInt32 sampleNumber = soundStructPointerArray[inBusNumber].sampleNumber;
-    
-    // Fill the buffer or buffers pointed at by *ioData with the requested number of samples 
-    //    of audio from the sound stored in memory.
-    for (UInt32 frameNumber = 0; frameNumber < inNumberFrames; ++frameNumber) {
+	if(startedCallback && noInterrupt) {
+		
+		//get a copy of the objectiveC class "self" we need this to get the next sample to fill the buffer
+		audioControl *manager = (audioControl *)inRefCon;
         
-        outSamplesChannelLeft[frameNumber]                 = dataInLeft[sampleNumber];
-        if (isStereo) outSamplesChannelRight[frameNumber]  = dataInRight[sampleNumber];
+		float * tempbuf = manager->tempbuf; 
+        //	float * monobuf =  manager->monobuf; 
+		
+		//loop through all the buffers that need to be filled
+		for (i = 0 ; i < ioData->mNumberBuffers; i++){
+			//get the buffer to be filled
+			AudioBuffer buffer = ioData->mBuffers[i];
+			//printf("which buf %d numberOfSamples %d channels %d countertest %d \n", i, buffer.mDataByteSize, buffer.mNumberChannels, g_countertest);
+			
+			//if needed we can get the number of bytes that will fill the buffer using
+			// int numberOfSamples = ioData->mBuffers[i].mDataByteSize;
+			
+			//get the buffer and point to it as an UInt32 (as we will be filling it with 32 bit samples)
+			//if we wanted we could grab it as a 16 bit and put in the samples for left and right seperately
+			//but the loop below would be for(j = 0; j < inNumberFrames * 2; j++) as each frame is a 32 bit number
+			//UInt32 *frameBuffer = buffer.mData;
+			
+			short signed int *frameBuffer = (short signed int *)buffer.mData;
+			
+			//safety first
+			inNumberFrames= inNumberFrames<4000?inNumberFrames:4000; 
+            
+			//float * tempbuf= manager->readbuffer_;
+			
+			int flag = manager->readflag_; 
+			
+			if (flag==1) {
+                
+				
+				int pos = (*manager->readpos_); 
+				int size= manager->buffersize_; 
+				float * source =  manager->readbuffer_; 
+                
+				float mult = .5*32000.0; //just alllow a little leeway for limiter errors 32767.0; 
+				int j; 
+				
+                //loop through the buffer and fill the frames
+                for (j = 0; j < 2*inNumberFrames; j++){
+                    // get NextPacket returns a 32 bit value, one frame.
+                    //frameBuffer[j] = [[remoteIOplayer inMemoryAudioFile] getNextPacket];
+                    //float value= 32767.0*sin((400*2*3.14159)*(j/44100.0)); 
+                    //float value= mult*tempbuf[j]; //sin((400*2*3.14159)*(g_countertest/44100.0)); 
+					
+                    tempbuf[j] = source[pos]; //mult*(source[pos]); 
+                    
+                    pos = (pos+1)%size; 
+                    //frameBuffer[2*j] = 0.0; //value; 
+                    //frameBuffer[2*j+1] = 0.0; //value; 
+                    
+                    //++g_countertest; 
+                }
+				
+				
+                //(*(manager->readpos_)) += inNumberFrames;  
+                
+				(*(manager->readpos_)) = pos; 
+				
+				//converts to int
+				for (int j = 0; j < 2*inNumberFrames; j++)
+					frameBuffer[j] = mult*(tempbuf[j]);
+                
+				
+				
+			} else {
+				
+				for (int j = 0; j < inNumberFrames; j++){
+					// get NextPacket returns a 32 bit value, one frame.
+					//frameBuffer[j] = [[remoteIOplayer inMemoryAudioFile] getNextPacket];
+					float value= 0.0; //32767.0*sin((400*2*3.14159)*(j/44100.0)); 
+					//float value= mult*tempbuf[j]; //sin((400*2*3.14159)*(g_countertest/44100.0)); 
+					
+					frameBuffer[2*j] = value; 
+					frameBuffer[2*j+1] = value; 
+					
+					//++g_countertest; 
+				}
+				
+			}
+			
+		}
         
-        sampleNumber++;
-        
-        // After reaching the end of the sound stored in memory--that is, after
-        //    (frameTotalForSound / inNumberFrames) invocations of this callback--loop back to the 
-        //    start of the sound so playback resumes from there.
-        if (sampleNumber >= frameTotalForSound) sampleNumber = 0;
-    }
-    
-    // Update the stored sample number so, the next time this callback is invoked, playback resumes 
-    //    at the correct spot.
-    soundStructPointerArray[inBusNumber].sampleNumber = sampleNumber;
-    
+		
+	} else {
+		
+		for (i = 0 ; i < ioData->mNumberBuffers; i++){
+			AudioBuffer buffer = ioData->mBuffers[i];
+            
+			short signed int *frameBuffer = (short signed int *)buffer.mData;
+            
+			//loop through the buffer and fill the frames
+			for (j = 0; j < inNumberFrames; j++){
+                
+				short signed int value= 0; //32767.0*0.0; 
+				frameBuffer[2*j] = value;	
+				frameBuffer[2*j+1] = value; 
+				
+				//++g_countertest; 
+			}
+			
+		}
+		
+	}
+	
+	
     return noErr;
 }
+
 
 
 @interface audioControl ()
@@ -170,203 +235,35 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 @synthesize timer;
 @synthesize audioBufferCh1;
 @synthesize audioBufferCh2;
-@synthesize stereoStreamFormat, monoStreamFormat;
+@synthesize stereoStreamFormat;
 
 
 /*second channel stuff !!!!!!!!! start
                                             */
 
 
-- (void) setupStereoStreamFormat {
-    
-    // The AudioUnitSampleType data type is the recommended type for sample data in audio
-    //    units. This obtains the byte size of the type for use in filling in the ASBD.
-    size_t bytesPerSample = sizeof (AudioUnitSampleType);
-    
-    // Fill the application audio format struct's fields to define a linear PCM, 
-    //        stereo, noninterleaved stream at the hardware sample rate.
-    stereoStreamFormat.mFormatID          = kAudioFormatLinearPCM;
-    stereoStreamFormat.mFormatFlags       = kAudioFormatFlagsAudioUnitCanonical;
-    stereoStreamFormat.mBytesPerPacket    = bytesPerSample;
-    stereoStreamFormat.mFramesPerPacket   = 1;
-    stereoStreamFormat.mBytesPerFrame     = bytesPerSample;
-    stereoStreamFormat.mChannelsPerFrame  = 2;                    // 2 indicates stereo
-    stereoStreamFormat.mBitsPerChannel    = 8 * bytesPerSample;
-    stereoStreamFormat.mSampleRate        = 44100;
-    
-    
-//    [self printASBD: stereoStreamFormat];
+
+-(void)canRead {
+	readflag_ = true; 
+	
 }
 
-- (void) readAudioFilesIntoMemory:(NSURL *)url {
+-(void)cantRead {
     
-    sourceURLArray[0]   = (CFURLRef) [url retain];
-    
-    int audioFile = 0;
-    
-        NSLog (@"readAudioFilesIntoMemory - file %i", audioFile);
-        
-        // Instantiate an extended audio file object.
-        ExtAudioFileRef audioFileObject = 0;
-        
-        // Open an audio file and associate it with the extended audio file object.
-        OSStatus result = ExtAudioFileOpenURL (sourceURLArray[audioFile], &audioFileObject);
-        
-        if (noErr != result || NULL == audioFileObject) {[self printErrorMessage: @"ExtAudioFileOpenURL" withStatus: result]; return;}
-        
-        // Get the audio file's length in frames.
-        UInt64 totalFramesInFile = 0;
-        UInt32 frameLengthPropertySize = sizeof (totalFramesInFile);
-        
-        result =    ExtAudioFileGetProperty (
-                                             audioFileObject,
-                                             kExtAudioFileProperty_FileLengthFrames,
-                                             &frameLengthPropertySize,
-                                             &totalFramesInFile
-                                             );
-        
-        if (noErr != result) {[self printErrorMessage: @"ExtAudioFileGetProperty (audio file length in frames)" withStatus: result]; return;}
-        
-        // Assign the frame count to the soundStructArray instance variable
-        soundStructArray[audioFile].frameCount = totalFramesInFile;
-        
-        // Get the audio file's number of channels.
-        AudioStreamBasicDescription fileAudioFormat = {0};
-        UInt32 formatPropertySize = sizeof (fileAudioFormat);
-        
-        result =    ExtAudioFileGetProperty (
-                                             audioFileObject,
-                                             kExtAudioFileProperty_FileDataFormat,
-                                             &formatPropertySize,
-                                             &fileAudioFormat
-                                             );
-        
-        if (noErr != result) {[self printErrorMessage: @"ExtAudioFileGetProperty (file audio format)" withStatus: result]; return;}
-        
-        UInt32 channelCount = fileAudioFormat.mChannelsPerFrame;
-        
-        // Allocate memory in the soundStructArray instance variable to hold the left channel, 
-        //    or mono, audio data
-        soundStructArray[audioFile].audioDataLeft =
-        (AudioUnitSampleType *) calloc (totalFramesInFile, sizeof (AudioUnitSampleType));
-        
-        AudioStreamBasicDescription importFormat = {0};
-        if (2 == channelCount) {
-            
-            soundStructArray[audioFile].isStereo = YES;
-            // Sound is stereo, so allocate memory in the soundStructArray instance variable to  
-            //    hold the right channel audio data
-            soundStructArray[audioFile].audioDataRight =
-            (AudioUnitSampleType *) calloc (totalFramesInFile, sizeof (AudioUnitSampleType));
-            importFormat = stereoStreamFormat;
-            
-        } else if (1 == channelCount) {
-            
-            soundStructArray[audioFile].isStereo = NO;
-            importFormat = monoStreamFormat;
-            
-        } else {
-            
-            NSLog (@"*** WARNING: File format not supported - wrong number of channels");
-            ExtAudioFileDispose (audioFileObject);
-            return;
-        }
-        
-        // Assign the appropriate mixer input bus stream data format to the extended audio 
-        //        file object. This is the format used for the audio data placed into the audio 
-        //        buffer in the SoundStruct data structure, which is in turn used in the 
-        //        inputRenderCallback callback function.
-        
-        result =    ExtAudioFileSetProperty (
-                                             audioFileObject,
-                                             kExtAudioFileProperty_ClientDataFormat,
-                                             sizeof (importFormat),
-                                             &importFormat
-                                             );
-        
-        if (noErr != result) {[self printErrorMessage: @"ExtAudioFileSetProperty (client data format)" withStatus: result]; return;}
-        
-        // Set up an AudioBufferList struct, which has two roles:
-        //
-        //        1. It gives the ExtAudioFileRead function the configuration it 
-        //            needs to correctly provide the data to the buffer.
-        //
-        //        2. It points to the soundStructArray[audioFile].audioDataLeft buffer, so 
-        //            that audio data obtained from disk using the ExtAudioFileRead function
-        //            goes to that buffer
-        
-        // Allocate memory for the buffer list struct according to the number of 
-        //    channels it represents.
-        AudioBufferList *bufferList;
-        
-        bufferList = (AudioBufferList *) malloc (
-                                                 sizeof (AudioBufferList) + sizeof (AudioBuffer) * (channelCount - 1)
-                                                 );
-        
-        if (NULL == bufferList) {NSLog (@"*** malloc failure for allocating bufferList memory"); return;}
-        
-        // initialize the mNumberBuffers member
-        bufferList->mNumberBuffers = channelCount;
-        
-        // initialize the mBuffers member to 0
-        AudioBuffer emptyBuffer = {0};
-        size_t arrayIndex;
-        for (arrayIndex = 0; arrayIndex < channelCount; arrayIndex++) {
-            bufferList->mBuffers[arrayIndex] = emptyBuffer;
-        }
-        
-        // set up the AudioBuffer structs in the buffer list
-        bufferList->mBuffers[0].mNumberChannels  = 1;
-        bufferList->mBuffers[0].mDataByteSize    = totalFramesInFile * sizeof (AudioUnitSampleType);
-        bufferList->mBuffers[0].mData            = soundStructArray[audioFile].audioDataLeft;
-        
-        if (2 == channelCount) {
-            bufferList->mBuffers[1].mNumberChannels  = 1;
-            bufferList->mBuffers[1].mDataByteSize    = totalFramesInFile * sizeof (AudioUnitSampleType);
-            bufferList->mBuffers[1].mData            = soundStructArray[audioFile].audioDataRight;
-        }
-        
-        // Perform a synchronous, sequential read of the audio data out of the file and
-        //    into the soundStructArray[audioFile].audioDataLeft and (if stereo) .audioDataRight members.
-        UInt32 numberOfPacketsToRead = (UInt32) totalFramesInFile;
-        
-        result = ExtAudioFileRead (
-                                   audioFileObject,
-                                   &numberOfPacketsToRead,
-                                   bufferList
-                                   );
-        
-        free (bufferList);
-        
-        if (noErr != result) {
-            
-            [self printErrorMessage: @"ExtAudioFileRead failure - " withStatus: result];
-            
-            // If reading from the file failed, then free the memory for the sound buffer.
-            free (soundStructArray[audioFile].audioDataLeft);
-            soundStructArray[audioFile].audioDataLeft = 0;
-            
-            if (2 == channelCount) {
-                free (soundStructArray[audioFile].audioDataRight);
-                soundStructArray[audioFile].audioDataRight = 0;
-            }
-            
-            ExtAudioFileDispose (audioFileObject);            
-            return;
-        }
-        
-        NSLog (@"Finished reading file %i into memory", audioFile);
-        
-        // Set the sample index to zero, so that playback starts at the 
-        //    beginning of the sound.
-        soundStructArray[audioFile].sampleNumber = 0;
-    
-    [self setMasterVolCh2:1];
-        
-        // Dispose of the extended audio file object, which also
-        //    closes the associated file.
-        ExtAudioFileDispose (audioFileObject);
-    
+	readflag_ = false; 
+	
+}
+
+
+-(void)setUpData:(float *)readbuffer pos:(int *)readpos size:(int) siz {
+	
+	readbuffer_ = readbuffer; 
+	readpos_ = readpos; 
+	readflag_ = false; 
+	buffersize_ = siz; 
+	
+	//gain_ = 1.0; 
+	
 }
 
 
@@ -390,8 +287,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 
 -(void)connectSecChannelCallback{
     
-    rcbsSec.inputProc = &inputRenderCallback;
-    rcbsSec.inputProcRefCon = soundStructArray;
+    rcbsSec.inputProc = &playbackCallback;
+    rcbsSec.inputProcRefCon = self;
     
     OSStatus result;
     // set a callback for the specified node's specified input
@@ -400,6 +297,9 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     result = AUGraphUpdate(graph, NULL);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
+    startedCallback = YES;
+    noInterrupt = YES;
 }
 
 
@@ -642,8 +542,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
                                  
 -(BOOL)setupAudioGraphWithAudioFormat:(const sp_audioformat *)audioFormat error:(NSError **)err {
     
-    //set sec channel stream format
-    [self setupStereoStreamFormat];
     
     NSError *error = nil;
 	BOOL success = YES;
@@ -1044,6 +942,17 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     outputFormat.mReserved = 0;
     
     
+    stereoStreamFormat.mSampleRate			= 44100.00;
+	stereoStreamFormat.mFormatID			= kAudioFormatLinearPCM;
+	stereoStreamFormat.mFormatFlags         = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+	stereoStreamFormat.mFramesPerPacket     = 1;
+	stereoStreamFormat.mChannelsPerFrame	= 2;
+	stereoStreamFormat.mBitsPerChannel		= 16;
+	stereoStreamFormat.mBytesPerPacket		= 4;
+	stereoStreamFormat.mBytesPerFrame		= 4;
+    
+    
+    
     AURenderCallbackStruct rcbs;
     rcbs.inputProc = AudioUnitRenderDelegateCallback;
     rcbs.inputProcRefCon = self;
@@ -1171,7 +1080,11 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         NSLog(@"streamInputFormat failed mixerinput 1"); 
     }
     
-    
+    result = AudioUnitSetParameter(mixerUnitChTwo,kMultiChannelMixerParam_Volume , kAudioUnitScope_Output, 0, 1, 0);
+    if (noErr != result){
+        
+        { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+    }
     
     result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackCents , kAudioUnitScope_Global, 0, 0, 0);
     if (noErr != result){

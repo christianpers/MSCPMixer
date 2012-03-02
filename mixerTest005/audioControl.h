@@ -74,11 +74,19 @@ typedef struct {
    // SPCircularBuffer            *audioBufferCh1, *audioBufferCh2;
     
     //second channel stuff
-    CFURLRef                        sourceURLArray[1];
-    soundStruct                     soundStructArray[1];
     AudioStreamBasicDescription     stereoStreamFormat;
-    AudioStreamBasicDescription     monoStreamFormat;
     AURenderCallbackStruct          rcbsSec; //second channel
+  
+    @public
+    float tempbuf[8000];
+	//float monobuf[4000]; 
+	//float inputbuf[1024]; 
+	//float outputbuf[1024]; 
+	float * readbuffer_;	//for storing samples from music library file playback
+	int * readpos_;
+	int buffersize_; 
+	int audioproblems; 
+	int readflag_;
     
 	
 }
@@ -147,12 +155,14 @@ typedef struct {
 
 
 //second channel stuff
-- (void) readAudioFilesIntoMemory:(NSURL *)url;
-- (void) setupStereoStreamFormat;
 - (void) setMasterVolCh2:(AudioUnitParameterValue)val;
 - (void) connectSecChannelCallback;
+
+-(void)canRead;
+-(void)cantRead;
+
+-(void)setUpData:(float *)readbuffer pos:(int *)readpos size:(int) siz;
 @property (readwrite)           AudioStreamBasicDescription stereoStreamFormat;
-@property (readwrite)           AudioStreamBasicDescription monoStreamFormat;
 
 
 
