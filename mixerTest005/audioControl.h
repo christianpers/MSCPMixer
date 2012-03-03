@@ -66,6 +66,7 @@ typedef struct {
     
     AudioUnit                   mixerUnitChOne;
     AudioUnit                   mixerUnitChTwo;
+    AUNode                      mixerNodeChOne;
     AUNode                      mixerNodeChTwo;
     AudioUnit                   converterUnitChOne;
     AudioUnit                   converterUnitChTwo;
@@ -75,7 +76,9 @@ typedef struct {
     
     //second channel stuff
     AudioStreamBasicDescription     stereoStreamFormat;
-    AURenderCallbackStruct          rcbsSec; //second channel
+    AURenderCallbackStruct          rcbsFirst;
+    AURenderCallbackStruct          rcbsSecond; //second channel
+    
   
     @public
     float tempbuf[8000];
@@ -128,8 +131,8 @@ typedef struct {
  @param offset The time at which to seek to. Must be between 0.0 and the duration of the playing track.
  */
 
-- (void)fadeOutMusic:sender;
-- (void)fadeInMusic;
+- (void)fadeOutMusic:(int)channel;
+- (void)fadeInMusic:(int)channel;
 
 -(void)startAUGraph;
 -(void)stopAUGraph;

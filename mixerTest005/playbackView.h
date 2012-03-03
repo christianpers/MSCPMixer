@@ -21,6 +21,7 @@
     UIView *trackControlFG;
     UIView *secChannelView;
     double durationNum;
+    UIView *controlView;
    
     
    
@@ -31,6 +32,7 @@
 @property(nonatomic, retain) UIButton *selBtn;
 @property(nonatomic, retain) UIView *trackControlBG;
 @property(nonatomic, retain) UIView *trackControlFG;
+@property(nonatomic, retain) UIView *controlView;
 
 
 

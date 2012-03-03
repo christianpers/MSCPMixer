@@ -32,14 +32,21 @@
 	
 	//double secondsread_; 
 	double duration_; 
+    UIView *controlView;
    
 }
+
+@property(nonatomic, retain) UIView *controlView;
 
 - (void)showMediaPicker;
 - (void)createChannelTwoUI;
 - (void)removeChannelTwoUI;
 - (void)exportAssetAtURL:(NSURL*)assetURL withTitle:(NSString*)title withArtist:(NSString*)artist; 
 - (void)loadAudioFile; //:(id)outURL;  
-
+- (void)playnextTrack:(id)sender;
+- (void)playprevTrack:(id)sender;
+- (void)playTrack:(id)sender;
+- (void)stopTrack:(id)sender;
+- (void)pauseTrack:(id)sender;
 
 @end

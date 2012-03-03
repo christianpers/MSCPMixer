@@ -238,6 +238,33 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 @synthesize stereoStreamFormat;
 
 
+
+-(void)connectFirstChannelCallback{
+    OSStatus result;
+    
+    rcbsFirst.inputProc = AudioUnitRenderDelegateCallback;
+    rcbsFirst.inputProcRefCon = self;
+    
+    // set a callback for the specified node's specified input
+    result = AUGraphSetNodeInputCallback(graph, mixerNodeChOne, 0, &rcbsFirst);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+
+    result = AUGraphUpdate(graph, NULL);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+}
+
+-(void)removeFirstChannelCallback{
+    
+    OSStatus result;
+    result = AUGraphDisconnectNodeInput(graph, mixerNodeChOne, 0);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
+    result = AUGraphUpdate(graph, NULL);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+}
+
+
+
 /*second channel stuff !!!!!!!!! start
                                             */
 
@@ -278,21 +305,15 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     }
 }
 
--(void)removeSecChannelCallback{
-    
-    OSStatus result;
-    result = AUGraphUpdate(graph, NULL);
-    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-}
 
 -(void)connectSecChannelCallback{
     
-    rcbsSec.inputProc = &playbackCallback;
-    rcbsSec.inputProcRefCon = self;
+    rcbsSecond.inputProc = &playbackCallback;
+    rcbsSecond.inputProcRefCon = self;
     
     OSStatus result;
     // set a callback for the specified node's specified input
-    result = AUGraphSetNodeInputCallback(graph, mixerNodeChTwo, 0, &rcbsSec);
+    result = AUGraphSetNodeInputCallback(graph, mixerNodeChOne, 0, &rcbsSecond);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
     result = AUGraphUpdate(graph, NULL);
@@ -300,6 +321,16 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     startedCallback = YES;
     noInterrupt = YES;
+}
+
+-(void)removeSecChannelCallback{
+    
+    OSStatus result;
+    result = AUGraphDisconnectNodeInput(graph, mixerNodeChTwo, 0);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
+    result = AUGraphUpdate(graph, NULL);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
 }
 
 
@@ -349,29 +380,49 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 
 
 
--(void)fadeOutMusic:sender{
+-(void)fadeOutMusic:(int)channel{
     OSStatus result = noErr;
-    AudioUnitParameterValue val = 1;
-
-    for (int i = 0;i<10000;i++){
-          
-        result = AudioUnitSetParameter(mixerUnit, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, val, 0);
-        val-=.0001; 
-       
+    if (channel == 1){
+        result = AudioUnitSetParameter(mixerUnitChOne, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
+        self.volume-=.009; 
+        NSLog(@"volume: %f",self.volume);
+        if (self.volume > 1){
+            [self performSelector:_cmd withObject:nil afterDelay:0.01];
+            return;
+        }
+    }
+    else if (channel == 2){
+        result = AudioUnitSetParameter(mixerUnitChTwo, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
+        self.volume-=.009; 
+        NSLog(@"volume: %f",self.volume);
+        if (self.volume > 1){
+            [self performSelector:_cmd withObject:nil afterDelay:0.01];
+            return;
+        }
     }
 }
 
 
--(void)fadeInMusic{
+-(void)fadeInMusicCh1:(int)channel{
     OSStatus result = noErr;
-    result = AudioUnitSetParameter(mixerUnitChOne, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
-    self.volume+=.001; 
-    NSLog(@"volume: %f",self.volume);
-    if (self.volume < 1){
-        [self performSelector:@selector(fadeInMusic) withObject:nil afterDelay:0.01];
-        return;
+    if (channel == 1){
+        result = AudioUnitSetParameter(mixerUnitChOne, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
+        self.volume+=.009; 
+        NSLog(@"volume: %f",self.volume);
+        if (self.volume < 1){
+            [self performSelector:_cmd withObject:nil afterDelay:0.01];
+            return;
+        }
     }
-    
+    else if (channel == 2){
+        result = AudioUnitSetParameter(mixerUnitChTwo, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
+        self.volume+=.009; 
+        NSLog(@"volume: %f",self.volume);
+        if (self.volume < 1){
+            [self performSelector:_cmd withObject:nil afterDelay:0.01];
+            return;
+        }
+    }
 }
 
 -(void)resetVarispeedUnit:(int)unit{
@@ -573,7 +624,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     AUNode     outputNode;
     AUNode     mixerNode;
     
-    AUNode      mixerNodeChOne;
+   // AUNode      mixerNodeChOne;
    // AUNode      mixerNodeChTwo;
     AUNode      converterNodeChOne;
     AUNode      converterNodeChTwo;
@@ -953,17 +1004,18 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     
     
-    AURenderCallbackStruct rcbs;
-    rcbs.inputProc = AudioUnitRenderDelegateCallback;
-    rcbs.inputProcRefCon = self;
+   // AURenderCallbackStruct rcbs;
+   // rcbs.inputProc = AudioUnitRenderDelegateCallback;
+  //  rcbs.inputProcRefCon = self;
     
    // AURenderCallbackStruct rcbsSec;
    // rcbsSec.inputProc = &inputRenderCallback;
    // rcbsSec.inputProcRefCon = soundStructArray;
  
     // set a callback for the specified node's specified input
-    result = AUGraphSetNodeInputCallback(graph, mixerNodeChOne, 0, &rcbs);
-    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+  //  result = AUGraphSetNodeInputCallback(graph, mixerNodeChOne, 0, &rcbs);
+  //  if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    [self connectFirstChannelCallback];
     
    
     // set a callback for the specified node's specified input
@@ -1119,6 +1171,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     if (result) { printf("AUGraphInitialize result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
     [self startAUGraph];
+    
+    
   //  self.firstInputSampleTime = -1;
   //  player.firstOutputSampleTime = -1;
   //  player.inToOutSampleTimeOffset = -1;
@@ -1241,11 +1295,20 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         return;
     }
     else{
+        
         OSStatus result;
         
         Boolean isRunning = false;
         result = AUGraphIsRunning(graph, &isRunning);
-        if (result) { printf("AUGraphIsRunning result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+        if (isRunning){
+            UInt32 numInteractions;
+            result = AUGraphCountNodeInteractions(graph, mixerNodeChOne, &numInteractions);
+            if (numInteractions == 1){
+                
+                [self connectFirstChannelCallback];
+            
+            }
+        }
         if (!isRunning) {
         
             result = AUGraphStart(graph);
@@ -1257,6 +1320,12 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
             success &= [[AVAudioSession sharedInstance] setActive:YES error:&error];
         
             printf("PLAY\n");
+            UInt32 numInteractions;
+            result = AUGraphCountNodeInteractions(graph, mixerNodeChOne, &numInteractions);
+            if (numInteractions == 1){
+                
+                [self connectFirstChannelCallback];
+            }
            
        }
        
@@ -1322,7 +1391,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
            [self startAUGraph];
            if (self.volume < 0.1){
                
-               [self fadeInMusic];
+               [self fadeInMusic:1];
            }
       //     self.volume = 0;
       //     
@@ -1330,7 +1399,18 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
        else
         {
            // Explicitly stop the audio unit, otherwise it'll continue playing audio from the buffers it has.
-           [self stopAUGraph];
+           //[self stopAUGraph];
+            
+            OSStatus result;
+            UInt32 numInteractions;
+            result = AUGraphCountNodeInteractions(graph, mixerNodeChOne, &numInteractions);
+            if (numInteractions == 2){
+                [self fadeOutMusic:1];
+                [self removeFirstChannelCallback];
+            }
+            
+            
+            
         }
     }
     else

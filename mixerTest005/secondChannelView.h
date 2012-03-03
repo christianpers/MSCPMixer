@@ -10,9 +10,11 @@
 
 @interface secondChannelView : UIView{
     
+    UIView *controlView;
     
 }
 
+@property(nonatomic, retain) UIView *controlView;
 
 
 

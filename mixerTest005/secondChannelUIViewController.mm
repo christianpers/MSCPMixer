@@ -12,6 +12,7 @@
 
 @implementation secondChannelUIViewController
 
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -431,41 +432,8 @@ audiofileProblem:
 }
 
 
-
-
-
-
 - (void)createChannelTwoUI{
     
-       
-    UIButton *addtrack = [UIButton buttonWithType:UIButtonTypeCustom];
-    addtrack.frame = CGRectMake(50, self.view.bounds.size.height-100, 200, 40);// position in the parent view and set the size of the
-    addtrack.backgroundColor = [UIColor blackColor];
-    [addtrack setTitle:[NSString stringWithFormat:@"ADD TRACK"] forState:UIControlStateNormal];
-    [addtrack setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    [addtrack addTarget:self 
-                 action:@selector(showMediaPicker)
-       forControlEvents:UIControlEventTouchDown];
-    
-    [self.view addSubview:addtrack];
-    
-    effectController *lopassChTwoController = [[effectController alloc]initWithFrame:CGRectMake(300, 30, 40, 40)];
-    lopassChTwoController.backgroundColor = [UIColor blackColor];
-    [self.view addSubview:lopassChTwoController];
-    [lopassChTwoController setTag:6];
-    
-    UILabel *lblLopassChTwo = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
-    lblLopassChTwo.textAlignment =  UITextAlignmentCenter;
-    lblLopassChTwo.textColor = [UIColor blackColor];
-    lblLopassChTwo.backgroundColor = [UIColor clearColor];
-    lblLopassChTwo.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
-    lblLopassChTwo.text = @"L";
-    [lopassChTwoController addSubview:lblLopassChTwo];
-    [lblLopassChTwo release];  
-    
-    [lopassChTwoController release];
-   
     
     datasize_ = 44100*8; 
 	data_ = new float[datasize_];
@@ -482,34 +450,29 @@ audiofileProblem:
     
 	
 	//create here, not fully started yet
-//	audio = [[AudioDeviceManager alloc] init];
-//	[audio retain]; 
+    //	audio = [[AudioDeviceManager alloc] init];
+    //	[audio retain]; 
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     
 	[main.playbackManager setUpData:data_ pos:&readpos_ size:datasize_]; //allocate buffers
+    
+    
+    //setting up the controls 
 
-    
-    
 }
 
-- (void)removeChannelTwoUI{
-    
-    for (UIView *view in self.view.subviews){
-        if (view.tag != 10){
-            [view removeFromSuperview];
-            
-        }
-        
-    }
-}
+
+
+
 
 
 
 
 - (void)viewDidUnload
 {
+    [self.controlView release];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -520,5 +483,7 @@ audiofileProblem:
     // Return YES for supported orientations
 	return YES;
 }
+
+
 
 @end

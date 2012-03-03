@@ -89,7 +89,7 @@
     
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     
-    CGFloat components[] = {.4, .5, 1.0, 1.0};
+    CGFloat components[] = {1, 1, 1.0, 1.0};
     
     CGColorRef color = CGColorCreate(colorspace, components);
     

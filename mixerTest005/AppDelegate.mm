@@ -195,6 +195,7 @@ int labelWidth = 300;
         self.plbackView.titleLbl.frame = CGRectMake(80, bounds.size.height-600, self.plbackView.titleLbl.bounds.size.width, self.plbackView.titleLbl.bounds.size.height);
         self.plbackView.artistLbl.frame = CGRectMake(80, bounds.size.height-550, self.plbackView.artistLbl.bounds.size.width, self.plbackView.artistLbl.bounds.size.height);
         self.plbackView.trackControlBG.frame = CGRectMake(400, bounds.size.height-700, self.plbackView.trackControlBG.bounds.size.width, self.plbackView.trackControlBG.bounds.size.height);
+        
     
         [UIView commitAnimations];
         
@@ -329,7 +330,6 @@ int labelWidth = 300;
     
     [secChLbl release];
     [secChTouch release];
-    
     
     
     self.chTwoViewController.view = self.secChView;

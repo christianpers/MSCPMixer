@@ -9,6 +9,7 @@
 #import "effectController.h"
 #import "Shared.h"
 #import "AppDelegate.h"
+#import "playbackView.h"
 
 @implementation effectController
 
@@ -31,6 +32,7 @@ CGSize parentSize;
         UIPanGestureRecognizer *effectSwipe = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panPiece:)];
         [self addGestureRecognizer:effectSwipe]; 
         [effectSwipe release];
+        
     }
     return self;
 }
@@ -49,7 +51,17 @@ CGSize parentSize;
         main.playlistLabel.hidden = YES;
         main.searchLabel.hidden = YES;
         main.cueView.hidden = YES;
-    }
+        
+        if (piece.tag <= 5){
+            [[(playbackView *)[self superview] controlView] setHidden:YES];
+            
+        }
+        else{
+            [[(secondChannelUIViewController *)[self superclass] controlView] setHidden:YES];
+            
+        }
+             
+     }
     
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
         
@@ -57,12 +69,18 @@ CGSize parentSize;
         self.gridView.param1 = paramVal1;
         self.gridView.param2 = paramVal2;
         
-        piece.backgroundColor = [UIColor purpleColor];
+        if (piece.tag <= 5){
+            piece.backgroundColor = [UIColor whiteColor];
+        }
+        else{
+            piece.backgroundColor = [UIColor blackColor];
+            
+        }
         CGPoint translation = [gestureRecognizer translationInView:[piece superview]];
         
         [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
         [gestureRecognizer setTranslation:CGPointZero inView:[piece superview]];
-        setY = [piece center].y+translation.y;
+        setY = [piece center].y + translation.y;
         setX = [piece center].x + translation.x;
         if(setY < parentSize.height/2){
             aboveMiddleY = YES;
@@ -72,7 +90,14 @@ CGSize parentSize;
         }
     }
     if ([gestureRecognizer state] == UIGestureRecognizerStateEnded){
-        piece.backgroundColor = [UIColor whiteColor];
+        if (piece.tag <= 5){
+            piece.backgroundColor = [UIColor clearColor];
+            
+        }
+        else{
+            piece.backgroundColor = [UIColor clearColor];
+            
+        }
         [self.gridView removeFromSuperview];
         self.gridView = nil;
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -81,6 +106,18 @@ CGSize parentSize;
         main.playlistLabel.hidden = NO;
         main.searchLabel.hidden = NO;
         main.cueView.hidden = NO;
+        if (piece.tag <= 5){
+            [[(playbackView *)[self superview] controlView] setHidden:NO];
+            
+            
+        }
+        else{
+            [[(secondChannelUIViewController *)[self superclass] controlView] setHidden:NO];
+            
+            
+        }
+        
+        
     }
     
     if ([SPSession sharedSession].playing){
