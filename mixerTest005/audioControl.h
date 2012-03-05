@@ -18,16 +18,6 @@
 
 #import "CocoaLibSpotify.h"
 
-typedef struct {
-    
-    BOOL                 isStereo;           // set to true if there is data in the audioDataRight member
-    UInt32               frameCount;         // the total number of frames in the audio data
-    UInt32               sampleNumber;       // the next audio sample to play
-    AudioUnitSampleType  *audioDataLeft;     // the complete left (or mono) channel of audio data read from an audio file
-    AudioUnitSampleType  *audioDataRight;    // the complete right channel of audio data read from an audio file
-    
-} soundStruct, *soundStructPtr;
-
 @class audioControl;
 
 @protocol audioControlDelegate <NSObject>
@@ -78,9 +68,9 @@ typedef struct {
     AudioStreamBasicDescription     stereoStreamFormat;
     AURenderCallbackStruct          rcbsFirst;
     AURenderCallbackStruct          rcbsSecond; //second channel
-    
   
-    @public
+    
+@public
     float tempbuf[8000];
 	//float monobuf[4000]; 
 	//float inputbuf[1024]; 
@@ -121,6 +111,8 @@ typedef struct {
 @property (readwrite) BOOL isPlaying;
 /** Plays the given track.
  
+
+ 
  @param trackToPlay The track that should be played.
  @param error An `NSError` pointer reference that, if not `NULL`, will be filled with an error describing any failure. 
  @return Returns `YES` is playback started successfully, `NO` if not.
@@ -131,8 +123,10 @@ typedef struct {
  @param offset The time at which to seek to. Must be between 0.0 and the duration of the playing track.
  */
 
-- (void)fadeOutMusic:(int)channel;
-- (void)fadeInMusic:(int)channel;
+- (void)fadeOutMusicCh1;
+- (void)fadeOutMusicCh2;
+- (void)fadeInMusicCh1;
+- (void)fadeInMusicCh2;
 
 -(void)startAUGraph;
 -(void)stopAUGraph;
@@ -142,7 +136,7 @@ typedef struct {
  */
 
 - (void)resetVarispeedUnit:(int)unit;
-- (void)setMasterVol:(AudioUnitParameterValue)val;
+- (void)setMasterVolCh1:(AudioUnitParameterValue)val;
 
 - (void)setlopassEffectY: (AudioUnitParameterValue)val :(int)channel;
 - (void)setlopassEffectX: (AudioUnitParameterValue)val :(int)channel;
@@ -160,6 +154,8 @@ typedef struct {
 //second channel stuff
 - (void) setMasterVolCh2:(AudioUnitParameterValue)val;
 - (void) connectSecChannelCallback;
+- (void)removeSecChannelCallback;
+- (void) closeDownChannelTwo;
 
 -(void)canRead;
 -(void)cantRead;
@@ -182,6 +178,9 @@ typedef struct {
 @property (readwrite) AudioUnitParameterValue volume;
 
 @property (nonatomic, retain) NSTimer *timer;
+
+@property(nonatomic) BOOL playbackIsPaused;
+
 
 
 @end

@@ -45,6 +45,7 @@ CGSize parentSize;
     
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan){
         
+        [self.gridView removeFromSuperview];
         [self drawEffectGrid:piece.tag];
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         main.playbackLabel.hidden = YES;
@@ -57,7 +58,7 @@ CGSize parentSize;
             
         }
         else{
-            [[(secondChannelUIViewController *)[self superclass] controlView] setHidden:YES];
+           // [[(secondChannelView *)[self superview] controlView] setHidden:YES];
             
         }
              
@@ -112,7 +113,7 @@ CGSize parentSize;
             
         }
         else{
-            [[(secondChannelUIViewController *)[self superclass] controlView] setHidden:NO];
+          //  [[(secondChannelView *)[self superview] controlView] setHidden:NO];
             
             
         }
@@ -135,11 +136,14 @@ CGSize parentSize;
                 [self reverbUnit];
                 break;
             case 5:
-                [self masterVol];
+                [self masterVolCh1];
                 break;    
             case 6:
                 [self lopassUnitChTwo];
                 break;   
+            case 7:
+                [self masterVolCh2];
+                break; 
             default:
                 break;
         }
@@ -221,14 +225,24 @@ CGSize parentSize;
     
 }
 
-- (void)masterVol{
+- (void)masterVolCh1{
     paramVal1 = (setY/parentSize.height);
     paramVal1 = 1 - paramVal1;
     NSLog(@"vol:%f",paramVal1);
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [main.playbackManager setMasterVol:paramVal1];
+    [main.playbackManager setMasterVolCh1:paramVal1];
     
 }
+
+- (void)masterVolCh2{
+    paramVal1 = (setY/parentSize.height);
+    paramVal1 = 1 - paramVal1;
+    NSLog(@"vol:%f",paramVal1);
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [main.playbackManager setMasterVolCh2:paramVal1];
+    
+}
+
 - (void)lopassUnitChTwo{
     paramVal1 = (setY/parentSize.height)*22000;
     float twoThirds = (parentSize.width/3)*2;
@@ -322,6 +336,15 @@ CGSize parentSize;
             x = 260;
             y = 330;
             self.gridView.effectType = @"Lopass";
+            break;
+        case 7:
+            /*
+             default val cutoff freq 6900
+             default val resonance 0.0
+             */
+            x = 0;
+            y = 0;
+            self.gridView.effectType = @"Volume";
             break;
         default:
             break;

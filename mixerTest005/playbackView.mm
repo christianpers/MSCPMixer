@@ -209,6 +209,9 @@
         [self.trackControlBG addGestureRecognizer:pgr];
         [pgr release];
         
+        AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        
+        main.playbackManager.playbackIsPaused = NO;
             
     }
     return self;
@@ -297,12 +300,19 @@
 - (void)pauseTrack:(id)sender{
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    if (main.playbackManager.isPlaying){
-        [[SPSession sharedSession]setPlaying:NO];
-    }else{
-        [[SPSession sharedSession]setPlaying:YES];
-        [main.playbackManager setVolume:1];
+    if (!main.playbackManager.playbackIsPaused){
+        
+        if (main.playbackManager.isPlaying){
+            main.playbackManager.playbackIsPaused = YES;
+            [[SPSession sharedSession]setPlaying:NO];
+        }
     }
+    else{
+        [[SPSession sharedSession]setPlaying:YES];
+        main.playbackManager.playbackIsPaused = NO;
+        
+    }
+    
 
     
 }

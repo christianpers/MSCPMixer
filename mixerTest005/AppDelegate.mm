@@ -34,6 +34,7 @@
 @synthesize secChView = _secChView;
 @synthesize chTwoActive;
 @synthesize chTwoViewController;
+@synthesize pllistViewController;
 
 
 int labelWidth = 300;
@@ -273,7 +274,7 @@ int labelWidth = 300;
     
     [menuTouchPlayback release];
     
-    self.cueView = [[mastercueView alloc]initWithFrame:CGRectMake((winSize.width/2-600/2), winSize.height-200, 600, 60)];
+    self.cueView = [[mastercueView alloc]initWithFrame:CGRectMake((winSize.width/2-600/2), winSize.height-200, 400, 60)];
     
     [self.window addSubview:self.cueView];
     self.cueView.hidden = YES;
@@ -370,9 +371,6 @@ NSUInteger loadTrack;
         av.tag  = 1;
         [self.loadingView addSubview:av];
         [av startAnimating];
-        
-        
-        
     } 
     
     // Invoked by SPSession after a successful login.
@@ -408,8 +406,12 @@ NSUInteger loadTrack;
         
         [self.loadingView removeFromSuperview];
         
+        self.pllistViewController = [[playlistViewController alloc]init];
+        
         self.pllistView = [[playlistView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
-        [self.mainViewController.view insertSubview:self.pllistView belowSubview:self.plbackView]; 
+        self.pllistViewController.view = self.pllistView;
+        
+        [self.mainViewController.view insertSubview:self.pllistViewController.view belowSubview:self.plbackView]; 
         
         [self.pllistView initGridParams];
         [self.pllistView loadPlaylistView:[[SPSession sharedSession] userPlaylists]];
@@ -579,13 +581,13 @@ NSUInteger loadTrack;
     
    // [self.pllistView removeObservers];
     
-    for (UIView *view in [self.pllistView subviews]){
+    for (UIView *view in [self.pllistViewController.view subviews]){
         
         [view removeFromSuperview];
     }
-    [self.pllistView removeFromSuperview];
+    [self.pllistViewController.view removeFromSuperview];
     
-    self.pllistView = nil;
+    self.pllistViewController = nil;
     
     [self.mainViewController presentModalViewController:[[[LoginViewController alloc] init] autorelease]
 											   animated:YES];

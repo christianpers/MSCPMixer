@@ -19,6 +19,7 @@
 #import "playlistViewController.h"
 #import "secondChannelView.h"
 #import "secondChannelUIViewController.h"
+#import "playlistViewController.h"
 
 @interface AppDelegate : NSObject <UIApplicationDelegate, SPSessionDelegate> {
     UIViewController *_mainViewController;
@@ -38,6 +39,7 @@
     secondChannelView *secChView;
     BOOL chTwoActive;
     secondChannelUIViewController *chTwoViewController;
+    playlistViewController *pllistViewController;
     
 }
 
@@ -53,6 +55,7 @@
 
 @property (nonatomic, retain) playbackView *plbackView;
 @property (nonatomic, retain) playlistView *pllistView;
+@property (nonatomic, retain) playlistViewController *pllistViewController;
 
 @property (nonatomic, retain) UILabel *playlistLabel;
 @property (nonatomic, retain) UILabel *playbackLabel;

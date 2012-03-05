@@ -78,7 +78,7 @@
         headerLabel.opaque = NO;
         headerLabel.textColor = [UIColor blackColor];
         headerLabel.highlightedTextColor = [UIColor whiteColor];
-        headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+        headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(22.0)];
         headerLabel.frame = CGRectMake(0.0, 0.0, 400.0, 30.0);
     
         // If you want to align the header text as centered
@@ -146,6 +146,7 @@
     
     cell.contentView.backgroundColor = [UIColor clearColor];
     cell.textLabel.textColor = [UIColor whiteColor];
+    cell.textLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(18.0)];
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     return cell;    

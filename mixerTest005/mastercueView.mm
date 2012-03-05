@@ -33,11 +33,11 @@
         //  [panGesture setDelegate:playlistView];
         [self addGestureRecognizer:masterCuePan];
         
-        UILabel *masterCueLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(0, 5, 600, 50) ];
+        UILabel *masterCueLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(0, 5, 400, 50) ];
         masterCueLabel.textAlignment =  UITextAlignmentCenter;
         masterCueLabel.textColor = [UIColor whiteColor];
         masterCueLabel.backgroundColor = [UIColor clearColor];
-        masterCueLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(38.0)];
+        masterCueLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(26.0)];
         masterCueLabel.userInteractionEnabled = YES;
         [self addSubview:masterCueLabel];
         
@@ -60,7 +60,7 @@
             [songCue addObject:finalStr];
         }
         
-        self.tableView = [[masterCueTableView alloc]initWithFrame:CGRectMake(30, 80, 540, 500) andDataArray:songCue];
+        self.tableView = [[masterCueTableView alloc]initWithFrame:CGRectMake(30, 80, 340, 300) andDataArray:songCue];
         self.tableView.backgroundColor = [UIColor clearColor];
         self.tableView.tag = 20;
         
@@ -68,7 +68,7 @@
         
         self.tableView.hidden = YES;
         
-        UIButton *edit = [[UIButton alloc]initWithFrame:CGRectMake(500, 20, 60, 40)];
+        UIButton *edit = [[UIButton alloc]initWithFrame:CGRectMake(320, 20, 60, 40)];
         edit.backgroundColor = [UIColor whiteColor];
         [edit setTitle:[NSString stringWithFormat:@"edit"] forState:UIControlStateNormal];
         [edit setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -105,7 +105,7 @@
         [UIView setAnimationBeginsFromCurrentState:YES];
         
         CGRect bounds = self.bounds;
-        bounds.size.height -= 600;
+        bounds.size.height -= 400;
         self.bounds = bounds;
         
         self.editbtn.hidden = YES;
@@ -121,7 +121,7 @@
         [UIView setAnimationBeginsFromCurrentState:YES];
         
         CGRect bounds = self.bounds;
-        bounds.size.height += 600;
+        bounds.size.height += 400;
         self.bounds = bounds;
         
         self.editbtn.hidden = NO;

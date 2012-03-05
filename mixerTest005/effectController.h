@@ -22,7 +22,8 @@
 - (void)lopassUnit;
 - (void)hipassUnit;
 - (void)reverbUnit;
-- (void)masterVol;
+- (void)masterVolCh1;
+- (void)masterVolCh2;
 - (void)drawEffectGrid:(int)tag;
 - (void)trackControl;
 

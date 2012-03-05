@@ -8,14 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "CocoaLibSpotify.h"
+#import "playlistViewController.h"
 
 @interface playlistView : UIScrollView{
     SPPlaylistContainer *plContainer;
     SPPlaylist *_loadPlaylist;
     NSMutableArray *plCallback;
     SPTrack *_trackimg;
-    UIViewController *plViewController;
+    playlistViewController *plViewController;
     UIImage *_tempImg;
+    SPPlaylistItem *loadItem;
+    sp_linktype itemCallback;
+    NSMutableArray *missedPlArray;
 
 }
 
@@ -23,8 +27,11 @@
 @property (nonatomic, retain) SPPlaylist *loadPlaylist;
 @property (nonatomic, retain) NSMutableArray *plCallback;
 @property (nonatomic, retain) SPTrack *trackimg;
-@property (nonatomic, retain) UIViewController *plViewController;
+@property (nonatomic, retain) playlistViewController *plViewController;
 @property (nonatomic, retain) UIImage *tempImg;
+@property (nonatomic, retain) SPPlaylistItem *loadItem;
+@property (nonatomic) sp_linktype itemCallback;
+
 
 - (void)initGridParams;
 - (void)loadPlaylistView:(SPPlaylistContainer *)playlistContainer;
@@ -35,5 +42,7 @@
 - (void)checkPlLoad:(SPPlaylistContainer *)plCon;
 - (NSString *)getTrackStr:(SPPlaylistItem *)plItem;
 - (void)removeObservers;
+- (void)setMissedPlaylists;
+-(void)checkMissedPlaylists:(SPPlaylist *)pl;
 
 @end

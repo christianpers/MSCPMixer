@@ -12,6 +12,8 @@
 
 @implementation secondChannelUIViewController
 
+@synthesize controlView;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,6 +54,13 @@
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker 
   didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection {
 	[self dismissModalViewControllerAnimated:YES];
+    
+    memset(data_, 0, datasize_);
+    
+    [self freeAudio];
+    
+    [self initDataVar];
+    
 	for (MPMediaItem* item in mediaItemCollection.items) {
 		NSString* title = [item valueForProperty:MPMediaItemPropertyTitle];
 		NSString* artist = [item valueForProperty:MPMediaItemPropertyArtist];
@@ -103,7 +112,7 @@
     self.view.frame = CGRectMake(0, self.view.bounds.size.height/2, self.view.bounds.size.width, self.view.bounds.size.height/2);
    
     [UIView commitAnimations];
-     //importingflag_=0; 
+     importingflag_=0; 
 	
 }
 
@@ -140,7 +149,6 @@
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    
 	//release previous
 	[outURL release];
 	//need to retain? 
@@ -157,9 +165,9 @@
 	readpos_ = 0;
 	initialreadflag_ = false; 
 	
-	for (int i=0; i<datasize_; ++i)
-		data_[0]= 0.0; //zero out contents of buffer
-    
+	for (int i=0; i<datasize_; ++i){
+		data_[i]= 0.0; //zero out contents of buffer
+	}	
 	//initialise the audio player
     [main.playbackManager connectSecChannelCallback];
 
@@ -395,8 +403,7 @@
 				if (!initialreadflag_) 	{
 					initialreadflag_ = true; 
                     [main.playbackManager canRead];
-				//	[audio canRead];
-				} else {
+             	} else {
 					
 					usleep(100); //1000 = 1 msec 
 				}
@@ -432,7 +439,7 @@ audiofileProblem:
 }
 
 
-- (void)createChannelTwoUI{
+- (void)initDataVar{
     
     
     datasize_ = 44100*8; 
@@ -464,18 +471,173 @@ audiofileProblem:
 }
 
 
+- (void)createChannelTwoUI{
+    
+    
+    UIButton *addtrack = [UIButton buttonWithType:UIButtonTypeCustom];
+    addtrack.frame = CGRectMake(50, self.view.bounds.size.height-100, 200, 40);// position in the parent view and set the size of the
+    addtrack.backgroundColor = [UIColor blackColor];
+    [addtrack setTitle:[NSString stringWithFormat:@"ADD TRACK"] forState:UIControlStateNormal];
+    [addtrack setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    [addtrack addTarget:self 
+                 action:@selector(showMediaPicker)
+       forControlEvents:UIControlEventTouchDown];
+    
+    [self.view addSubview:addtrack];
+    
+    
+    effectController *lopassChTwoController = [[effectController alloc]initWithFrame:CGRectMake(300, 30, 40, 40)];
+    lopassChTwoController.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:lopassChTwoController];
+    [lopassChTwoController setTag:6];
+    
+    UILabel *lblLopassChTwo = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
+    lblLopassChTwo.textAlignment =  UITextAlignmentCenter;
+    lblLopassChTwo.textColor = [UIColor blackColor];
+    lblLopassChTwo.backgroundColor = [UIColor clearColor];
+    lblLopassChTwo.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+    lblLopassChTwo.text = @"L";
+    [lopassChTwoController addSubview:lblLopassChTwo];
+    [lblLopassChTwo release];  
+    
+    [lopassChTwoController release];
+    
+    effectController *mastervolControllerChTwo = [[effectController alloc]initWithFrame:CGRectMake(200, 10, 60, 60)];
+    mastervolControllerChTwo.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:mastervolControllerChTwo];
+    [mastervolControllerChTwo setTag:7]; 
+    
+    UILabel *lblvol = [[UILabel alloc]initWithFrame:CGRectMake(0,15,60,30)];
+    lblvol.textAlignment =  UITextAlignmentCenter;
+    lblvol.textColor = [UIColor blackColor];
+    lblvol.backgroundColor = [UIColor clearColor];
+    lblvol.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(22.0)];
+    lblvol.text = @"Vol";
+    [mastervolControllerChTwo addSubview:lblvol];
+    [lblvol release];   
+    [mastervolControllerChTwo release];
+    
+    //setting up the controls 
+    
+    UIView *cView = [[UIView alloc]initWithFrame:CGRectMake(190, 140, 400, 50)];
+    cView.backgroundColor = [UIColor clearColor];
+    self.controlView = cView;
+    [self.view addSubview:self.controlView];    
+    
+    [cView release];
+    
+    NSString* imagePathNext = [[NSBundle mainBundle] pathForResource:@"nextCh2" ofType:@"png"];
+    NSString* imagePathPrev = [[NSBundle mainBundle] pathForResource:@"prevCh2" ofType:@"png"];
+    NSString* imagePathStop = [[NSBundle mainBundle] pathForResource:@"stopCh2" ofType:@"png"];
+    NSString* imagePathPause = [[NSBundle mainBundle] pathForResource:@"pauseCh2" ofType:@"png"];
+    NSString* imagePathPlay = [[NSBundle mainBundle] pathForResource:@"playCh2" ofType:@"png"];
+    
+    UIImage *nextImg = [UIImage imageWithContentsOfFile:imagePathNext];
+    UIImage *prevImg = [UIImage imageWithContentsOfFile:imagePathPrev];
+    UIImage *stopImg = [UIImage imageWithContentsOfFile:imagePathStop];
+    UIImage *pauseImg = [UIImage imageWithContentsOfFile:imagePathPause];
+    UIImage *playImg = [UIImage imageWithContentsOfFile:imagePathPlay];
+    
+    UIButton *playBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 3, 43, 43)];
+    [playBtn setBackgroundImage:playImg forState:UIControlStateNormal];
+    [self.controlView addSubview:playBtn];
+    [playBtn addTarget:self 
+                action:@selector(playTrack:)
+      forControlEvents:UIControlEventTouchDown];
+    
+    [playBtn release];
+    
+    UIButton *stopBtn = [[UIButton alloc]initWithFrame:CGRectMake(80, 3, 43, 43)];
+    [stopBtn setBackgroundImage:stopImg forState:UIControlStateNormal];
+    [self.controlView addSubview:stopBtn];
+    [stopBtn addTarget:self 
+                action:@selector(stopTrack:)
+      forControlEvents:UIControlEventTouchDown];
+    
+    [stopBtn release];
+    
+    UIButton *pauseBtn = [[UIButton alloc]initWithFrame:CGRectMake(160, 3, 43, 43)];
+    [pauseBtn setBackgroundImage:pauseImg forState:UIControlStateNormal];
+    [self.controlView addSubview:pauseBtn];
+    [pauseBtn addTarget:self 
+                 action:@selector(pauseTrack:)
+       forControlEvents:UIControlEventTouchDown];
+    
+    [pauseBtn release];
+    
+    UIButton *prevBtn = [[UIButton alloc]initWithFrame:CGRectMake(240, 3, 43, 43)];
+    [prevBtn setBackgroundImage:prevImg forState:UIControlStateNormal];
+    [self.controlView addSubview:prevBtn];
+    [prevBtn addTarget:self 
+                action:@selector(playprevTrack:)
+      forControlEvents:UIControlEventTouchDown];
+    
+    [prevBtn release];
+    
+    UIButton *nextBtn = [[UIButton alloc]initWithFrame:CGRectMake(320, 3, 43, 43)];
+    [nextBtn setBackgroundImage:nextImg forState:UIControlStateNormal];
+    [self.controlView addSubview:nextBtn];
+    [nextBtn addTarget:self 
+                action:@selector(playnextTrack:)
+      forControlEvents:UIControlEventTouchDown];
+    
+    [nextBtn release];
+    
+}
+
+- (void)removeChannelTwoUI{
+    
+    for (UIView *view in self.view.subviews){
+        if (view.tag != 10){
+            [view removeFromSuperview];
+            
+        }
+        
+    }
+}
 
 
-
-
+- (void)freeAudio {
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+   
+    
+    [main.playbackManager cantRead];
+    
+    [main.playbackManager removeSecChannelCallback];
+    
+    [main.playbackManager closeDownChannelTwo];
+	//stop audio if necessary
+	if(playingflag_==1) {
+		
+		
+		
+	//	[audio closeDownAudioDevice]; 
+		
+		playingflag_=0; 
+	}
+	
+	//stop background loading thread
+	if(backgroundloadflag_ == 1)
+		earlyfinish_ = 1; 
+	
+	while(backgroundloadflag_==1)
+	{
+		usleep(5000); //wait for file thread to finish
+	}
+	
+	
+	
+	
+}
 
 
 - (void)viewDidUnload
 {
-    [self.controlView release];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

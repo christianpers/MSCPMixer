@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "secondChannelUIViewController.h"
 
 @interface secondChannelView : UIView{
     
-    UIView *controlView;
+
     
 }
 
-@property(nonatomic, retain) UIView *controlView;
+
 
 
 
