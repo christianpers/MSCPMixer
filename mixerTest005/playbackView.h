@@ -22,6 +22,11 @@
     UIView *secChannelView;
     double durationNum;
     UIView *controlView;
+    effectController *timepitchController;
+    effectController *lopassController;
+    effectController *hipassController;
+    effectController *channelOneVolController;
+    
    
     
    
@@ -33,6 +38,11 @@
 @property(nonatomic, retain) UIView *trackControlBG;
 @property(nonatomic, retain) UIView *trackControlFG;
 @property(nonatomic, retain) UIView *controlView;
+
+@property(nonatomic, retain) effectController *timepitchController;
+@property(nonatomic, retain) effectController *lopassController;
+@property(nonatomic, retain) effectController *hipassController;
+@property(nonatomic, retain) effectController *channelOneVolController;
 
 
 

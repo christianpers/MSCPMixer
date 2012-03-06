@@ -175,7 +175,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
             
             self.playbackSession = aSession;
             self.playbackSession.playbackDelegate = self;
-            self.volume = 0.0;
+            self.volume = 0.7;
             self.audioBufferCh1 = [[SPCircularBuffer alloc] initWithMaximumLength:kMaximumBytesInBuffer];
             self.audioBufferCh2 = [[SPCircularBuffer alloc] initWithMaximumLength:kMaximumBytesInBuffer];
             
@@ -196,8 +196,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         }
     return self;
 }
-
-
 
 
 
@@ -389,7 +387,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	}
     
 	self.currentTrack = trackToPlay;
-    self.volume = 0;
+   // self.volume = 0;
 	self.trackPosition = 0.0;
 	BOOL result = [self.playbackSession playTrack:self.currentTrack error:error];
 	if (result){
@@ -473,7 +471,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         OSStatus result = noErr;
         
         NSLog(@"setting the playbackRate");
-        result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0,1, 0);
+        result = AudioUnitSetParameter(timePitchUnitChTwo,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0,1, 0);
         if (noErr != result){
             
             { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
@@ -484,29 +482,53 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 }
 
 
--(void)setPlaybackCents:(AudioUnitParameterValue)val{
+-(void)setPlaybackCents:(AudioUnitParameterValue)val:(int)channel{
     
     OSStatus result = noErr;
-    
-    NSLog(@"setting the playbackRate");
-    result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackCents , kAudioUnitScope_Global, 0, val, 0);
-    if (noErr != result){
+    if(channel == 1){
+        NSLog(@"setting the playbackRate");
+        result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackCents , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
         
-        { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+    }else{
+        NSLog(@"setting the playbackRate");
+        result = AudioUnitSetParameter(timePitchUnitChTwo,kVarispeedParam_PlaybackCents , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
+        
     }
+    
+    
     
 }
 
--(void)setPlaybackRate:(AudioUnitParameterValue)val{
+-(void)setPlaybackRate:(AudioUnitParameterValue)val:(int)channel{
     
     OSStatus result = noErr;
-    
-    NSLog(@"setting the playbackRate");
-    result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0, val, 0);
-    if (noErr != result){
+    if (channel == 1){
+        NSLog(@"setting the playbackRate");
+        result = AudioUnitSetParameter(timePitchUnitChOne,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
         
-        { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+    }else{
+        NSLog(@"setting the playbackRate");
+        result = AudioUnitSetParameter(timePitchUnitChTwo,kVarispeedParam_PlaybackRate , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        } 
+        
     }
+    
+   
     
     
 }
@@ -561,28 +583,53 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
 }
 
--(void)sethipassEffectY:(AudioUnitParameterValue)val{
+-(void)sethipassEffectY:(AudioUnitParameterValue)val:(int)channel{
     
     OSStatus result = noErr;
-    
-    NSLog(@"setting the hipassfreq: %f",val);
-    result = AudioUnitSetParameter(hipassUnitChOne,kHipassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
-    if (noErr != result){
+    if(channel == 1){
+        NSLog(@"setting the hipassfreq: %f",val);
+        result = AudioUnitSetParameter(hipassUnitChOne,kHipassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
         
-        { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+    }else{
+        NSLog(@"setting the hipassfreq: %f",val);
+        result = AudioUnitSetParameter(hipassUnitChTwo,kHipassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
+        
     }
+    
+   
     
 }
--(void)sethipassEffectX:(AudioUnitParameterValue)val{
+-(void)sethipassEffectX:(AudioUnitParameterValue)val:(int)channel{
     
     OSStatus result = noErr;
     
-    NSLog(@"setting the hipassresonance: %f",val);
-    result = AudioUnitSetParameter(hipassUnitChOne,kHipassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
-    if (noErr != result){
+    if (channel == 1){
+        NSLog(@"setting the hipassresonance: %f",val);
+        result = AudioUnitSetParameter(hipassUnitChOne,kHipassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
         
-        { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+    }else{
+        NSLog(@"setting the hipassresonance: %f",val);
+        result = AudioUnitSetParameter(hipassUnitChTwo,kHipassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
+        if (noErr != result){
+            
+            { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
+        }
+        
     }
+    
+   
     
 }
 
@@ -1431,7 +1478,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
            [self startAUGraph];
            if (self.volume < 0.1){
                
-               [self fadeInMusicCh1];
+             //  [self fadeInMusicCh1];
            }
         } 
        else

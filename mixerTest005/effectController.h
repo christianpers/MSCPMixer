@@ -23,11 +23,12 @@
 - (void)hipassUnit;
 - (void)reverbUnit;
 - (void)masterVolCh1;
-- (void)masterVolCh2;
 - (void)drawEffectGrid:(int)tag;
 - (void)trackControl;
 
 //ch two
 - (void)lopassUnitChTwo;
-
+- (void)hipassUnitChTwo;
+- (void)variSpeedUnitChTwo;
+- (void)masterVolCh2;
 @end

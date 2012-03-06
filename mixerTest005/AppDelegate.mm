@@ -193,9 +193,19 @@ int labelWidth = 300;
         self.secChView.frame = CGRectMake(0, bounds.size.height/2, bounds.size.width, bounds.size.height/2);
     
         self.cueView.frame = CGRectMake(200, bounds.size.height-700, self.cueView.bounds.size.width, self.cueView.bounds.size.height);
-        self.plbackView.titleLbl.frame = CGRectMake(80, bounds.size.height-600, self.plbackView.titleLbl.bounds.size.width, self.plbackView.titleLbl.bounds.size.height);
-        self.plbackView.artistLbl.frame = CGRectMake(80, bounds.size.height-550, self.plbackView.artistLbl.bounds.size.width, self.plbackView.artistLbl.bounds.size.height);
         self.plbackView.trackControlBG.frame = CGRectMake(400, bounds.size.height-700, self.plbackView.trackControlBG.bounds.size.width, self.plbackView.trackControlBG.bounds.size.height);
+        
+        
+        self.plbackView.timepitchController.frame = CGRectMake(20, bounds.size.height/4, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
+        
+        self.plbackView.lopassController.frame = CGRectMake(80, 30, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
+        
+        self.plbackView.hipassController.frame = CGRectMake(40, 100, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
+        
+        self.plbackView.channelOneVolController.frame = CGRectMake(100, 200, self.plbackView.channelOneVolController.bounds.size.width, self.plbackView.channelOneVolController.bounds.size.height);
+        
+        self.plbackView.artistLbl.hidden = YES;
+        self.plbackView.titleLbl.hidden = YES;
         
     
         [UIView commitAnimations];
@@ -215,8 +225,9 @@ int labelWidth = 300;
         [UIView setAnimationDuration:1];
         [UIView setAnimationBeginsFromCurrentState:YES];
         
-        self.plbackView.titleLbl.frame = CGRectMake(400, winSize.height-300, self.plbackView.titleLbl.bounds.size.width, self.plbackView.titleLbl.bounds.size.height);
-        self.plbackView.artistLbl.frame = CGRectMake(400, winSize.height-250, self.plbackView.artistLbl.bounds.size.width, self.plbackView.artistLbl.bounds.size.height);
+        
+        self.plbackView.artistLbl.hidden = NO;
+        self.plbackView.titleLbl.hidden = NO;
         
         self.plbackView.frame = CGRectMake(0, 0, winSize.width, winSize.height);
         self.secChView.frame = CGRectMake(0, winSize.height-70, winSize.width,50);

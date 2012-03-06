@@ -54,6 +54,8 @@
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker 
   didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection {
 	[self dismissModalViewControllerAnimated:YES];
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     
     memset(data_, 0, datasize_);
     
@@ -62,26 +64,33 @@
     [self initDataVar];
     
 	for (MPMediaItem* item in mediaItemCollection.items) {
-		NSString* title = [item valueForProperty:MPMediaItemPropertyTitle];
-		NSString* artist = [item valueForProperty:MPMediaItemPropertyArtist];
+		//NSString *titletest = [item valueForProperty:MPMediaItemPropertyTitle];
+		//NSString *artisttest = [item valueForProperty:MPMediaItemPropertyArtist];
+        
+		glTitle = [item valueForProperty:MPMediaItemPropertyTitle];
+		glTitle = [item valueForProperty:MPMediaItemPropertyArtist];
 		NSNumber* dur = [item valueForProperty:MPMediaItemPropertyPlaybackDuration]; 
 		//NSTimeInterval is a double
 		duration_ = [dur doubleValue]; 
 		
 		//MPMediaItemPropertyArtist
-		NSURL* assetURL = [item valueForProperty:MPMediaItemPropertyAssetURL];
-		if (nil == assetURL) {
+		glAssetURL = [item valueForProperty:MPMediaItemPropertyAssetURL];
+		if (nil == glAssetURL) {
 			/**
 			 * !!!: When MPMediaItemPropertyAssetURL is nil, it typically means the file
 			 * in question is protected by DRM. (old m4p files)
 			 */
 			return;
 		}
-        NSLog(@"title: %@",title);
+        NSLog(@"title: %@",glTitle);
         [UIView animateWithDuration:1
                          animations:^{
                              //     self.tableView.alpha = 1;
                              //     self.tableView.hidden = YES;
+                             main.playlistLabel.hidden = NO;
+                             main.playbackLabel.hidden = NO;
+                             main.searchLabel.hidden = NO;
+                             main.cueView.hidden = NO;
                          }];
         
         [UIView beginAnimations : @"Display notif" context:nil];
@@ -92,17 +101,23 @@
         
         [UIView commitAnimations];
         
-    	[self exportAssetAtURL:assetURL withTitle:title withArtist:artist];
+    	[self exportAssetAtURL:glAssetURL withTitle:glTitle withArtist:glArtist];
 	}
 }
 
 - (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker {
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
 	[self dismissModalViewControllerAnimated:YES];
     
     [UIView animateWithDuration:1
                      animations:^{
                          //     self.tableView.alpha = 1;
                          //     self.tableView.hidden = YES;
+                         main.playlistLabel.hidden = NO;
+                         main.playbackLabel.hidden = NO;
+                         main.searchLabel.hidden = NO;
+                         main.cueView.hidden = NO;
                      }];
     
     [UIView beginAnimations : @"Display notif" context:nil];
@@ -123,6 +138,13 @@
 	MPMediaPickerController* mediaPicker = [[[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeMusic] autorelease];
 	mediaPicker.delegate = self;
 	[self presentModalViewController:mediaPicker animated:YES];
+    
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  
+    main.playlistLabel.hidden = YES;
+    main.playbackLabel.hidden = YES;
+    main.searchLabel.hidden = YES;
+    main.cueView.hidden = YES;
     
     MPMediaQuery *everything = [[MPMediaQuery alloc] init];
     [everything setGroupingType: MPMediaGroupingAlbum];
@@ -462,7 +484,6 @@ audiofileProblem:
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    
 	[main.playbackManager setUpData:data_ pos:&readpos_ size:datasize_]; //allocate buffers
     
     
@@ -503,6 +524,38 @@ audiofileProblem:
     
     [lopassChTwoController release];
     
+    effectController *hipassChTwoController = [[effectController alloc]initWithFrame:CGRectMake(300, 30, 40, 40)];
+    hipassChTwoController.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:hipassChTwoController];
+    [hipassChTwoController setTag:8];
+    
+    UILabel *lblHipassChTwo = [[UILabel alloc]initWithFrame:CGRectMake(205,54,30,30)];
+    lblHipassChTwo.textAlignment =  UITextAlignmentCenter;
+    lblHipassChTwo.textColor = [UIColor blackColor];
+    lblHipassChTwo.backgroundColor = [UIColor clearColor];
+    lblHipassChTwo.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+    lblHipassChTwo.text = @"H";
+    [hipassChTwoController addSubview:lblHipassChTwo];
+    [lblHipassChTwo release];  
+    
+    [hipassChTwoController release];
+    
+    effectController *timepitchChTwoController = [[effectController alloc]initWithFrame:CGRectMake(300, 30, 40, 40)];
+    timepitchChTwoController.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:timepitchChTwoController];
+    [timepitchChTwoController setTag:9];
+    
+    UILabel *lbltimepitchChTwo = [[UILabel alloc]initWithFrame:CGRectMake(405,200,30,30)];
+    lbltimepitchChTwo.textAlignment =  UITextAlignmentCenter;
+    lbltimepitchChTwo.textColor = [UIColor blackColor];
+    lbltimepitchChTwo.backgroundColor = [UIColor clearColor];
+    lbltimepitchChTwo.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+    lbltimepitchChTwo.text = @"T";
+    [timepitchChTwoController addSubview:lbltimepitchChTwo];
+    [lbltimepitchChTwo release];  
+    
+    [timepitchChTwoController release];
+    
     effectController *mastervolControllerChTwo = [[effectController alloc]initWithFrame:CGRectMake(200, 10, 60, 60)];
     mastervolControllerChTwo.backgroundColor = [UIColor clearColor];
     [self.view addSubview:mastervolControllerChTwo];
@@ -519,36 +572,22 @@ audiofileProblem:
     [mastervolControllerChTwo release];
     
     //setting up the controls 
+    CGSize parent = self.view.bounds.size;
     
-    UIView *cView = [[UIView alloc]initWithFrame:CGRectMake(190, 140, 400, 50)];
+    UIView *cView = [[UIView alloc]initWithFrame:CGRectMake((parent.width/2)-(130/2), 140, 130, 50)];
     cView.backgroundColor = [UIColor clearColor];
     self.controlView = cView;
     [self.view addSubview:self.controlView];    
     
     [cView release];
     
-    NSString* imagePathNext = [[NSBundle mainBundle] pathForResource:@"nextCh2" ofType:@"png"];
-    NSString* imagePathPrev = [[NSBundle mainBundle] pathForResource:@"prevCh2" ofType:@"png"];
     NSString* imagePathStop = [[NSBundle mainBundle] pathForResource:@"stopCh2" ofType:@"png"];
     NSString* imagePathPause = [[NSBundle mainBundle] pathForResource:@"pauseCh2" ofType:@"png"];
-    NSString* imagePathPlay = [[NSBundle mainBundle] pathForResource:@"playCh2" ofType:@"png"];
     
-    UIImage *nextImg = [UIImage imageWithContentsOfFile:imagePathNext];
-    UIImage *prevImg = [UIImage imageWithContentsOfFile:imagePathPrev];
     UIImage *stopImg = [UIImage imageWithContentsOfFile:imagePathStop];
     UIImage *pauseImg = [UIImage imageWithContentsOfFile:imagePathPause];
-    UIImage *playImg = [UIImage imageWithContentsOfFile:imagePathPlay];
     
-    UIButton *playBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 3, 43, 43)];
-    [playBtn setBackgroundImage:playImg forState:UIControlStateNormal];
-    [self.controlView addSubview:playBtn];
-    [playBtn addTarget:self 
-                action:@selector(playTrack:)
-      forControlEvents:UIControlEventTouchDown];
-    
-    [playBtn release];
-    
-    UIButton *stopBtn = [[UIButton alloc]initWithFrame:CGRectMake(80, 3, 43, 43)];
+    UIButton *stopBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 3, 43, 43)];
     [stopBtn setBackgroundImage:stopImg forState:UIControlStateNormal];
     [self.controlView addSubview:stopBtn];
     [stopBtn addTarget:self 
@@ -557,7 +596,7 @@ audiofileProblem:
     
     [stopBtn release];
     
-    UIButton *pauseBtn = [[UIButton alloc]initWithFrame:CGRectMake(160, 3, 43, 43)];
+    UIButton *pauseBtn = [[UIButton alloc]initWithFrame:CGRectMake(80, 3, 43, 43)];
     [pauseBtn setBackgroundImage:pauseImg forState:UIControlStateNormal];
     [self.controlView addSubview:pauseBtn];
     [pauseBtn addTarget:self 
@@ -566,23 +605,37 @@ audiofileProblem:
     
     [pauseBtn release];
     
-    UIButton *prevBtn = [[UIButton alloc]initWithFrame:CGRectMake(240, 3, 43, 43)];
-    [prevBtn setBackgroundImage:prevImg forState:UIControlStateNormal];
-    [self.controlView addSubview:prevBtn];
-    [prevBtn addTarget:self 
-                action:@selector(playprevTrack:)
-      forControlEvents:UIControlEventTouchDown];
+   
     
-    [prevBtn release];
+}
+
+
+- (void)pauseTrack:(id)sender{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    UIButton *nextBtn = [[UIButton alloc]initWithFrame:CGRectMake(320, 3, 43, 43)];
-    [nextBtn setBackgroundImage:nextImg forState:UIControlStateNormal];
-    [self.controlView addSubview:nextBtn];
-    [nextBtn addTarget:self 
-                action:@selector(playnextTrack:)
-      forControlEvents:UIControlEventTouchDown];
+    if (isPaused){
+        isPaused = NO;
+        [main.playbackManager canRead];
+    }else{
+        isPaused = YES;
+        [main.playbackManager cantRead];
+    }
     
-    [nextBtn release];
+}
+
+-(void)stopTrack:(id)sender{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    [main.playbackManager cantRead];
+    
+    memset(data_, 0, datasize_);
+    
+    [self freeAudio];
+    
+    [self initDataVar];
+    
+    [main.playbackManager removeSecChannelCallback];
+    
     
 }
 
@@ -609,10 +662,6 @@ audiofileProblem:
     [main.playbackManager closeDownChannelTwo];
 	//stop audio if necessary
 	if(playingflag_==1) {
-		
-		
-		
-	//	[audio closeDownAudioDevice]; 
 		
 		playingflag_=0; 
 	}

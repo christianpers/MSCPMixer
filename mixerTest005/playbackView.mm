@@ -15,6 +15,7 @@
 
 @synthesize artistLbl, titleLbl, selBtn;
 @synthesize trackControlBG, trackControlFG, controlView;
+@synthesize timepitchController, lopassController, hipassController, channelOneVolController;
 
 
 - (id)initWithFrame:(CGRect)frame
@@ -111,10 +112,10 @@
         [nextBtn release];
         
         
-        effectController *timepitchController = [[effectController alloc]initWithFrame:CGRectMake(10, 512, 40, 40)];
-        timepitchController.backgroundColor = [UIColor clearColor];
-        [self addSubview:timepitchController];
-        [timepitchController setTag:1];
+        self.timepitchController = [[effectController alloc]initWithFrame:CGRectMake(10, 512, 40, 40)];
+        self.timepitchController.backgroundColor = [UIColor clearColor];
+        [self addSubview:self.timepitchController];
+        [self.timepitchController setTag:1];
         
         UILabel *lblTimepitch = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
         lblTimepitch.textAlignment = UITextAlignmentCenter;
@@ -122,22 +123,22 @@
         lblTimepitch.backgroundColor = [UIColor clearColor];
         lblTimepitch.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
         lblTimepitch.text = @"T";
-        [timepitchController addSubview:lblTimepitch];
+        [self.timepitchController addSubview:lblTimepitch];
         [lblTimepitch release];
         UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] 
                                               initWithTarget:self action:@selector(showEffectOptionsPitch:)];
         lpgr.minimumPressDuration = 1.3; //seconds
-        [timepitchController addGestureRecognizer:lpgr];
+        [self.timepitchController addGestureRecognizer:lpgr];
         [lpgr release];
         
-        [timepitchController release];
+        //[setimepitchController release];
        
         
         
-        effectController *lopassController = [[effectController alloc]initWithFrame:CGRectMake(100, 100, 40, 40)];
-        lopassController.backgroundColor = [UIColor clearColor];
-        [self addSubview:lopassController];
-        [lopassController setTag:2];
+        self.lopassController = [[effectController alloc]initWithFrame:CGRectMake(100, 100, 40, 40)];
+        self.lopassController.backgroundColor = [UIColor clearColor];
+        [self addSubview:self.lopassController];
+        [self.lopassController setTag:2];
         
         UILabel *lblLopass = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
         lblLopass.textAlignment =  UITextAlignmentCenter;
@@ -145,15 +146,15 @@
         lblLopass.backgroundColor = [UIColor clearColor];
         lblLopass.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
         lblLopass.text = @"L";
-        [lopassController addSubview:lblLopass];
+        [self.lopassController addSubview:lblLopass];
         [lblLopass release];   
         
-        [lopassController release];
+      //  [lopassController release];
       
-        effectController *hipassController = [[effectController alloc]initWithFrame:CGRectMake(300, 0, 40, 40)];
-        hipassController.backgroundColor = [UIColor clearColor];
-        [self addSubview:hipassController];
-        [hipassController setTag:3];
+        self.hipassController = [[effectController alloc]initWithFrame:CGRectMake(300, 0, 40, 40)];
+        self.hipassController.backgroundColor = [UIColor clearColor];
+        [self addSubview:self.hipassController];
+        [self.hipassController setTag:3];
         
         UILabel *lblHipass = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
         lblHipass.textAlignment =  UITextAlignmentCenter;
@@ -161,30 +162,15 @@
         lblHipass.backgroundColor = [UIColor clearColor];
         lblHipass.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
         lblHipass.text = @"H";
-        [hipassController addSubview:lblHipass];
+        [self.hipassController addSubview:lblHipass];
         [lblHipass release];  
         
-        [hipassController release];
+      //  [hipassController release];
                        
-        effectController *reverbController = [[effectController alloc]initWithFrame:CGRectMake(300, 500, 40, 40)];
-        reverbController.backgroundColor = [UIColor clearColor];
-        [self addSubview:reverbController];
-        [reverbController setTag:4];
-        
-        UILabel *lblReverb = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
-        lblReverb.textAlignment =  UITextAlignmentCenter;
-        lblReverb.textColor = [UIColor whiteColor];
-        lblReverb.backgroundColor = [UIColor clearColor];
-        lblReverb.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
-        lblReverb.text = @"R";
-        [reverbController addSubview:lblReverb];
-        [lblReverb release]; 
-        [reverbController release];
-        
-        effectController *mastervolController = [[effectController alloc]initWithFrame:CGRectMake(200, 10, 60, 60)];
-        mastervolController.backgroundColor = [UIColor clearColor];
-        [self addSubview:mastervolController];
-        [mastervolController setTag:5]; 
+        self.channelOneVolController = [[effectController alloc]initWithFrame:CGRectMake(200, 10, 60, 60)];
+        self.channelOneVolController.backgroundColor = [UIColor clearColor];
+        [self addSubview:self.channelOneVolController];
+        [self.channelOneVolController setTag:5]; 
         
         UILabel *lblvol = [[UILabel alloc]initWithFrame:CGRectMake(0,15,60,30)];
         lblvol.textAlignment =  UITextAlignmentCenter;
@@ -192,9 +178,9 @@
         lblvol.backgroundColor = [UIColor clearColor];
         lblvol.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(22.0)];
         lblvol.text = @"Vol";
-        [mastervolController addSubview:lblvol];
+        [self.channelOneVolController addSubview:lblvol];
         [lblvol release];   
-        [mastervolController release];
+     //   [mastervolController release];
         
         self.trackControlBG = [[UIView alloc]initWithFrame:CGRectMake(100, 860, 0, 50)];
         self.trackControlBG.backgroundColor = [UIColor whiteColor];
@@ -203,7 +189,7 @@
         [self.trackControlBG addSubview:trackControlFG];
         self.trackControlFG.backgroundColor = [UIColor blackColor];
         
-        [self addSubview:self.trackControlBG];
+       // [self addSubview:self.trackControlBG];
         
         UIPanGestureRecognizer *pgr = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(trackdurationSwipe:)];
         [self.trackControlBG addGestureRecognizer:pgr];
@@ -434,6 +420,11 @@
     [self.trackControlBG release];
     [self.trackControlFG release];
     [self.controlView release];
+    [self.timepitchController release];
+    [self.lopassController release];
+    [self.hipassController release];
+    [self.channelOneVolController release];
+
 }
 
 @end

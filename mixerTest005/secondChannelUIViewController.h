@@ -34,17 +34,23 @@
 	double duration_; 
  
     UIView *controlView;
+  //  NSURL *assetURL;
+  //  NSString* artist;
+  //  NSString* titleSong;
+    NSURL *glAssetURL;
+    NSString *glArtist;
+    NSString *glTitle;
+    BOOL    isPaused;
    
 }
 
 @property(nonatomic, retain) UIView *controlView;
 
+
 - (void)showMediaPicker;
 - (void)initDataVar;
 - (void)exportAssetAtURL:(NSURL*)assetURL withTitle:(NSString*)title withArtist:(NSString*)artist; 
 - (void)loadAudioFile; //:(id)outURL;  
-- (void)playnextTrack:(id)sender;
-- (void)playprevTrack:(id)sender;
 - (void)playTrack:(id)sender;
 - (void)stopTrack:(id)sender;
 - (void)pauseTrack:(id)sender;

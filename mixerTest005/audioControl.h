@@ -141,20 +141,20 @@
 - (void)setlopassEffectY: (AudioUnitParameterValue)val :(int)channel;
 - (void)setlopassEffectX: (AudioUnitParameterValue)val :(int)channel;
 
--(void)sethipassEffectY:(AudioUnitParameterValue)val;
--(void)sethipassEffectX:(AudioUnitParameterValue)val;
+-(void)sethipassEffectY:(AudioUnitParameterValue)val:(int)channel;
+-(void)sethipassEffectX:(AudioUnitParameterValue)val:(int)channel;
 
 -(void)setReverbX:(AudioUnitParameterValue)val;
 -(void)setReverbY:(AudioUnitParameterValue)val;
 
-- (void)setPlaybackRate: (AudioUnitParameterValue)val;
-- (void)setPlaybackCents: (AudioUnitParameterValue)val;
+- (void)setPlaybackRate: (AudioUnitParameterValue)val:(int)channel;
+-(void)setPlaybackCents:(AudioUnitParameterValue)val:(int)channel;
 
 
 //second channel stuff
 - (void) setMasterVolCh2:(AudioUnitParameterValue)val;
 - (void) connectSecChannelCallback;
-- (void)removeSecChannelCallback;
+- (void) removeSecChannelCallback;
 - (void) closeDownChannelTwo;
 
 -(void)canRead;

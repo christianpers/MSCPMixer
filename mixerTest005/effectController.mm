@@ -144,6 +144,12 @@ CGSize parentSize;
             case 7:
                 [self masterVolCh2];
                 break; 
+            case 8:
+                [self hipassUnitChTwo];
+                break;
+            case 9:
+                [self variSpeedUnitChTwo];
+                break;
             default:
                 break;
         }
@@ -156,7 +162,7 @@ CGSize parentSize;
         paramVal1 = (setY/parentSize.height)*4;
         NSLog(@"param rate: %f",paramVal1);
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [main.playbackManager setPlaybackRate:paramVal1];
+        [main.playbackManager setPlaybackRate:paramVal1:1];
         
     }
     else{
@@ -169,7 +175,29 @@ CGSize parentSize;
         NSLog(@"param cents: %f",paramVal1);
         
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [main.playbackManager setPlaybackCents:paramVal1];
+        [main.playbackManager setPlaybackCents:paramVal1:1];
+    }
+    
+}
+- (void)variSpeedUnitChTwo{
+    if ([Shared sharedInstance].curVariSpeedEffect == 0){
+        paramVal1 = (setY/parentSize.height)*4;
+        NSLog(@"param rate: %f",paramVal1);
+        AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [main.playbackManager setPlaybackRate:paramVal1:2];
+        
+    }
+    else{
+        
+        if (aboveMiddleY){
+            paramVal1 = (((parentSize.height/2)-setY)/(parentSize.height/2))*2400;
+        }else{
+            paramVal1 = ((setY - (parentSize.height/2))/-(parentSize.height/2))*2400;
+        }
+        NSLog(@"param cents: %f",paramVal1);
+        
+        AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [main.playbackManager setPlaybackCents:paramVal1:2];
     }
     
 }
@@ -206,8 +234,26 @@ CGSize parentSize;
     NSLog(@"paramval2:%f",paramVal2);
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [main.playbackManager sethipassEffectY:paramVal1];
-    [main.playbackManager sethipassEffectX:paramVal2];
+    [main.playbackManager sethipassEffectY:paramVal1:1];
+    [main.playbackManager sethipassEffectX:paramVal2:1];
+}
+
+- (void)hipassUnitChTwo{
+    paramVal1 = (setY/parentSize.height)*22000;
+    float twoThirds = (parentSize.width/3)*2;
+    if (setX < (parentSize.width/3)){
+        paramVal2 = (((parentSize.width/3)-setX)/-(parentSize.width/3))*20;
+        NSLog(@"positive side");
+    }
+    else{
+        paramVal2 = (((setX*2)-(twoThirds))/(twoThirds))*20;
+        NSLog(@"negative side");
+    }
+    NSLog(@"paramval2:%f",paramVal2);
+    
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [main.playbackManager sethipassEffectY:paramVal1:2];
+    [main.playbackManager sethipassEffectX:paramVal2:2];
 }
 
 - (void)reverbUnit{
@@ -345,6 +391,32 @@ CGSize parentSize;
             x = 0;
             y = 0;
             self.gridView.effectType = @"Volume";
+            break;
+        case 8:
+            /*
+             default val cutoff freq 6900
+             default val resonance 0.0
+             */
+            x = 260;
+            y = 330;
+            self.gridView.effectType = @"Hipass";
+            break;
+        case 9:
+            /*
+             default val playbackrate 1.0
+             default val playbackcents 0.0
+             */
+            if ([Shared sharedInstance].curVariSpeedEffect == 1){
+                x = 20;
+                y = 200;
+                
+            }
+            else{
+                
+                x = 0;
+                y = 246;
+            }
+            self.gridView.effectType = @"TimePitch";
             break;
         default:
             break;
