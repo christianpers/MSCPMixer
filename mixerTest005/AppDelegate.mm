@@ -175,6 +175,8 @@ int labelWidth = 300;
     
     CGRect bounds = self.plbackView.bounds;
     CGSize winSize = self.window.frame.size;
+    CGPoint effectParentPos = self.plbackView.effectParentView.frame.origin;
+    CGRect effectParentSize = self.plbackView.effectParentView.bounds;
     
     if (!chTwoActive){
         chTwoActive = YES;
@@ -188,7 +190,7 @@ int labelWidth = 300;
         [UIView setAnimationDuration:1];
         [UIView setAnimationBeginsFromCurrentState:YES];
         
-    
+        self.plbackView.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, bounds.size.height/2-100);
         self.plbackView.frame = CGRectMake(0, 0, bounds.size.width, bounds.size.height/2);
         self.secChView.frame = CGRectMake(0, bounds.size.height/2, bounds.size.width, bounds.size.height/2);
     
@@ -231,6 +233,8 @@ int labelWidth = 300;
         
         self.plbackView.frame = CGRectMake(0, 0, winSize.width, winSize.height);
         self.secChView.frame = CGRectMake(0, winSize.height-70, winSize.width,50);
+        self.plbackView.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, bounds.size.height-180);
+        
         
         [UIView commitAnimations];
      
@@ -317,12 +321,12 @@ int labelWidth = 300;
                action:@selector(userLogout)
      forControlEvents:UIControlEventTouchDown];
     
-    [self.window addSubview:logout];
+    //[self.window addSubview:logout];
     
     
     self.secChView = [[secondChannelView alloc] init];
     self.secChView.frame = CGRectMake(0, self.plbackView.bounds.size.height-70, self.plbackView.bounds.size.width, 50);
-    self.secChView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
+    self.secChView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
     
  //   [self.mainViewController.view insertSubview:self.secChView aboveSubview:self.plbackView];
     

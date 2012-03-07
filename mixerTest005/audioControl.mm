@@ -502,9 +502,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         }
         
     }
-    
-    
-    
 }
 
 -(void)setPlaybackRate:(AudioUnitParameterValue)val:(int)channel{
@@ -665,6 +662,15 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     OSStatus result = AudioUnitSetParameter(mixerUnit, kMultiChannelMixerParam_Enable, kAudioUnitScope_Input, inputNum, isONValue, 0);
     if (result) { printf("AudioUnitSetParameter kMultiChannelMixerParam_Enable result %ld %08ld %4.4s\n", result, result, (char*)&result); return; }
     
+}
+
+-(Boolean)isaugraphRunning{
+    OSStatus result;
+    
+    Boolean isRunning = false;
+    result = AUGraphIsRunning(graph, &isRunning);
+    
+    return isRunning;
 }
 
                                  

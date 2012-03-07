@@ -34,9 +34,7 @@
 	double duration_; 
  
     UIView *controlView;
-  //  NSURL *assetURL;
-  //  NSString* artist;
-  //  NSString* titleSong;
+    UIView *effectParentView;
     NSURL *glAssetURL;
     NSString *glArtist;
     NSString *glTitle;
@@ -45,6 +43,7 @@
 }
 
 @property(nonatomic, retain) UIView *controlView;
+@property(nonatomic, retain) UIView *effectParentView;
 
 
 - (void)showMediaPicker;

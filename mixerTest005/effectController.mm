@@ -10,6 +10,7 @@
 #import "Shared.h"
 #import "AppDelegate.h"
 #import "playbackView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation effectController
 
@@ -39,22 +40,41 @@ CGSize parentSize;
 
 - (void)panPiece:(UIPanGestureRecognizer *)gestureRecognizer
 {
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     UIView *piece = [gestureRecognizer view];
     UIView *parentView = [piece superview];
     parentSize = parentView.frame.size;
+    
+    CGPoint pos = piece.frame.origin;
+    CGPoint translation = [gestureRecognizer translationInView:[piece superview]];
+    
+    
     
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan){
         
         [self.gridView removeFromSuperview];
         [self drawEffectGrid:piece.tag];
-        AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         main.playbackLabel.hidden = YES;
         main.playlistLabel.hidden = YES;
         main.searchLabel.hidden = YES;
         main.cueView.hidden = YES;
+        parentView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.1];
+        parentView.layer.borderWidth = 4.0f;
+        
+        if (pos.x <= 0) {
+            [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
+        }else if (pos.x >= parentView.bounds.size.width-43){
+            [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
+        }else if (pos.y <= 0) {
+            [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
+        }else if (pos.y >= parentView.bounds.size.height-43){
+            [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
+        }
+        
         
         if (piece.tag <= 5){
-            [[(playbackView *)[self superview] controlView] setHidden:YES];
+           // [[(playbackView *)[self superview] controlView] setHidden:YES];
             
         }
         else{
@@ -66,28 +86,34 @@ CGSize parentSize;
     
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
         
-        [self.gridView setNeedsDisplay];
-        self.gridView.param1 = paramVal1;
-        self.gridView.param2 = paramVal2;
         
-        if (piece.tag <= 5){
-            piece.backgroundColor = [UIColor whiteColor];
-        }
-        else{
-            piece.backgroundColor = [UIColor blackColor];
+        
+        
+        if((pos.x >= 0 && pos.x <= (parentView.bounds.size.width-43))&&(pos.y >= 0 && pos.y <= (parentView.bounds.size.height-43))){
+            [self.gridView setNeedsDisplay];
+            self.gridView.param1 = paramVal1;
+            self.gridView.param2 = paramVal2;
             
-        }
-        CGPoint translation = [gestureRecognizer translationInView:[piece superview]];
-        
-        [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
-        [gestureRecognizer setTranslation:CGPointZero inView:[piece superview]];
-        setY = [piece center].y + translation.y;
-        setX = [piece center].x + translation.x;
-        if(setY < parentSize.height/2){
-            aboveMiddleY = YES;
-        }
-        else{
-            aboveMiddleY = NO;
+            if (piece.tag <= 5){
+                piece.backgroundColor = [UIColor whiteColor];
+            }
+            else{
+                piece.backgroundColor = [UIColor blackColor];
+                
+            }
+            
+            [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
+            [gestureRecognizer setTranslation:CGPointZero inView:[piece superview]];
+           // setY = [piece center].y + translation.y;
+            setY = pos.y;
+            setX = [piece center].x + translation.x;
+            if(setY < parentSize.height/2){
+                aboveMiddleY = YES;
+            }
+            else{
+                aboveMiddleY = NO;
+            }
+
         }
     }
     if ([gestureRecognizer state] == UIGestureRecognizerStateEnded){
@@ -101,14 +127,16 @@ CGSize parentSize;
         }
         [self.gridView removeFromSuperview];
         self.gridView = nil;
-        AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
         main.playbackLabel.hidden = NO;
         main.playlistLabel.hidden = NO;
         main.searchLabel.hidden = NO;
         main.cueView.hidden = NO;
+        parentView.backgroundColor = [UIColor clearColor];
+        parentView.layer.borderWidth = 0.0f;
+        
         if (piece.tag <= 5){
-            [[(playbackView *)[self superview] controlView] setHidden:NO];
+          //  [[(playbackView *)[self superview] controlView] setHidden:NO];
             
             
         }
@@ -121,7 +149,7 @@ CGSize parentSize;
         
     }
     
-    if ([SPSession sharedSession].playing){
+    if ([main.playbackManager isaugraphRunning]){
         switch (piece.tag) {
             case 1:
                 [self variSpeedUnit];
@@ -221,7 +249,7 @@ CGSize parentSize;
 }
 
 - (void)hipassUnit{
-    paramVal1 = (setY/parentSize.height)*22000;
+    paramVal1 = (setY/parentSize.height)*7000;
     float twoThirds = (parentSize.width/3)*2;
     if (setX < (parentSize.width/3)){
         paramVal2 = (((parentSize.width/3)-setX)/-(parentSize.width/3))*20;
@@ -239,7 +267,7 @@ CGSize parentSize;
 }
 
 - (void)hipassUnitChTwo{
-    paramVal1 = (setY/parentSize.height)*22000;
+    paramVal1 = (setY/parentSize.height)*7000;
     float twoThirds = (parentSize.width/3)*2;
     if (setX < (parentSize.width/3)){
         paramVal2 = (((parentSize.width/3)-setX)/-(parentSize.width/3))*20;
@@ -407,7 +435,7 @@ CGSize parentSize;
              default val playbackcents 0.0
              */
             if ([Shared sharedInstance].curVariSpeedEffect == 1){
-                x = 20;
+                x = 0;
                 y = 200;
                 
             }

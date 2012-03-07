@@ -272,7 +272,7 @@ int tagAdd = 10;
     SPPlaylist *playlistDetail = pl;
     SPPlaylistFolder *playlistFolder;
     SPPlaylistItem *playlistItem;
-    sp_linktype linktype;
+    Boolean foundValidTrack = NO;
     
     NSURL *trackURL;
     
@@ -284,9 +284,30 @@ int tagAdd = 10;
     }
     
     NSLog(@"fucking shit: %@",playlistDetail.name);
-    
-    playlistItem = [playlistDetail.items objectAtIndex:0];
-    
+    for (SPPlaylistItem *trackTest in playlistDetail.items){
+        if (!foundValidTrack){
+            if(trackTest.itemURLType == SP_LINKTYPE_TRACK){
+                
+                foundValidTrack = YES;
+                playlistItem = trackTest;
+            }
+        }
+    }
+    if (!foundValidTrack){
+        UIButton *btn = (UIButton *)[self viewWithTag:plCounter+tagAdd];
+        for (UIView *view in [btn subviews]){
+            [view removeFromSuperview];
+            
+        }
+        NSNumber *missedplNum = [NSNumber numberWithInt:plCounter];
+        [missedPlArray addObject:missedplNum];
+        plCounter++;
+        
+        [self checkPlLoad:plContainer];
+        
+    }
+   // playlistItem = [playlistDetail.items objectAtIndex:0];
+   /* 
     if (playlistItem.itemURLType == SP_LINKTYPE_INVALID){
         
         UIButton *btn = (UIButton *)[self viewWithTag:plCounter+tagAdd];
@@ -300,33 +321,27 @@ int tagAdd = 10;
         
         [self checkPlLoad:plContainer];
     }
+    */
     else{
-        
-    
-        // [self loadImage:playlistItem];
         trackURL = playlistItem.itemURL;
-    
-    
         SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
-    
         if (track.availability == 1){
-            
             self.trackimg = track;
-        
         }
         else
         {
             UIButton *btn = (UIButton *)[self viewWithTag:plCounter+tagAdd];
             for (UIView *view in [btn subviews]){
                 [view removeFromSuperview];
-            
+                
             }
             NSNumber *missedplNum = [NSNumber numberWithInt:plCounter];
             [missedPlArray addObject:missedplNum];
             plCounter++;
             [self checkPlLoad:plContainer];
-        
-        }
+            
+        }   
+
     }
 }
 

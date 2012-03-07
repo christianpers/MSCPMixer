@@ -26,6 +26,7 @@
     effectController *lopassController;
     effectController *hipassController;
     effectController *channelOneVolController;
+    UIView *effectContainerView;
     
    
     
@@ -38,6 +39,7 @@
 @property(nonatomic, retain) UIView *trackControlBG;
 @property(nonatomic, retain) UIView *trackControlFG;
 @property(nonatomic, retain) UIView *controlView;
+@property(nonatomic, retain) UIView *effectParentView;
 
 @property(nonatomic, retain) effectController *timepitchController;
 @property(nonatomic, retain) effectController *lopassController;

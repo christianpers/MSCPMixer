@@ -9,10 +9,11 @@
 #import "secondChannelUIViewController.h"
 #import <AVFoundation/AVAsset.h>
 #import "AppDelegate.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation secondChannelUIViewController
 
-@synthesize controlView;
+@synthesize controlView, effectParentView;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -494,6 +495,12 @@ audiofileProblem:
 
 - (void)createChannelTwoUI{
     
+    CGSize parentSize = self.view.frame.size;
+    
+    self.effectParentView = [[UIView alloc]initWithFrame:CGRectMake(50, 30, parentSize.width-100, parentSize.height-60)];
+    self.effectParentView.backgroundColor = [UIColor clearColor];
+    self.effectParentView.layer.borderColor = [[UIColor whiteColor] CGColor];
+    [self.view addSubview:self.effectParentView];
     
     UIButton *addtrack = [UIButton buttonWithType:UIButtonTypeCustom];
     addtrack.frame = CGRectMake(50, self.view.bounds.size.height-100, 200, 40);// position in the parent view and set the size of the
@@ -507,10 +514,9 @@ audiofileProblem:
     
     [self.view addSubview:addtrack];
     
-    
     effectController *lopassChTwoController = [[effectController alloc]initWithFrame:CGRectMake(300, 30, 40, 40)];
     lopassChTwoController.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:lopassChTwoController];
+    [self.effectParentView addSubview:lopassChTwoController];
     [lopassChTwoController setTag:6];
     
     UILabel *lblLopassChTwo = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
@@ -524,12 +530,12 @@ audiofileProblem:
     
     [lopassChTwoController release];
     
-    effectController *hipassChTwoController = [[effectController alloc]initWithFrame:CGRectMake(300, 30, 40, 40)];
+    effectController *hipassChTwoController = [[effectController alloc]initWithFrame:CGRectMake(500, 80, 40, 40)];
     hipassChTwoController.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:hipassChTwoController];
+    [self.effectParentView addSubview:hipassChTwoController];
     [hipassChTwoController setTag:8];
     
-    UILabel *lblHipassChTwo = [[UILabel alloc]initWithFrame:CGRectMake(205,54,30,30)];
+    UILabel *lblHipassChTwo = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
     lblHipassChTwo.textAlignment =  UITextAlignmentCenter;
     lblHipassChTwo.textColor = [UIColor blackColor];
     lblHipassChTwo.backgroundColor = [UIColor clearColor];
@@ -540,12 +546,12 @@ audiofileProblem:
     
     [hipassChTwoController release];
     
-    effectController *timepitchChTwoController = [[effectController alloc]initWithFrame:CGRectMake(300, 30, 40, 40)];
+    effectController *timepitchChTwoController = [[effectController alloc]initWithFrame:CGRectMake(200, 230, 40, 40)];
     timepitchChTwoController.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:timepitchChTwoController];
+    [self.effectParentView addSubview:timepitchChTwoController];
     [timepitchChTwoController setTag:9];
     
-    UILabel *lbltimepitchChTwo = [[UILabel alloc]initWithFrame:CGRectMake(405,200,30,30)];
+    UILabel *lbltimepitchChTwo = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
     lbltimepitchChTwo.textAlignment =  UITextAlignmentCenter;
     lbltimepitchChTwo.textColor = [UIColor blackColor];
     lbltimepitchChTwo.backgroundColor = [UIColor clearColor];
@@ -558,7 +564,7 @@ audiofileProblem:
     
     effectController *mastervolControllerChTwo = [[effectController alloc]initWithFrame:CGRectMake(200, 10, 60, 60)];
     mastervolControllerChTwo.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:mastervolControllerChTwo];
+    [self.effectParentView addSubview:mastervolControllerChTwo];
     [mastervolControllerChTwo setTag:7]; 
     
     UILabel *lblvol = [[UILabel alloc]initWithFrame:CGRectMake(0,15,60,30)];
@@ -604,8 +610,6 @@ audiofileProblem:
        forControlEvents:UIControlEventTouchDown];
     
     [pauseBtn release];
-    
-   
     
 }
 

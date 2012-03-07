@@ -9,13 +9,13 @@
 #import "playbackView.h"
 #import "Shared.h"
 #import "AppDelegate.h"
-
+#import <QuartzCore/QuartzCore.h>
 
 @implementation playbackView
 
 @synthesize artistLbl, titleLbl, selBtn;
 @synthesize trackControlBG, trackControlFG, controlView;
-@synthesize timepitchController, lopassController, hipassController, channelOneVolController;
+@synthesize timepitchController, lopassController, hipassController, channelOneVolController, effectParentView;
 
 
 - (id)initWithFrame:(CGRect)frame
@@ -45,6 +45,12 @@
         self.titleLbl.text = @"Title";
         
         [self addSubview:self.titleLbl];
+        
+        self.effectParentView = [[UIView alloc]initWithFrame:CGRectMake(50, 60, parentSize.width-100, parentSize.height-180)];
+        self.effectParentView.backgroundColor = [UIColor clearColor];
+        self.effectParentView.layer.borderColor = [[UIColor whiteColor] CGColor];
+        [self addSubview:self.effectParentView];
+        
         
        
         UIView *cView = [[UIView alloc]initWithFrame:CGRectMake(190, 280, 400, 50)];
@@ -112,9 +118,11 @@
         [nextBtn release];
         
         
+        
+        
         self.timepitchController = [[effectController alloc]initWithFrame:CGRectMake(10, 512, 40, 40)];
         self.timepitchController.backgroundColor = [UIColor clearColor];
-        [self addSubview:self.timepitchController];
+        [self.effectParentView addSubview:self.timepitchController];
         [self.timepitchController setTag:1];
         
         UILabel *lblTimepitch = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
@@ -137,7 +145,7 @@
         
         self.lopassController = [[effectController alloc]initWithFrame:CGRectMake(100, 100, 40, 40)];
         self.lopassController.backgroundColor = [UIColor clearColor];
-        [self addSubview:self.lopassController];
+        [self.effectParentView addSubview:self.lopassController];
         [self.lopassController setTag:2];
         
         UILabel *lblLopass = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
@@ -153,7 +161,7 @@
       
         self.hipassController = [[effectController alloc]initWithFrame:CGRectMake(300, 0, 40, 40)];
         self.hipassController.backgroundColor = [UIColor clearColor];
-        [self addSubview:self.hipassController];
+        [self.effectParentView addSubview:self.hipassController];
         [self.hipassController setTag:3];
         
         UILabel *lblHipass = [[UILabel alloc]initWithFrame:CGRectMake(5,5,30,30)];
@@ -169,7 +177,7 @@
                        
         self.channelOneVolController = [[effectController alloc]initWithFrame:CGRectMake(200, 10, 60, 60)];
         self.channelOneVolController.backgroundColor = [UIColor clearColor];
-        [self addSubview:self.channelOneVolController];
+        [self.effectParentView addSubview:self.channelOneVolController];
         [self.channelOneVolController setTag:5]; 
         
         UILabel *lblvol = [[UILabel alloc]initWithFrame:CGRectMake(0,15,60,30)];
@@ -424,6 +432,7 @@
     [self.lopassController release];
     [self.hipassController release];
     [self.channelOneVolController release];
+    [self.effectParentView release];
 
 }
 

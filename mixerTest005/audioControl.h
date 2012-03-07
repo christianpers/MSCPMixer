@@ -131,6 +131,8 @@
 -(void)startAUGraph;
 -(void)stopAUGraph;
 
+-(Boolean)isaugraphRunning;
+
 /*
  effect controls
  */
