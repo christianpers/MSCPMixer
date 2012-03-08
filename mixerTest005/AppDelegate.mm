@@ -173,71 +173,78 @@ int labelWidth = 300;
 
 -(void)newChannel:(UITapGestureRecognizer *)gesture{
     
-    CGRect bounds = self.plbackView.bounds;
-    CGSize winSize = self.window.frame.size;
-    CGPoint effectParentPos = self.plbackView.effectParentView.frame.origin;
-    CGRect effectParentSize = self.plbackView.effectParentView.bounds;
-    
-    if (!chTwoActive){
-        chTwoActive = YES;
-        [UIView animateWithDuration:1
-                     animations:^{
-                         //     self.tableView.alpha = 1;
-                         //     self.tableView.hidden = YES;
-                     }];
-    
-        [UIView beginAnimations : @"Display notif" context:nil];
-        [UIView setAnimationDuration:1];
-        [UIView setAnimationBeginsFromCurrentState:YES];
+    if ([self.playbackManager isaugraphRunning]){
+        CGRect bounds = self.plbackView.bounds;
+        CGSize winSize = self.window.frame.size;
+        CGPoint effectParentPos = self.plbackView.effectParentView.frame.origin;
+        CGRect effectParentSize = self.plbackView.effectParentView.bounds;
         
-        self.plbackView.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, bounds.size.height/2-100);
-        self.plbackView.frame = CGRectMake(0, 0, bounds.size.width, bounds.size.height/2);
-        self.secChView.frame = CGRectMake(0, bounds.size.height/2, bounds.size.width, bounds.size.height/2);
-    
-        self.cueView.frame = CGRectMake(200, bounds.size.height-700, self.cueView.bounds.size.width, self.cueView.bounds.size.height);
-        self.plbackView.trackControlBG.frame = CGRectMake(400, bounds.size.height-700, self.plbackView.trackControlBG.bounds.size.width, self.plbackView.trackControlBG.bounds.size.height);
+        if (!chTwoActive){
+            chTwoActive = YES;
+            [UIView animateWithDuration:1
+                             animations:^{
+                                 //     self.tableView.alpha = 1;
+                                 //     self.tableView.hidden = YES;
+                             }];
+            
+            [UIView beginAnimations : @"Display notif" context:nil];
+            [UIView setAnimationDuration:1];
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            
+            self.plbackView.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, bounds.size.height/2-100);
+            self.plbackView.frame = CGRectMake(0, 0, bounds.size.width, bounds.size.height/2);
+            self.secChView.frame = CGRectMake(0, bounds.size.height/2, bounds.size.width, bounds.size.height/2);
+            
+            self.cueView.frame = CGRectMake(200, bounds.size.height-700, self.cueView.bounds.size.width, self.cueView.bounds.size.height);
+            self.plbackView.trackControlBG.frame = CGRectMake(400, bounds.size.height-700, self.plbackView.trackControlBG.bounds.size.width, self.plbackView.trackControlBG.bounds.size.height);
+            
+            
+            self.plbackView.timepitchController.frame = CGRectMake(20, bounds.size.height/4, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
+            
+            self.plbackView.lopassController.frame = CGRectMake(80, 30, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
+            
+            self.plbackView.hipassController.frame = CGRectMake(40, 100, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
+            
+            self.plbackView.channelOneVolController.frame = CGRectMake(100, 200, self.plbackView.channelOneVolController.bounds.size.width, self.plbackView.channelOneVolController.bounds.size.height);
+            
+            self.plbackView.artistLbl.hidden = YES;
+            self.plbackView.titleLbl.hidden = YES;
+            
+            
+            [UIView commitAnimations];
+            
+            [self.chTwoViewController createChannelTwoUI];
+        }
+        else{
+            chTwoActive = NO;
+            [UIView animateWithDuration:1
+                             animations:^{
+                                 //     self.tableView.alpha = 1;
+                                 //     self.tableView.hidden = YES;
+                                 [self.chTwoViewController removeChannelTwoUI];
+                             }];
+            
+            [UIView beginAnimations : @"Display notif" context:nil];
+            [UIView setAnimationDuration:1];
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            
+            
+            self.plbackView.artistLbl.hidden = NO;
+            self.plbackView.titleLbl.hidden = NO;
+            
+            self.plbackView.frame = CGRectMake(0, 0, winSize.width, winSize.height);
+            self.secChView.frame = CGRectMake(0, winSize.height-70, winSize.width,50);
+            self.plbackView.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, bounds.size.height-180);
+            
+            
+            [UIView commitAnimations];
+            
+        }
+    }else{
         
-        
-        self.plbackView.timepitchController.frame = CGRectMake(20, bounds.size.height/4, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
-        
-        self.plbackView.lopassController.frame = CGRectMake(80, 30, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
-        
-        self.plbackView.hipassController.frame = CGRectMake(40, 100, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
-        
-        self.plbackView.channelOneVolController.frame = CGRectMake(100, 200, self.plbackView.channelOneVolController.bounds.size.width, self.plbackView.channelOneVolController.bounds.size.height);
-        
-        self.plbackView.artistLbl.hidden = YES;
-        self.plbackView.titleLbl.hidden = YES;
-        
-    
-        [UIView commitAnimations];
-        
-        [self.chTwoViewController createChannelTwoUI];
-    }
-    else{
-        chTwoActive = NO;
-        [UIView animateWithDuration:1
-                         animations:^{
-                             //     self.tableView.alpha = 1;
-                             //     self.tableView.hidden = YES;
-                             [self.chTwoViewController removeChannelTwoUI];
-                         }];
-        
-        [UIView beginAnimations : @"Display notif" context:nil];
-        [UIView setAnimationDuration:1];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        
-        
-        self.plbackView.artistLbl.hidden = NO;
-        self.plbackView.titleLbl.hidden = NO;
-        
-        self.plbackView.frame = CGRectMake(0, 0, winSize.width, winSize.height);
-        self.secChView.frame = CGRectMake(0, winSize.height-70, winSize.width,50);
-        self.plbackView.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, bounds.size.height-180);
-        
-        
-        [UIView commitAnimations];
-     
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Start spotify channel first" message:@"This channel is disabled until channel 1 is started, sorry dude." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
     }
     
 }
@@ -250,6 +257,10 @@ int labelWidth = 300;
 }
 
 - (void)initLoadGUI{
+    
+    
+   
+    
     CGSize winSize = self.window.frame.size;
     
     UITapGestureRecognizer *menuTouchSearch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];
@@ -551,8 +562,11 @@ NSUInteger loadTrack;
         
         [self.searchController dismissViewControllerAnimated:YES completion:nil];
         
+        
     }
     else if (lbl.tag == 12){
+     //   [self.playbackManager checkavailableOutputRoutes];
+        
         //  [self.mainViewController.view bringSubviewToFront:self.spSearchView.view];
         self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
         self.playbackLabel.textColor = [UIColor whiteColor];

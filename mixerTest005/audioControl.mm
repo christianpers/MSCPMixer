@@ -673,6 +673,28 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     return isRunning;
 }
 
+-(void)checkavailableOutputRoutes{
+    CFArrayRef destinations;
+    CFNumberRef currentDest;
+    CFStringRef test;
+    
+    // Get the output destination list
+    AudioSessionGetProperty(kAudioSessionProperty_OutputDestinations, nil, &destinations);
+    
+    // Get the index of the current destination (in the list above)
+    AudioSessionGetProperty(kAudioSessionProperty_OutputDestination, nil, &currentDest);
+    
+    
+    int numOuts = CFArrayGetCount(destinations);
+    
+    for (int i=0;i<numOuts;i++){
+        test = (CFStringRef)CFArrayGetValueAtIndex(destinations, i);
+        
+        NSLog(@"out: %@",test);
+    }
+    
+}
+
                                  
 -(BOOL)setupAudioGraphWithAudioFormat:(const sp_audioformat *)audioFormat error:(NSError **)err {
     
@@ -681,6 +703,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	BOOL success = YES;
 	success &= [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
 	success &= [[AVAudioSession sharedInstance] setActive:YES error:&error];
+    
+    
 	
 	if (!success && err != NULL) {
 		*err = error;

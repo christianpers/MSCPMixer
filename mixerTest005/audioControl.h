@@ -152,6 +152,7 @@
 - (void)setPlaybackRate: (AudioUnitParameterValue)val:(int)channel;
 -(void)setPlaybackCents:(AudioUnitParameterValue)val:(int)channel;
 
+-(void)checkavailableOutputRoutes;
 
 //second channel stuff
 - (void) setMasterVolCh2:(AudioUnitParameterValue)val;
