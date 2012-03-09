@@ -710,9 +710,24 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 
 -(void)checkavailableOutputRoutes{
     
+    CFStringRef testing = kAudioSession_AudioRouteKey_Outputs;
+    
+    
+    CFDictionaryRef asCFType = (CFDictionaryRef)testing;
+    UInt32 dataSize = sizeof(asCFType);
+   // AudioSessionGetProperty(kAudioSessionProperty_AudioRouteDescription, &dataSize, &asCFType);
+    NSDictionary *easyPeasy = (NSDictionary *)asCFType;
+    NSDictionary *firstOutput = (NSDictionary *)[[easyPeasy valueForKey:@"RouteDetailedDescription_Outputs"] objectAtIndex:0];
+    NSString *portType = (NSString *)[firstOutput valueForKey:@"kAudioSession_AudioRouteKey_Type"];
+    NSLog(@"first output port type is: %@!", portType);
+    
     UInt32 size = sizeof(CFArrayRef);
     
-    OSStatus err = AudioSessionGetProperty(kAudioSessionProperty_OutputDestinations, &size, &audioOutputRoutes);
+    CFArrayRef test = (CFArrayRef)kAudioSession_AudioRouteKey_Outputs;
+    
+    
+    
+    OSStatus err;// = AudioSessionGetProperty(kAudioSession_AudioRouteKey_Outputs, &size, &test);
     
     if (err == noErr){
         CFIndex i, c = CFArrayGetCount(audioOutputRoutes);
