@@ -41,6 +41,8 @@
     secondChannelUIViewController *chTwoViewController;
     playlistViewController *pllistViewController;
     
+    
+    
 }
 
 

@@ -565,7 +565,7 @@ NSUInteger loadTrack;
         
     }
     else if (lbl.tag == 12){
-     //   [self.playbackManager checkavailableOutputRoutes];
+        [self.playbackManager checkavailableOutputRoutes];
         
         //  [self.mainViewController.view bringSubviewToFront:self.spSearchView.view];
         self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];

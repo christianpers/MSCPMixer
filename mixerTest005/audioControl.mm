@@ -14,6 +14,30 @@ AudioBufferList* bufferList;
 BOOL startedCallback;
 BOOL noInterrupt; 
 
+void propListener(	void *                  inClientData,
+				  AudioSessionPropertyID	inID,
+				  UInt32                  inDataSize,
+				  const void *            inData){
+	printf("property listener\n");
+	//RemoteIOPlayer *THIS = (RemoteIOPlayer*)inClientData;
+	if (inID == kAudioSessionProperty_AudioRouteChange){		
+	}
+}
+
+void rioInterruptionListener(void *inClientData, UInt32 inInterruption){
+	printf("Session interrupted! --- %s ---", inInterruption == kAudioSessionBeginInterruption ? "Begin Interruption" : "End Interruption");
+	
+	if (inInterruption == kAudioSessionEndInterruption) {
+		// make sure we are again the active session
+		AudioSessionSetActive(true);
+		//AudioOutputUnitStart(THIS->audioUnit);
+	}
+	if (inInterruption == kAudioSessionBeginInterruption) {
+		//AudioOutputUnitStop(THIS->audioUnit);
+    }
+}
+
+
 static OSStatus playbackCallback(void *inRefCon, 
 								 AudioUnitRenderActionFlags *ioActionFlags, 
 								 const AudioTimeStamp *inTimeStamp, 
@@ -673,26 +697,64 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     return isRunning;
 }
 
+/* print a CFNumber */
+-(void) printCfNumber:(CFNumberRef)cfNum {
+	SInt32 s;
+	if(!CFNumberGetValue(cfNum, kCFNumberSInt32Type, &s)) {
+		//printf("***CFNumber overflow***");
+		return;
+	}
+    NSLog(@"route: %ld",s);
+	//printf("%d", (int)s);
+}
+
 -(void)checkavailableOutputRoutes{
-    CFArrayRef destinations;
-    CFNumberRef currentDest;
-    CFStringRef test;
     
-    // Get the output destination list
-    AudioSessionGetProperty(kAudioSessionProperty_OutputDestinations, nil, &destinations);
+    UInt32 size = sizeof(CFArrayRef);
     
-    // Get the index of the current destination (in the list above)
-    AudioSessionGetProperty(kAudioSessionProperty_OutputDestination, nil, &currentDest);
+    OSStatus err = AudioSessionGetProperty(kAudioSessionProperty_OutputDestinations, &size, &audioOutputRoutes);
     
-    
-    int numOuts = CFArrayGetCount(destinations);
-    
-    for (int i=0;i<numOuts;i++){
-        test = (CFStringRef)CFArrayGetValueAtIndex(destinations, i);
+    if (err == noErr){
+        CFIndex i, c = CFArrayGetCount(audioOutputRoutes);
+        CFDictionaryRef audioOutput;
         
-        NSLog(@"out: %@",test);
+        for (i=0; i<c; i++) {
+            audioOutput = (CFDictionaryRef)CFArrayGetValueAtIndex(audioOutputRoutes, i);
+            
+            CFNumberRef routeId = (CFNumberRef)CFDictionaryGetValue(audioOutput, kAudioSession_OutputDestinationKey_ID);
+            CFStringRef routeDescription = (CFStringRef)CFDictionaryGetValue(audioOutput, kAudioSession_OutputDestinationKey_Description);
+            
+            [self printCfNumber:routeId];
+            const char *bytes;
+            
+            NSLog(@"route descr: %@",routeDescription);
+            
+            //haven't worked out how to print out the CFString yet.
+            bytes = CFStringGetCStringPtr(routeDescription, kCFStringEncodingMacRoman);
+            
+            //printf(bytes);
+            
+        }
+        
+        
     }
+}
+
+-(void)setnewaudioRoute{
+  /*  
+    CFNumberRef routeId = (CFNumberRef)CFDictionaryGetValue(audioOutput, kAudioSession_OutputDestinationKey_ID);
     
+    OSStatus err = AudioSessionSetProperty(kAudioSessionProperty_OutputDestination, <#UInt32 inDataSize#>, <#const void *inData#>)
+    
+    UInt32 audioRouteOverride = kAudioSessionOutputRoute_AirPlay;  // 1
+    
+    AudioSessionSetProperty (
+                             kAudioSessionProperty_AudioRoute,                         // 2
+                             sizeof (audioRouteOverride),                                      // 3
+                             &audioRouteOverride                                               // 4
+                             );
+   
+   */
 }
 
                                  
@@ -701,9 +763,18 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     NSError *error = nil;
 	BOOL success = YES;
+    
+    // Initialize and configure the audio session, and add an interuption listener
+    AudioSessionInitialize(NULL, NULL, rioInterruptionListener, self);
+	
+    
 	success &= [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
 	success &= [[AVAudioSession sharedInstance] setActive:YES error:&error];
     
+    
+    //add a property listener
+	AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange, propListener, self);
+	
     
 	
 	if (!success && err != NULL) {

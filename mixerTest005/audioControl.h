@@ -68,6 +68,8 @@
     AudioStreamBasicDescription     stereoStreamFormat;
     AURenderCallbackStruct          rcbsFirst;
     AURenderCallbackStruct          rcbsSecond; //second channel
+    
+    CFArrayRef audioOutputRoutes;
   
     
 @public
