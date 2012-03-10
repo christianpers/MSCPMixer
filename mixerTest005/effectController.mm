@@ -59,8 +59,8 @@ CGSize parentSize;
         main.playlistLabel.hidden = YES;
         main.searchLabel.hidden = YES;
         main.cueView.hidden = YES;
-        parentView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.1];
-        parentView.layer.borderWidth = 4.0f;
+        parentView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.16];
+       // parentView.layer.borderWidth = 4.0f;
         
         if (pos.x <= 0) {
             [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
@@ -133,7 +133,7 @@ CGSize parentSize;
         main.searchLabel.hidden = NO;
         main.cueView.hidden = NO;
         parentView.backgroundColor = [UIColor clearColor];
-        parentView.layer.borderWidth = 0.0f;
+     //   parentView.layer.borderWidth = 0.0f;
         
         if (piece.tag <= 5){
           //  [[(playbackView *)[self superview] controlView] setHidden:NO];
@@ -360,7 +360,7 @@ CGSize parentSize;
              */
             if ([Shared sharedInstance].curVariSpeedEffect == 1){
                 x = 0;
-                y = window.height/2;
+                y = (window.height/2)-21;
                 
             }
             else{
@@ -436,7 +436,7 @@ CGSize parentSize;
              */
             if ([Shared sharedInstance].curVariSpeedEffect == 1){
                 x = 0;
-                y = 200;
+                y = (window.height/2)-21;
                 
             }
             else{

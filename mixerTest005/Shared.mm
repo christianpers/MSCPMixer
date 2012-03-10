@@ -18,6 +18,7 @@ static Shared* sharedInstance;
 @synthesize effectgridX,effectgridY;
 @synthesize hasLoggedin;
 @synthesize currTrackPos;
+@synthesize relogin;
 
 
 + (Shared*)sharedInstance
@@ -42,6 +43,7 @@ static Shared* sharedInstance;
         effectgridX = 0;
         hasLoggedin = false;
         currTrackPos = 0;
+        relogin = false;
     }
     return self;
 }

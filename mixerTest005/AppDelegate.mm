@@ -34,7 +34,6 @@
 @synthesize secChView = _secChView;
 @synthesize chTwoActive;
 @synthesize chTwoViewController;
-@synthesize pllistViewController;
 
 
 int labelWidth = 300;
@@ -42,13 +41,16 @@ int labelWidth = 300;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  // CGSize winSize = self.window.frame.size;
+    //self.pllistView = [[playlistView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
+    //self.loadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
+    
+   // [self createLoadingPlView];
     // Override point for customization after application launch.
 	[self.window makeKeyAndVisible];
     
-    
     self.searchController = [[searchViewController alloc]init];
     self.chTwoViewController = [[secondChannelUIViewController alloc]init];
-    
     
     
     //  searchTableViewController *rootView = [[searchTableViewController alloc]init];
@@ -65,11 +67,11 @@ int labelWidth = 300;
     
     [[SPSession sharedSession] setDelegate:self];
     
+    
     //  [self.window addSubview:self.navigationController.view];
     [self performSelector:@selector(showLogin) withObject:nil afterDelay:0.0];
     //[self showLogin];
     
-    [self initLoadGUI];
     
     return YES;
 }
@@ -77,6 +79,36 @@ int labelWidth = 300;
 -(void)showLogin {
 	[self.mainViewController presentModalViewController:[[[LoginViewController alloc] init] autorelease]
 											   animated:NO];
+}
+
+-(void)createLoadingPlView{
+    
+    CGSize winSize = self.window.frame.size;
+    
+    UIView *newloadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
+    self.loadingView = newloadingView;
+    
+    self.loadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
+    [self.window addSubview:self.loadingView];
+    
+    UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(0, 580, winSize.width, 60)];
+    // lbl.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.6];
+    lbl.backgroundColor = [UIColor clearColor];
+    lbl.textColor = [UIColor whiteColor];
+    lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(26.0)];
+    lbl.text = [NSString stringWithFormat:@"LOADING UR PLAYLISTS"];
+    lbl.textAlignment = UITextAlignmentCenter;
+    [self.loadingView addSubview:lbl];
+    [lbl release];
+    
+    UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+    av.frame=CGRectMake((winSize.width/2)-(85/2), ((winSize.height/2)-(85/2))-40, 85, 85);
+    av.tag  = 1;
+    [self.loadingView addSubview:av];
+    [av startAnimating];
+    
+    [newloadingView release];
+    
 }
 
 
@@ -256,10 +288,17 @@ int labelWidth = 300;
    [self.playbackManager seekToTrackPosition:setnewTrackPos];
 }
 
+- (void)removeGUI{
+    [self.searchLabel removeFromSuperview];
+    [self.plbackView removeFromSuperview];
+    [self.playbackLabel removeFromSuperview];
+    [self.cueView removeFromSuperview];
+    [self.playlistLabel removeFromSuperview];
+    [self.secChView removeFromSuperview];
+    
+}
+
 - (void)initLoadGUI{
-    
-    
-   
     
     CGSize winSize = self.window.frame.size;
     
@@ -332,7 +371,9 @@ int labelWidth = 300;
                action:@selector(userLogout)
      forControlEvents:UIControlEventTouchDown];
     
-    //[self.window addSubview:logout];
+    [self.window addSubview:logout];
+    
+    //[logout release];
     
     
     self.secChView = [[secondChannelView alloc] init];
@@ -358,7 +399,6 @@ int labelWidth = 300;
     [secChLbl release];
     [secChTouch release];
     
-    
     self.chTwoViewController.view = self.secChView;
     [self.mainViewController.view insertSubview:self.chTwoViewController.view aboveSubview:self.plbackView];
     
@@ -377,26 +417,12 @@ NSUInteger loadTrack;
     CGSize winSize = self.window.frame.size;
     
     if (![Shared sharedInstance].hasLoggedin){
+        
+        [self createLoadingPlView];
+        [self initLoadGUI];
+        
         [Shared sharedInstance].hasLoggedin = true;
-        self.loadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
-        self.loadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
-        [self.window addSubview:self.loadingView];
         
-        UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(0, 580, winSize.width, 60)];
-        // lbl.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.6];
-        lbl.backgroundColor = [UIColor clearColor];
-        lbl.textColor = [UIColor whiteColor];
-        lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(26.0)];
-        lbl.text = [NSString stringWithFormat:@"LOADING UR PLAYLISTS"];
-        lbl.textAlignment = UITextAlignmentCenter;
-        [self.loadingView addSubview:lbl];
-        [lbl release];
-        
-        UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
-        av.frame=CGRectMake((winSize.width/2)-(85/2), ((winSize.height/2)-(85/2))-40, 85, 85);
-        av.tag  = 1;
-        [self.loadingView addSubview:av];
-        [av startAnimating];
     } 
     
     // Invoked by SPSession after a successful login.
@@ -418,6 +444,7 @@ NSUInteger loadTrack;
             self.playbackLabel.hidden = NO;
             
             [self.loadingView removeFromSuperview];
+            [self.loadingView release];
             
             
         }
@@ -425,25 +452,28 @@ NSUInteger loadTrack;
     else{
         NSLog(@"loaded playlists");
         
+        
+        
         self.cueView.hidden = NO;
         self.playlistLabel.hidden = NO;
         self.searchLabel.hidden = NO;
         self.playbackLabel.hidden = NO;
         
         [self.loadingView removeFromSuperview];
+        [self.loadingView release];
+  
+        playlistView *newplView = [[playlistView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
         
-        self.pllistViewController = [[playlistViewController alloc]init];
+        [self.mainViewController.view insertSubview:newplView belowSubview:self.plbackView]; 
         
-        self.pllistView = [[playlistView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
-        self.pllistViewController.view = self.pllistView;
-        
-        [self.mainViewController.view insertSubview:self.pllistViewController.view belowSubview:self.plbackView]; 
-        
-        [self.pllistView initGridParams];
-        [self.pllistView loadPlaylistView:[[SPSession sharedSession] userPlaylists]];
-        [self.pllistView checkPlLoad:[[SPSession sharedSession]userPlaylists]];
+        [newplView initGridParams];
+        [newplView loadPlaylistView:[[SPSession sharedSession] userPlaylists]];
+        [newplView checkPlLoad:[[SPSession sharedSession]userPlaylists]];
+       
+        self.pllistView = newplView;
         
         
+        [newplView release];
         
     }
 }
@@ -565,7 +595,7 @@ NSUInteger loadTrack;
         
     }
     else if (lbl.tag == 12){
-        [self.playbackManager checkavailableOutputRoutes];
+       // [self.playbackManager checkavailableOutputRoutes];
         
         //  [self.mainViewController.view bringSubviewToFront:self.spSearchView.view];
         self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
@@ -603,20 +633,25 @@ NSUInteger loadTrack;
 
 -(void)sessionDidLogOut:(SPSession *)aSession {
     NSLog(@"session logged out");
-    self.cueView.hidden = YES;
-    self.playlistLabel.hidden = YES;
-    self.searchLabel.hidden = YES;
-    self.playbackLabel.hidden = YES;
+   // self.cueView.hidden = YES;
+   // self.playlistLabel.hidden = YES;
+   // self.searchLabel.hidden = YES;
+   // self.playbackLabel.hidden = YES;
+    [self removeGUI];
     
-   // [self.pllistView removeObservers];
+    [self.pllistView removeObservers];
     
-    for (UIView *view in [self.pllistViewController.view subviews]){
+    for (UIView *view in [self.pllistView subviews]){
         
         [view removeFromSuperview];
     }
-    [self.pllistViewController.view removeFromSuperview];
+    [self.pllistView removeFromSuperview];
+  //  [self.pllistView dealloc];
+  //  [self.pllistViewController.view removeFromSuperview];
     
-    self.pllistViewController = nil;
+  //  self.pllistViewController = nil;
+    
+    [Shared sharedInstance].relogin = true;
     
     [self.mainViewController presentModalViewController:[[[LoginViewController alloc] init] autorelease]
 											   animated:YES];
@@ -643,7 +678,7 @@ NSUInteger loadTrack;
 	[self removeObserver:self forKeyPath:@"playbackManager.trackPosition"];
     */
     [self.chTwoViewController release];
-    [_loadingView release];
+   // [_loadingView release];
     [_playlistLabel release];
     [_playbackLabel release];
     [_searchLabel release];

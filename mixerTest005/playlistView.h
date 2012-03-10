@@ -43,6 +43,6 @@
 - (NSString *)getTrackStr:(SPPlaylistItem *)plItem;
 - (void)removeObservers;
 - (void)setMissedPlaylists;
--(void)checkMissedPlaylists:(SPPlaylist *)pl;
+- (void)checkMissedPlaylists:(SPPlaylist *)pl;
 
 @end

@@ -24,7 +24,7 @@
         self.param1Lbl = [[UILabel alloc] initWithFrame:CGRectZero];
         self.param1Lbl.backgroundColor = [UIColor clearColor];
         //     headerLabel.opaque = NO;
-        self.param1Lbl.textColor = [UIColor purpleColor];
+        self.param1Lbl.textColor = [[UIColor purpleColor] colorWithAlphaComponent:.5];
        // param1.highlightedTextColor = [UIColor whiteColor];
         self.param1Lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(23.0)];
         self.param1Lbl.frame = CGRectMake(size.width-260, 340, 260, 30.0);
@@ -33,7 +33,7 @@
         self.param2Lbl = [[UILabel alloc] initWithFrame:CGRectZero];
         self.param2Lbl.backgroundColor = [UIColor clearColor];
         //     headerLabel.opaque = NO;
-        self.param2Lbl.textColor = [UIColor purpleColor];
+        self.param2Lbl.textColor = [[UIColor purpleColor] colorWithAlphaComponent:.5];
         // param1.highlightedTextColor = [UIColor whiteColor];
         self.param2Lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(23.0)];
         self.param2Lbl.frame = CGRectMake(size.width-260, 380, 260, 30.0);
@@ -89,7 +89,7 @@
     
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     
-    CGFloat components[] = {.5, 1, 1.0, 1.0};
+    CGFloat components[] = {1, 1, 1, 1};
     
     CGColorRef color = CGColorCreate(colorspace, components);
     

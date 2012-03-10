@@ -29,6 +29,8 @@
     if (self) {
         // Custom initialization
         
+       
+        
     }
     return self;
 }
@@ -110,11 +112,13 @@
   	self.usernameField.text = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
     
    // self.pass.on = NO;
-    if (self.pass.on && ![Shared sharedInstance].hasLoggedin){
-        
-        
+    if (self.pass.on && ![Shared sharedInstance].hasLoggedin && ![Shared sharedInstance].relogin){
+       
        [[SPSession sharedSession] attemptLoginWithStoredCredentials:(NSError **)error];
        // NSLog(@"%@",tryLogin);
+    }else{
+        
+        [Shared sharedInstance].hasLoggedin = false;
     }
     
     

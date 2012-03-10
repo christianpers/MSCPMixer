@@ -712,11 +712,12 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     CFStringRef testing = kAudioSession_AudioRouteKey_Outputs;
     
+    /*this shit does not work !!*/
     
-    CFDictionaryRef asCFType = (CFDictionaryRef)testing;
-    UInt32 dataSize = sizeof(asCFType);
+   // CFDictionaryRef asCFType = (CFDictionaryRef)testing;
+   // UInt32 dataSize = sizeof(asCFType);
    // AudioSessionGetProperty(kAudioSessionProperty_AudioRouteDescription, &dataSize, &asCFType);
-    NSDictionary *easyPeasy = (NSDictionary *)asCFType;
+    NSDictionary *easyPeasy = (NSDictionary *)testing;
     NSDictionary *firstOutput = (NSDictionary *)[[easyPeasy valueForKey:@"RouteDetailedDescription_Outputs"] objectAtIndex:0];
     NSString *portType = (NSString *)[firstOutput valueForKey:@"kAudioSession_AudioRouteKey_Type"];
     NSLog(@"first output port type is: %@!", portType);
@@ -882,14 +883,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     timePitch_desc.componentFlags = 0;
     timePitch_desc.componentFlagsMask = 0;
 	//CAComponentDescription timePitch_desc(kAudioUnitType_FormatConverter, kAudioUnitSubType_Varispeed, kAudioUnitManufacturer_Apple);
-    
-    AudioComponentDescription reverb_desc;
-    reverb_desc.componentType = kAudioUnitType_Effect;
-    reverb_desc.componentSubType = kAudioUnitSubType_Reverb2;
-    reverb_desc.componentManufacturer = kAudioUnitManufacturer_Apple;
-    reverb_desc.componentFlags = 0;
-    reverb_desc.componentFlagsMask = 0;
-   // CAComponentDescription reverb_desc(kAudioUnitType_Effect, kAudioUnitSubType_Reverb2, kAudioUnitManufacturer_Apple);
     
     AudioComponentDescription hipass_desc;
     hipass_desc.componentType = kAudioUnitType_Effect;

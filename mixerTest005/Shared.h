@@ -17,6 +17,7 @@
     int effectgridY;
     BOOL hasLoggedin;
     Float64 currTrackPos;
+    Boolean relogin;
 }
 
 @property (nonatomic, retain) NSMutableArray *masterCue;
@@ -26,6 +27,8 @@
 @property (nonatomic) int effectgridY;
 @property (nonatomic) BOOL hasLoggedin;
 @property (nonatomic) Float64 currTrackPos;
+@property (nonatomic) Boolean relogin;
+
 
 + (Shared*)sharedInstance;
 

@@ -41,18 +41,29 @@ int tagAdd = 10;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
-          self.plViewController = [[playlistViewController alloc]init];
+            // Initialization code
         
-       // [self loadPlaylistView:plContainer];
-      //  [self checkPlLoad:plContainer];
+        self.plViewController = [[playlistViewController alloc]init];
+        
         missedPlArray = [[NSMutableArray alloc] init];
+        
+        [self addObserver:self forKeyPath:@"loadPlaylist.items" options:0 context:nil];
+        
+        [self addObserver:self forKeyPath:@"trackimg.album.cover.image" options:0 context:nil];
+        
+
+         
         
     }
     return self;
 }
 
 - (void)initGridParams{
+    
+    int nrofViewChilds = [[self subviews]count];
+    NSLog(@"bitch: %d",nrofViewChilds);
+    
+     
     plContainer = [[SPSession sharedSession] userPlaylists];
     
     nrOfPl = [[plContainer playlists] count];
@@ -81,17 +92,14 @@ int tagAdd = 10;
     self.contentSize = CGSizeMake(parentWidth+(margin*columns), parentHeight+(rows*margin)+height);
     self.scrollEnabled = YES;
     
-    
+   
     self.loadPlaylist = nil;
     self.trackimg = nil;
     self.plCallback = nil;
     self.tempImg = nil;
     
     
-    [self addObserver:self forKeyPath:@"loadPlaylist.items" options:0 context:nil];
-    
-    [self addObserver:self forKeyPath:@"trackimg.album.cover.image" options:0 context:nil];
-    
+         
     
     
 }

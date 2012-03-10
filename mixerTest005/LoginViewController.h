@@ -15,6 +15,7 @@
 	UIButton *loginButton;
 	UIActivityIndicatorView *spinner;
     UISwitch *pass;
+    
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *usernameField;

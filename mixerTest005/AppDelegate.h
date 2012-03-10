@@ -39,7 +39,6 @@
     secondChannelView *secChView;
     BOOL chTwoActive;
     secondChannelUIViewController *chTwoViewController;
-    playlistViewController *pllistViewController;
     
     
     
@@ -57,7 +56,6 @@
 
 @property (nonatomic, retain) playbackView *plbackView;
 @property (nonatomic, retain) playlistView *pllistView;
-@property (nonatomic, retain) playlistViewController *pllistViewController;
 
 @property (nonatomic, retain) UILabel *playlistLabel;
 @property (nonatomic, retain) UILabel *playbackLabel;
@@ -77,6 +75,8 @@
 - (void)initLoadGUI;
 - (void)ativateSearchView;
 - (void)showLogin;
+
+- (void)createLoadingPlView;
 
 - (void)playnewTrack:(SPTrack *)track;
 
