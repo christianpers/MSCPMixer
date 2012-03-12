@@ -454,7 +454,7 @@
 		AA97EEDB14F0B06400A2B892 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = AA97EEDE14F0B06400A2B892 /* Build configuration list for PBXProject "mixerTest005" */;
 			compatibilityVersion = "Xcode 3.2";

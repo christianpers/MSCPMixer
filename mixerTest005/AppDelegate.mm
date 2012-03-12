@@ -86,10 +86,9 @@ int labelWidth = 300;
     CGSize winSize = self.window.frame.size;
     
     UIView *newloadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
-    self.loadingView = newloadingView;
     
-    self.loadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
-    [self.window addSubview:self.loadingView];
+    newloadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
+    [self.window addSubview:newloadingView];
     
     UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(0, 580, winSize.width, 60)];
     // lbl.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.6];
@@ -98,14 +97,17 @@ int labelWidth = 300;
     lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(26.0)];
     lbl.text = [NSString stringWithFormat:@"LOADING UR PLAYLISTS"];
     lbl.textAlignment = UITextAlignmentCenter;
-    [self.loadingView addSubview:lbl];
+    [newloadingView addSubview:lbl];
     [lbl release];
     
     UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
     av.frame=CGRectMake((winSize.width/2)-(85/2), ((winSize.height/2)-(85/2))-40, 85, 85);
     av.tag  = 1;
-    [self.loadingView addSubview:av];
+    [newloadingView addSubview:av];
     [av startAnimating];
+    
+    self.loadingView = newloadingView;
+    
     
     [newloadingView release];
     
@@ -143,6 +145,9 @@ int labelWidth = 300;
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
+    
+    [self.playbackManager stopAUGraph];
+    [[SPSession sharedSession]logout];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -166,6 +171,7 @@ int labelWidth = 300;
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
+    [self.playbackManager stopAUGraph];
     [[SPSession sharedSession]logout];
     
 }
@@ -266,7 +272,7 @@ int labelWidth = 300;
             
             self.plbackView.frame = CGRectMake(0, 0, winSize.width, winSize.height);
             self.secChView.frame = CGRectMake(0, winSize.height-70, winSize.width,50);
-            self.plbackView.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, bounds.size.height-180);
+            self.plbackView.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, winSize.height-180);
             
             
             [UIView commitAnimations];
@@ -371,10 +377,20 @@ int labelWidth = 300;
                action:@selector(userLogout)
      forControlEvents:UIControlEventTouchDown];
     
-    [self.window addSubview:logout];
+    //[self.window addSubview:logout];
     
     //[logout release];
     
+    UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(20, 30, 50, 50)];
+    mpVolumeViewParentView.backgroundColor = [UIColor clearColor];
+    [self.window addSubview:mpVolumeViewParentView];
+    MPVolumeView *myVolumeView =
+    [[MPVolumeView alloc] initWithFrame: mpVolumeViewParentView.bounds];
+    [mpVolumeViewParentView addSubview: myVolumeView];
+    //myVolumeView.showsRouteButton = YES;
+    myVolumeView.showsVolumeSlider = NO;
+    [myVolumeView release];
+    [mpVolumeViewParentView release];
     
     self.secChView = [[secondChannelView alloc] init];
     self.secChView.frame = CGRectMake(0, self.plbackView.bounds.size.height-70, self.plbackView.bounds.size.width, 50);
@@ -444,7 +460,7 @@ NSUInteger loadTrack;
             self.playbackLabel.hidden = NO;
             
             [self.loadingView removeFromSuperview];
-            [self.loadingView release];
+           // [self.loadingView release];
             
             
         }
@@ -452,15 +468,13 @@ NSUInteger loadTrack;
     else{
         NSLog(@"loaded playlists");
         
-        
-        
         self.cueView.hidden = NO;
         self.playlistLabel.hidden = NO;
         self.searchLabel.hidden = NO;
         self.playbackLabel.hidden = NO;
         
         [self.loadingView removeFromSuperview];
-        [self.loadingView release];
+       // [self.loadingView release];
   
         playlistView *newplView = [[playlistView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
         
@@ -615,7 +629,8 @@ NSUInteger loadTrack;
 
 -(void)userLogout{
     
-    [[SPSession sharedSession] logout];
+    [self.playbackManager checkavailableOutputRoutes];
+    //[[SPSession sharedSession] logout];
     
     
 }
@@ -633,19 +648,18 @@ NSUInteger loadTrack;
 
 -(void)sessionDidLogOut:(SPSession *)aSession {
     NSLog(@"session logged out");
-   // self.cueView.hidden = YES;
-   // self.playlistLabel.hidden = YES;
-   // self.searchLabel.hidden = YES;
-   // self.playbackLabel.hidden = YES;
     [self removeGUI];
     
-    [self.pllistView removeObservers];
+  //  [self.pllistView removeObservers];
+    
+    [self.playbackManager stopAUGraph];
     
     for (UIView *view in [self.pllistView subviews]){
         
         [view removeFromSuperview];
     }
     [self.pllistView removeFromSuperview];
+    self.pllistView = nil;
   //  [self.pllistView dealloc];
   //  [self.pllistViewController.view removeFromSuperview];
     
@@ -656,7 +670,14 @@ NSUInteger loadTrack;
     [self.mainViewController presentModalViewController:[[[LoginViewController alloc] init] autorelease]
 											   animated:YES];
 }
--(void)session:(SPSession *)aSession didEncounterNetworkError:(NSError *)error; {}
+-(void)session:(SPSession *)aSession didEncounterNetworkError:(NSError *)error; {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network error"
+													message:nil
+												   delegate:nil
+										  cancelButtonTitle:@"OK"
+										  otherButtonTitles:nil];
+	[[alert autorelease] show];
+}
 -(void)session:(SPSession *)aSession didLogMessage:(NSString *)aMessage; {}
 -(void)sessionDidChangeMetadata:(SPSession *)aSession; {}
 

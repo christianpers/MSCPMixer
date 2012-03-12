@@ -82,6 +82,7 @@
 	int buffersize_; 
 	int audioproblems; 
 	int readflag_;
+    BOOL chTwoPlaying;
     
 	
 }
@@ -161,9 +162,9 @@
 - (void) connectSecChannelCallback;
 - (void) removeSecChannelCallback;
 - (void) closeDownChannelTwo;
-
--(void)canRead;
--(void)cantRead;
+- (void) toggleChannelTwoPlayingStatus:(BOOL)playingStatus;
+- (void) canRead;
+- (void) cantRead;
 
 -(void)setUpData:(float *)readbuffer pos:(int *)readpos size:(int) siz;
 @property (readwrite)           AudioStreamBasicDescription stereoStreamFormat;

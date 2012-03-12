@@ -75,6 +75,9 @@ CGSize parentSize;
         
         if (piece.tag <= 5){
            // [[(playbackView *)[self superview] controlView] setHidden:YES];
+           // [[(playbackView *)[self superview] artistLbl] setHidden:YES];
+           // [[(playbackView *)[self superview] titleLbl] setHidden:YES];
+            
             
         }
         else{
@@ -119,6 +122,10 @@ CGSize parentSize;
     if ([gestureRecognizer state] == UIGestureRecognizerStateEnded){
         if (piece.tag <= 5){
             piece.backgroundColor = [UIColor clearColor];
+          //  [[(playbackView *)[self superview] artistLbl] setHidden:NO];
+          //  [[(playbackView *)[self superview] titleLbl] setHidden:NO];
+          //  [[(playbackView *)[self superview] controlView] setHidden:NO];
+            
             
         }
         else{
@@ -134,17 +141,6 @@ CGSize parentSize;
         main.cueView.hidden = NO;
         parentView.backgroundColor = [UIColor clearColor];
      //   parentView.layer.borderWidth = 0.0f;
-        
-        if (piece.tag <= 5){
-          //  [[(playbackView *)[self superview] controlView] setHidden:NO];
-            
-            
-        }
-        else{
-          //  [[(secondChannelView *)[self superview] controlView] setHidden:NO];
-            
-            
-        }
         
         
     }
@@ -360,7 +356,7 @@ CGSize parentSize;
              */
             if ([Shared sharedInstance].curVariSpeedEffect == 1){
                 x = 0;
-                y = (window.height/2)-21;
+                y = (window.height/2)+21;
                 
             }
             else{
@@ -436,7 +432,7 @@ CGSize parentSize;
              */
             if ([Shared sharedInstance].curVariSpeedEffect == 1){
                 x = 0;
-                y = (window.height/2)-21;
+                y = (window.height/2)+21;
                 
             }
             else{

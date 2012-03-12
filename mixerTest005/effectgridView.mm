@@ -24,19 +24,19 @@
         self.param1Lbl = [[UILabel alloc] initWithFrame:CGRectZero];
         self.param1Lbl.backgroundColor = [UIColor clearColor];
         //     headerLabel.opaque = NO;
-        self.param1Lbl.textColor = [[UIColor purpleColor] colorWithAlphaComponent:.5];
+        self.param1Lbl.textColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
        // param1.highlightedTextColor = [UIColor whiteColor];
-        self.param1Lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(23.0)];
-        self.param1Lbl.frame = CGRectMake(size.width-260, 340, 260, 30.0);
+        self.param1Lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(17.0)];
+        self.param1Lbl.frame = CGRectMake(size.width-200, 340, 200, 30.0);
         [self addSubview:self.param1Lbl];
         
         self.param2Lbl = [[UILabel alloc] initWithFrame:CGRectZero];
         self.param2Lbl.backgroundColor = [UIColor clearColor];
         //     headerLabel.opaque = NO;
-        self.param2Lbl.textColor = [[UIColor purpleColor] colorWithAlphaComponent:.5];
+        self.param2Lbl.textColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
         // param1.highlightedTextColor = [UIColor whiteColor];
-        self.param2Lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(23.0)];
-        self.param2Lbl.frame = CGRectMake(size.width-260, 380, 260, 30.0);
+        self.param2Lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(17.0)];
+        self.param2Lbl.frame = CGRectMake(size.width-200, 380, 200, 30.0);
         [self addSubview:self.param2Lbl];
         
     }
@@ -94,6 +94,13 @@
     CGColorRef color = CGColorCreate(colorspace, components);
     
     CGContextSetStrokeColorWithColor(context, color);
+    
+    float dashPhase = 0.0;
+    float dashLengths[] = { 20, 30, 40, 30, 20, 10 };
+    CGContextSetLineDash( context,
+                         dashPhase, dashLengths,
+                         sizeof( dashLengths ) / sizeof( float ) );
+
     
     if (x > 0){
         CGContextMoveToPoint(context, x, 0);

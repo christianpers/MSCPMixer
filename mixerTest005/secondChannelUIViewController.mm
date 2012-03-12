@@ -58,7 +58,8 @@
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     
-    memset(data_, 0, datasize_);
+   // memset(data_, 0, datasize_);
+    [main.playbackManager toggleChannelTwoPlayingStatus:YES];
     
     [self freeAudio];
     
@@ -410,6 +411,9 @@
 					if(0 == frameCount) {
 						
 						actuallyfinished=1; 
+                        [self freeAudio];
+                        
+                        [main.playbackManager toggleChannelTwoPlayingStatus:NO];
 						//in case user presses restart button! 
 						//break;
 						
@@ -419,6 +423,9 @@
 					
 					
 					actuallyfinished=1;
+                    [self freeAudio];
+                    
+                    [main.playbackManager toggleChannelTwoPlayingStatus:NO];
 				}
 				
 			}	else {
@@ -632,13 +639,14 @@ audiofileProblem:
     
     [main.playbackManager cantRead];
     
-    memset(data_, 0, datasize_);
     
     [self freeAudio];
     
     [self initDataVar];
     
     [main.playbackManager removeSecChannelCallback];
+    
+    [main.playbackManager toggleChannelTwoPlayingStatus:NO];
     
     
 }
@@ -658,6 +666,8 @@ audiofileProblem:
 - (void)freeAudio {
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
    
+    
+    memset(data_, 0, datasize_);
     
     [main.playbackManager cantRead];
     

@@ -14,6 +14,7 @@
     SPPlaylistContainer *plContainer;
     SPPlaylist *_loadPlaylist;
     NSMutableArray *plCallback;
+    SPPlaylist *plCallb;
     SPTrack *_trackimg;
     playlistViewController *plViewController;
     UIImage *_tempImg;
@@ -31,6 +32,7 @@
 @property (nonatomic, retain) UIImage *tempImg;
 @property (nonatomic, retain) SPPlaylistItem *loadItem;
 @property (nonatomic) sp_linktype itemCallback;
+@property (nonatomic, retain) SPPlaylist *plCallb;
 
 
 - (void)initGridParams;

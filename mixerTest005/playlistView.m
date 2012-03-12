@@ -19,6 +19,7 @@
 @synthesize tempImg = _tempImg;
 @synthesize plCallback = _plCallback;
 @synthesize loadItem = _loadItem;
+@synthesize plCallb = _plCallb;
 @synthesize itemCallback = _itemCallback;
 
 
@@ -98,10 +99,6 @@ int tagAdd = 10;
     self.plCallback = nil;
     self.tempImg = nil;
     
-    
-         
-    
-    
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -118,7 +115,8 @@ int tagAdd = 10;
         }
 	}
     else if ([keyPath isEqualToString:@"loadPlaylist.items"]){
-        self.plCallback = self.loadPlaylist.items;
+      //  self.plCallback = self.loadPlaylist.items;
+        self.plCallb = self.loadPlaylist;
         if(self.loadPlaylist.isLoaded)
          
             [self setLoadedTrack:self.loadPlaylist];
@@ -334,7 +332,23 @@ int tagAdd = 10;
         trackURL = playlistItem.itemURL;
         SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
         if (track.availability == 1){
-            self.trackimg = track;
+            CGImageRef cgref = [track.album.cover.image CGImage];
+            CIImage *cim = [track.album.cover.image CIImage];
+            
+            if (cim == nil && cgref == NULL)
+            {
+                NSLog(@"no underlying data");
+                self.trackimg = track;
+            }
+            else{
+                 
+                [self createnewplBox:track.album.cover.image];
+                if (plCounter < nrOfPl){
+                    [self checkPlLoad:plContainer];    
+                }
+                
+            }
+           
         }
         else
         {

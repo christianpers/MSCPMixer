@@ -293,24 +293,17 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 
 -(void)closeDownChannelTwo{
 	
-	
-	//OSStatus status = AudioOutputUnitStop(audioUnit);
-	
 	if(startedCallback) {
 		
-        //for(UInt32 i=0;i<bufferList->mNumberBuffers;i++) {
-        //		free(bufferList->mBuffers[i].mData);
-        //	}
-        //	
-       // free(bufferList);
-        
         startedCallback	= NO;
 		
 	}
     
-	//AudioUnitUninitialize(audioUnit);
-	
-	//AudioSessionSetActive(false);
+}
+
+-(void)toggleChannelTwoPlayingStatus:(BOOL)playingStatus{
+    
+    chTwoPlaying = playingStatus;
     
 }
 
@@ -718,8 +711,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
    // UInt32 dataSize = sizeof(asCFType);
    // AudioSessionGetProperty(kAudioSessionProperty_AudioRouteDescription, &dataSize, &asCFType);
     NSDictionary *easyPeasy = (NSDictionary *)testing;
-    NSDictionary *firstOutput = (NSDictionary *)[[easyPeasy valueForKey:@"RouteDetailedDescription_Outputs"] objectAtIndex:0];
-    NSString *portType = (NSString *)[firstOutput valueForKey:@"kAudioSession_AudioRouteKey_Type"];
+ //   NSDictionary *firstOutput = (NSDictionary *)[[easyPeasy valueForKey:@"RouteDetailedDescription_Outputs"] objectAtIndex:0];
+    NSString *portType = (NSString *)[easyPeasy valueForKey:@"kAudioSession_AudioRouteKey_Type"];
     NSLog(@"first output port type is: %@!", portType);
     
     UInt32 size = sizeof(CFArrayRef);
