@@ -146,8 +146,8 @@ int labelWidth = 300;
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
     
-    [self.playbackManager stopAUGraph];
-    [[SPSession sharedSession]logout];
+  //  [self.playbackManager stopAUGraph];
+  //  [[SPSession sharedSession]logout];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -171,8 +171,8 @@ int labelWidth = 300;
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
-    [self.playbackManager stopAUGraph];
-    [[SPSession sharedSession]logout];
+   // [self.playbackManager stopAUGraph];
+   // [[SPSession sharedSession]logout];
     
 }
 

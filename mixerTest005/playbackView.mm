@@ -16,6 +16,7 @@
 @synthesize artistLbl, titleLbl, selBtn;
 @synthesize trackControlBG, trackControlFG, controlView;
 @synthesize timepitchController, lopassController, hipassController, channelOneVolController, effectParentView;
+@synthesize fftView;
 
 
 - (id)initWithFrame:(CGRect)frame

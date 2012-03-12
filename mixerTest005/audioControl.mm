@@ -9,10 +9,13 @@
 #import "audioControl.h"
 #import "Shared.h"
 #import "AppDelegate.h"
+//#import "CAStreamBasicDescription.h"
+
 
 AudioBufferList* bufferList;
 BOOL startedCallback;
 BOOL noInterrupt; 
+
 
 void propListener(	void *                  inClientData,
 				  AudioSessionPropertyID	inID,
@@ -47,6 +50,7 @@ static OSStatus playbackCallback(void *inRefCon,
 	
 	int i, j; 
 	
+    
 	
 	if(startedCallback && noInterrupt) {
 		
@@ -749,22 +753,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     }
 }
 
--(void)setnewaudioRoute{
-  /*  
-    CFNumberRef routeId = (CFNumberRef)CFDictionaryGetValue(audioOutput, kAudioSession_OutputDestinationKey_ID);
-    
-    OSStatus err = AudioSessionSetProperty(kAudioSessionProperty_OutputDestination, <#UInt32 inDataSize#>, <#const void *inData#>)
-    
-    UInt32 audioRouteOverride = kAudioSessionOutputRoute_AirPlay;  // 1
-    
-    AudioSessionSetProperty (
-                             kAudioSessionProperty_AudioRoute,                         // 2
-                             sizeof (audioRouteOverride),                                      // 3
-                             &audioRouteOverride                                               // 4
-                             );
-   
-   */
-}
 
                                  
 -(BOOL)setupAudioGraphWithAudioFormat:(const sp_audioformat *)audioFormat error:(NSError **)err {
@@ -1595,6 +1583,10 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
                 [self fadeOutMusicCh1];
                 [self removeFirstChannelCallback];
             }
+            if (!chTwoPlaying){
+                
+                [self teardownCoreAudio];
+            }
         }
     }
     else
@@ -1702,6 +1694,25 @@ static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
                                                                  waitUntilDone:NO];
 		framesSinceLastTimeUpdate = 0;
 	}
+    
+    /*************** FFT ***************/		
+    // We want to deal with only floating point values here.
+  //  ConvertInt16ToFloat(control,control->audioBufferCh1, control->fftBuffer, bufferCapacity);
+    
+    /** 
+     Look at the real signal as an interleaved complex vector by casting it.
+     Then call the transformation function vDSP_ctoz to get a split complex 
+     vector, which for a real signal, divides into an even-odd configuration.
+     */
+ //   vDSP_ctoz((COMPLEX*)outputBuffer, 2, &A, 1, nOver2);
+    
+    // Carry out a Forward FFT transform.
+ //   vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_FORWARD);
+    
+    // The output signal is now in a split real form. Use the vDSP_ztoc to get
+    // a split real vector.
+ //   vDSP_ztoc(&A, 1, (COMPLEX *)outputBuffer, 2, nOver2);
+
         
     //	[self release];
     
@@ -1712,5 +1723,30 @@ static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
 	if (currentCoreAudioSampleRate > 0)
 		self.trackPosition = self.trackPosition + (double)framesToAppend/currentCoreAudioSampleRate;
 }
+
+void ConvertInt16ToFloat(audioControl* THIS, void *buf, float *outputBuf, size_t capacity) {
+	AudioConverterRef converter;
+	OSStatus err;
+	
+	size_t bytesPerSample = sizeof(float);
+	AudioStreamBasicDescription outFormat = {0};
+	outFormat.mFormatID = kAudioFormatLinearPCM;
+	outFormat.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked;
+	outFormat.mBitsPerChannel = 8 * bytesPerSample;
+	outFormat.mFramesPerPacket = 1;
+	outFormat.mChannelsPerFrame = 1;	
+	outFormat.mBytesPerPacket = bytesPerSample * outFormat.mFramesPerPacket;
+	outFormat.mBytesPerFrame = bytesPerSample * outFormat.mChannelsPerFrame;		
+	outFormat.mSampleRate = 44100;
+	
+	const AudioStreamBasicDescription inFormat = THIS->stereoStreamFormat;
+	
+	UInt32 inSize = capacity*sizeof(SInt16);
+	UInt32 outSize = capacity*sizeof(float);
+	err = AudioConverterNew(&inFormat, &outFormat, &converter);
+	err = AudioConverterConvertBuffer(converter, inSize, buf, &outSize, outputBuf);
+}
+
+
                                
 @end

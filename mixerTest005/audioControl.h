@@ -11,6 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import <Foundation/Foundation.h>
+#import <Accelerate/Accelerate.h>
 
 //#import "CAStreamBasicDescription.h"
 //#import "CAComponentDescription.h"
@@ -70,6 +71,13 @@
     AURenderCallbackStruct          rcbsSecond; //second channel
     
     CFArrayRef audioOutputRoutes;
+    
+    //fft objects
+    FFTSetup fftSetup;
+	COMPLEX_SPLIT A;
+    float *fftBuffer;
+    
+	
   
     
 @public

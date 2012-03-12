@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "effectController.h"
 #import "CocoaLibSpotify.h"
+#import "fftAnalyzerView.h"
 
 
 
@@ -28,6 +29,9 @@
     effectController *channelOneVolController;
     UIView *effectContainerView;
     
+    //fft analyzing
+    fftAnalyzerView *fftView;
+    
    
     
    
@@ -45,8 +49,7 @@
 @property(nonatomic, retain) effectController *lopassController;
 @property(nonatomic, retain) effectController *hipassController;
 @property(nonatomic, retain) effectController *channelOneVolController;
-
-
+@property(nonatomic, assign) fftAnalyzerView *fftView;
 
 
 - (void)playnextTrack:(id)sender;
