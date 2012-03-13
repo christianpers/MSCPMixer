@@ -29,6 +29,13 @@
         int cntrlHeight = 100;
         int mastervolHeight = 200;
         
+        //fft shieed
+        self.fftView = [[fftAnalyzerView alloc]initWithFrame:CGRectMake(100, 100, 100, 100)];
+    //    self.fftView.backgroundColor = [UIColor whiteColor];
+        [self addSubview:self.fftView];
+        AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [main.playbackManager setFFTView:self.fftView];
+        
         self.artistLbl = [[UILabel alloc]initWithFrame:CGRectMake(400,self.bounds.size.height-200,300,30)];
         self.artistLbl.textAlignment =  UITextAlignmentCenter;
         self.artistLbl.textColor = [UIColor blackColor];
@@ -204,7 +211,6 @@
         [self.trackControlBG addGestureRecognizer:pgr];
         [pgr release];
         
-        AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
         main.playbackManager.playbackIsPaused = NO;
             
@@ -436,6 +442,7 @@
     [self.hipassController release];
     [self.channelOneVolController release];
     [self.effectParentView release];
+    [self.fftView release];
 
 }
 

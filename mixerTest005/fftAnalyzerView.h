@@ -15,5 +15,7 @@
     float *fftBuffer;
 }
 
+- (void)updateFFT :(float *)buffer;
+
 
 @end

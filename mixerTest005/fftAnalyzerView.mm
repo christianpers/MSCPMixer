@@ -7,6 +7,7 @@
 //
 
 #import "fftAnalyzerView.h"
+#import "AppDelegate.h"
 
 @implementation fftAnalyzerView
 
@@ -14,19 +15,33 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+        
+        
     }
     return self;
 }
 
+-(void)updateFFT:(float *)buffer{
+    
+  //NSLog(@"update fft");
+   // memcpy(fftBuffer, buffer, buffer)
+    fftBuffer = buffer;
+    [self setNeedsDisplay];
+    
+    
+}
 
-/*
+
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    // Drawing code
+    CGRect rectangle = CGRectMake(0, 0, 10, 50);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(context, rectangle);
 }
-*/
+
 
 @end

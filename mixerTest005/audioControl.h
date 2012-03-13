@@ -18,6 +18,7 @@
 //#import "CARingBuffer.h"
 
 #import "CocoaLibSpotify.h"
+#import "fftAnalyzerView.h"
 
 @class audioControl;
 
@@ -42,7 +43,6 @@
     AudioUnitParameterValue     volume;
     int                         currentCoreAudioSampleRate;
     
-    AudioStreamBasicDescription streamFormat;
     AUGraph                     graph;
     AudioUnit                   ioUnit;
     AudioUnit                   mixerUnit;
@@ -66,21 +66,14 @@
    // SPCircularBuffer            *audioBufferCh1, *audioBufferCh2;
     
     //second channel stuff
-    AudioStreamBasicDescription     stereoStreamFormat;
+   
     AURenderCallbackStruct          rcbsFirst;
     AURenderCallbackStruct          rcbsSecond; //second channel
     
     CFArrayRef audioOutputRoutes;
     
-    //fft objects
-    FFTSetup fftSetup;
-	COMPLEX_SPLIT A;
-    float *fftBuffer;
-    
-	
-  
-    
 @public
+    AudioStreamBasicDescription     stereoStreamFormat;
     float tempbuf[8000];
 	//float monobuf[4000]; 
 	//float inputbuf[1024]; 
@@ -92,8 +85,19 @@
 	int readflag_;
     BOOL chTwoPlaying;
     
+    //fft objects
+    FFTSetup fftSetup;
+	COMPLEX_SPLIT A;
+    void *fftInBuffer;
+    float *fftOutBuffer;
+    size_t bufferCapacity;	// In samples
+    int log2n, n, nOver2;
+    size_t index;	// In samples
+    fftAnalyzerView *fftView;
 	
 }
+
+- (void)setFFTView: (fftAnalyzerView *)fftViewer;
 
 
 - (void)initializeAudioBuffer: (NSUInteger)bufferSizeBytes;
@@ -123,6 +127,7 @@
 /** Plays the given track.
  
 
+
  
  @param trackToPlay The track that should be played.
  @param error An `NSError` pointer reference that, if not `NULL`, will be filled with an error describing any failure. 
@@ -143,6 +148,8 @@
 -(void)stopAUGraph;
 
 -(Boolean)isaugraphRunning;
+
+
 
 /*
  effect controls
@@ -194,6 +201,8 @@
 @property (nonatomic, retain) NSTimer *timer;
 
 @property(nonatomic) BOOL playbackIsPaused;
+
+@property(nonatomic, assign)fftAnalyzerView *fftView;
 
 
 

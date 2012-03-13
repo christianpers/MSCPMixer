@@ -49,7 +49,7 @@
 @property(nonatomic, retain) effectController *lopassController;
 @property(nonatomic, retain) effectController *hipassController;
 @property(nonatomic, retain) effectController *channelOneVolController;
-@property(nonatomic, assign) fftAnalyzerView *fftView;
+@property(nonatomic, retain) fftAnalyzerView *fftView;
 
 
 - (void)playnextTrack:(id)sender;
