@@ -11,7 +11,6 @@
 		AA58C0ED14FC839C0074837F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EC14FC839C0074837F /* CoreMedia.framework */; };
 		AA58C0F014FC83CA0074837F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */; };
 		AA58C0F314FC86090074837F /* secondChannelUIViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA58C0F214FC86090074837F /* secondChannelUIViewController.mm */; };
-		AA5B97DB150E7D960061D969 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA5B97D9150E7D960061D969 /* CAStreamBasicDescription.cpp */; };
 		AA5B97DF150E92700061D969 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA5B97DE150E92700061D969 /* Accelerate.framework */; };
 		AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA5B97E6150EAF950061D969 /* fftAnalyzerView.mm */; };
 		AA651B4015003051000DBF35 /* playNew.png in Resources */ = {isa = PBXBuildFile; fileRef = AA651B3F15003051000DBF35 /* playNew.png */; };
@@ -72,14 +71,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA2CEBCE150F032C00EBA96C /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = ../../../../../../Developer/Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
+		AA2CEBCF150F032C00EBA96C /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = ../../../../../../Developer/Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.h; sourceTree = "<group>"; };
 		AA2D5D0214FB17E000F1DAAA /* secondChannelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secondChannelView.h; sourceTree = "<group>"; };
 		AA2D5D0314FB17E000F1DAAA /* secondChannelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = secondChannelView.m; sourceTree = "<group>"; };
 		AA58C0EC14FC839C0074837F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		AA58C0F114FC86090074837F /* secondChannelUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secondChannelUIViewController.h; sourceTree = "<group>"; };
 		AA58C0F214FC86090074837F /* secondChannelUIViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = secondChannelUIViewController.mm; sourceTree = "<group>"; };
-		AA5B97D9150E7D960061D969 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = DEVELOPER_DIR; };
-		AA5B97DA150E7D960061D969 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.h; sourceTree = DEVELOPER_DIR; };
 		AA5B97DE150E92700061D969 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		AA5B97E5150EAF950061D969 /* fftAnalyzerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftAnalyzerView.h; sourceTree = "<group>"; };
 		AA5B97E6150EAF950061D969 /* fftAnalyzerView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = fftAnalyzerView.mm; sourceTree = "<group>"; };
@@ -220,8 +219,8 @@
 		AA5B97D8150E7D790061D969 /* iPublicUtility */ = {
 			isa = PBXGroup;
 			children = (
-				AA5B97D9150E7D960061D969 /* CAStreamBasicDescription.cpp */,
-				AA5B97DA150E7D960061D969 /* CAStreamBasicDescription.h */,
+				AA2CEBCE150F032C00EBA96C /* CAStreamBasicDescription.cpp */,
+				AA2CEBCF150F032C00EBA96C /* CAStreamBasicDescription.h */,
 			);
 			name = iPublicUtility;
 			sourceTree = "<group>";
@@ -566,7 +565,6 @@
 				AA83DAD914F7327300BF43F0 /* playlistViewController.m in Sources */,
 				AA2D5D0414FB17E000F1DAAA /* secondChannelView.m in Sources */,
 				AA58C0F314FC86090074837F /* secondChannelUIViewController.mm in Sources */,
-				AA5B97DB150E7D960061D969 /* CAStreamBasicDescription.cpp in Sources */,
 				AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

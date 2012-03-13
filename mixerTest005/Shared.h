@@ -18,6 +18,7 @@
     BOOL hasLoggedin;
     Float64 currTrackPos;
     Boolean relogin;
+    int currTrackCueNum;
 }
 
 @property (nonatomic, retain) NSMutableArray *masterCue;
@@ -28,6 +29,7 @@
 @property (nonatomic) BOOL hasLoggedin;
 @property (nonatomic) Float64 currTrackPos;
 @property (nonatomic) Boolean relogin;
+@property (nonatomic) int currTrackCueNum;
 
 
 + (Shared*)sharedInstance;

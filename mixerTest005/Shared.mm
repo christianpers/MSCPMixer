@@ -19,6 +19,7 @@ static Shared* sharedInstance;
 @synthesize hasLoggedin;
 @synthesize currTrackPos;
 @synthesize relogin;
+@synthesize currTrackCueNum;
 
 
 + (Shared*)sharedInstance
@@ -44,6 +45,7 @@ static Shared* sharedInstance;
         hasLoggedin = false;
         currTrackPos = 0;
         relogin = false;
+        currTrackCueNum = 0;
     }
     return self;
 }

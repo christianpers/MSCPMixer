@@ -302,6 +302,10 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         startedCallback	= NO;
 		
 	}
+    if (![SPSession sharedSession].playing){
+        [self stopAUGraph];
+        
+    }
     
 }
 
@@ -1585,7 +1589,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
             }
             if (!chTwoPlaying){
                 
-                [self teardownCoreAudio];
+                [self stopAUGraph];
             }
         }
     }
@@ -1618,31 +1622,39 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 }
                                  
 -(void)sessionDidEndPlaybackOnMainThread:(SPSession *)aSession {
-    NSURL *currentURL = [self.currentTrack spotifyURL];
-    int loop = 0;
-    int currentTrackIndexNum = 0;
+ //   NSURL *currentURL = [self.currentTrack spotifyURL];
+    
+ //   int loop = 0;
+    int currentTrackIndexNum = [Shared sharedInstance].currTrackCueNum;
     int cueLength = [[Shared sharedInstance].masterCue count];
-    for (NSURL *url in [Shared sharedInstance].masterCue){
+    
+ /*   for (NSURL *url in [Shared sharedInstance].masterCue){
         if ([url isEqual:currentURL]){
             currentTrackIndexNum = loop;
         }
         loop++;
-    }
+    }*/
     NSLog(@"currenttrackindex: %d",currentTrackIndexNum);
     if (currentTrackIndexNum+1 < cueLength){
+        [Shared sharedInstance].currTrackCueNum++;
         NSURL *trackURL = [[Shared sharedInstance].masterCue objectAtIndex:currentTrackIndexNum+1];
         SPTrack *track = [[SPSession sharedSession]trackForURL:trackURL];
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [main playnewTrack:track]; 
         
-        
-        
     }
-    else{
+    else if (currentTrackIndexNum+1 == cueLength){
+        [Shared sharedInstance].currTrackCueNum = 0;
+        NSURL *trackURL = [[Shared sharedInstance].masterCue objectAtIndex:0];
+        SPTrack *track = [[SPSession sharedSession]trackForURL:trackURL];
+        AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [main playnewTrack:track];
+    }
+    else {
         [self removeFirstChannelCallback];
     }
     
-    self.currentTrack = nil;	
+    //self.currentTrack = nil;	
 }
 
 static UInt32 framesSinceLastTimeUpdate = 0;

@@ -77,6 +77,7 @@ numberOfSectionsInTableView:(UITableView *)tableView {
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSURL *trackURL = [[Shared sharedInstance].masterCue objectAtIndex:indexPath.row];
+    [Shared sharedInstance].currTrackCueNum = indexPath.row;
     SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
     
     [main playnewTrack:track];
