@@ -13,9 +13,11 @@
 @interface fftAnalyzerView : UIView{
     
     float *fftBuffer;
+    int num_bars;
+    int bin_size;
 }
 
-- (void)updateFFT :(float *)buffer;
+- (void)updateFFT :(float **)buffer :(int)frequencyBin;
 
 
 @end

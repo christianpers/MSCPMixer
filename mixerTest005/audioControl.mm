@@ -325,7 +325,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     result = AUGraphUpdate(graph, NULL);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
-    [self realFFTSetup];
+   
 }
 
 -(void)removeFirstChannelCallback{
@@ -820,6 +820,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	success &= [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
 	success &= [[AVAudioSession sharedInstance] setActive:YES error:&error];
     
+    [self realFFTSetup];
     
     //add a property listener
 	AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange, propListener, self);
@@ -1722,7 +1723,6 @@ static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
     //    myAUGraphPlayerPtr player = (myAUGraphPlayerPtr)inRefCon;
     //	[self retain]; // Try to avoid the object being deallocated while this is going on.
     
-    uint32_t stride = 1;
     
     AudioBuffer *buffer = &(ioData->mBuffers[0]);
 	UInt32 bytesRequired = buffer->mDataByteSize;
@@ -1759,30 +1759,46 @@ static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
     
     
     /*************** FFT ***************/	
-	memcpy(control->fftInBuffer, control->audioBufferCh1, bytesRequired);
+  //  memset(control->fftOutBuffer, 0, control->n*sizeof(SInt16));
+    
+    void *fftInBuffer = control->fftInBuffer;
+    float *fftOutBuffer = control->fftOutBuffer;
+    FFTSetup fftSetup = control->fftSetup;
+    COMPLEX_SPLIT A = control->A;
+    
+    uint32_t log2n = control->log2n;
+	uint32_t n = control->n;
+	uint32_t nOver2 = control->nOver2;
+	uint32_t stride = 1;
+	int bufferCapacity = control->bufferCapacity;
+	SInt16 index = control->index;
+    
+    n = 10;
+    
+	memcpy(fftInBuffer, &buffer->mData, bytesRequired);
     
     // We want to deal with only floating point values here.
-    ConvertInt16ToFloat(control ,control->fftInBuffer, control->fftOutBuffer, buffer->mDataByteSize);
-    
-    
+    ConvertInt16ToFloat(control ,fftInBuffer, fftOutBuffer, bufferCapacity);
+   
     /** 
      Look at the real signal as an interleaved complex vector by casting it.
      Then call the transformation function vDSP_ctoz to get a split complex 
      vector, which for a real signal, divides into an even-odd configuration.
      */
-     vDSP_ctoz((COMPLEX*)control->fftOutBuffer, 2, &control->A, 1, control->nOver2);
+     vDSP_ctoz((COMPLEX*)fftOutBuffer, 2, &A, 1, nOver2);
     
      // Carry out a Forward FFT transform.
-     vDSP_fft_zrip(control->fftSetup, &control->A, stride, control->log2n, FFT_FORWARD);
+     vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_FORWARD);
     
     // The output signal is now in a split real form. Use the vDSP_ztoc to get
     // a split real vector.
-     vDSP_ztoc(&control->A, 1, (COMPLEX *)control->fftOutBuffer, 2, control->nOver2);
+     vDSP_ztoc(&A, 1, (COMPLEX *)fftOutBuffer, 2, nOver2);
     
-   // [[[main plbackView] fftView] updateFFT:control->fftOutBuffer];
-     [control->fftView updateFFT:control->fftOutBuffer];
     
-     memset(control->fftOutBuffer, 0, control->n*sizeof(SInt16));
+    
+    [control->fftView updateFFT:&fftOutBuffer :nOver2];
+    
+     memset(fftOutBuffer, 0, n*sizeof(SInt16));
     //	[self release];
     
     return noErr;

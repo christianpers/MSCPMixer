@@ -30,7 +30,7 @@
         int mastervolHeight = 200;
         
         //fft shieed
-        self.fftView = [[fftAnalyzerView alloc]initWithFrame:CGRectMake(100, 100, 100, 100)];
+        self.fftView = [[fftAnalyzerView alloc]initWithFrame:CGRectMake(100, 100, 200, 100)];
     //    self.fftView.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.fftView];
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
