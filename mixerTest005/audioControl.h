@@ -43,6 +43,7 @@
     AudioUnitParameterValue     volume;
     int                         currentCoreAudioSampleRate;
     
+    
     AUGraph                     graph;
     AudioUnit                   ioUnit;
     AudioUnit                   mixerUnit;
@@ -73,7 +74,8 @@
     CFArrayRef audioOutputRoutes;
     
 @public
-    AudioStreamBasicDescription     stereoStreamFormat;
+    AudioStreamBasicDescription     asbdChOne;
+    AudioStreamBasicDescription     asbdChTwo;
     float tempbuf[8000];
 	//float monobuf[4000]; 
 	//float inputbuf[1024]; 
@@ -182,7 +184,8 @@
 - (void) cantRead;
 
 -(void)setUpData:(float *)readbuffer pos:(int *)readpos size:(int) siz;
-@property (readwrite)           AudioStreamBasicDescription stereoStreamFormat;
+@property (readwrite)           AudioStreamBasicDescription asbdChOne;
+@property (readwrite)           AudioStreamBasicDescription asbdChTwo;
 
 
 

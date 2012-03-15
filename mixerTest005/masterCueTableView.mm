@@ -111,9 +111,23 @@ moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath
     NSURL *cue = [[Shared sharedInstance].masterCue objectAtIndex: sourceIndexPath.row];
     [cue retain];  // Let it survive being removed from the array.
     NSLog(@"from row:%d",sourceIndexPath.row);
-     NSLog(@"to row:%d",destinationIndexPath.row);
+    NSLog(@"to row:%d",destinationIndexPath.row);
     [[Shared sharedInstance].masterCue removeObjectAtIndex: sourceIndexPath.row];
     [[Shared sharedInstance].masterCue insertObject: cue  atIndex: destinationIndexPath.row];
+    int currpltrackIndex = [Shared sharedInstance].currTrackCueNum;
+    if (sourceIndexPath.row == currpltrackIndex){
+        
+        [Shared sharedInstance].currTrackCueNum = destinationIndexPath.row;
+        
+    }else{
+        
+        if (destinationIndexPath.row < currpltrackIndex){
+            [Shared sharedInstance].currTrackCueNum += 1;
+            
+        } 
+        
+    }
+    
     [cue release];
     [table reloadData];
     

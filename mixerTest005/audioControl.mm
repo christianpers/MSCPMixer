@@ -32,7 +32,7 @@ void ConvertInt16ToFloat(audioControl* THIS ,void *buf, float *outputBuf, size_t
 	outFormat.mBytesPerFrame = bytesPerSample * outFormat.mChannelsPerFrame;		
 	outFormat.mSampleRate = 44100;
 	
-	const AudioStreamBasicDescription inFormat = THIS->stereoStreamFormat;
+	const AudioStreamBasicDescription inFormat = THIS->asbdChOne;
 	
 	UInt32 inSize = capacity*sizeof(SInt16);
 	UInt32 outSize = capacity*sizeof(float);
@@ -285,7 +285,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 @synthesize timer;
 @synthesize audioBufferCh1;
 @synthesize audioBufferCh2;
-@synthesize stereoStreamFormat;
+@synthesize asbdChTwo, asbdChOne;
 @synthesize playbackIsPaused;
 @synthesize fftView;
 
@@ -443,7 +443,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         noInterrupt = NO;    
         
     }
-  }
+}
 
 
 /*second channel stuff !!!!!!!!!!! end
@@ -1200,27 +1200,26 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
    
     
-    AudioStreamBasicDescription outputFormat;
-    outputFormat.mSampleRate = (float)audioFormat->sample_rate;
-    outputFormat.mFormatID = kAudioFormatLinearPCM;
-    outputFormat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked | kAudioFormatFlagsNativeEndian;
-   // outputFormat.mFormatFlags = kAudioFormatFlagsAudioUnitCanonical;
-    outputFormat.mBytesPerPacket = audioFormat->channels * sizeof(SInt16);
-    outputFormat.mFramesPerPacket = 1;
-    outputFormat.mBytesPerFrame = outputFormat.mBytesPerPacket;
-    outputFormat.mChannelsPerFrame = audioFormat->channels;
-    outputFormat.mBitsPerChannel = 16;
-    outputFormat.mReserved = 0;
+    
+    asbdChOne.mSampleRate = (float)audioFormat->sample_rate;
+    asbdChOne.mFormatID = kAudioFormatLinearPCM;
+    asbdChOne.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked | kAudioFormatFlagsNativeEndian;
+    asbdChOne.mBytesPerPacket = audioFormat->channels * sizeof(SInt16);
+    asbdChOne.mFramesPerPacket = 1;
+    asbdChOne.mBytesPerFrame = asbdChOne.mBytesPerPacket;
+    asbdChOne.mChannelsPerFrame = audioFormat->channels;
+    asbdChOne.mBitsPerChannel = 16;
+    asbdChOne.mReserved = 0;
     
     
-    stereoStreamFormat.mSampleRate			= 44100.00;
-	stereoStreamFormat.mFormatID			= kAudioFormatLinearPCM;
-	stereoStreamFormat.mFormatFlags         = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
-	stereoStreamFormat.mFramesPerPacket     = 1;
-	stereoStreamFormat.mChannelsPerFrame	= 2;
-	stereoStreamFormat.mBitsPerChannel		= 16;
-	stereoStreamFormat.mBytesPerPacket		= 4;
-	stereoStreamFormat.mBytesPerFrame		= 4;
+    asbdChTwo.mSampleRate                   = 44100.00;
+	asbdChTwo.mFormatID                     = kAudioFormatLinearPCM;
+	asbdChTwo.mFormatFlags                  = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+	asbdChTwo.mFramesPerPacket              = 1;
+	asbdChTwo.mChannelsPerFrame             = 2;
+	asbdChTwo.mBitsPerChannel               = 16;
+	asbdChTwo.mBytesPerPacket               = 4;
+	asbdChTwo.mBytesPerFrame                = 4;
     
     /* CHANNEL 1
        connect channel 1 callback */ 
@@ -1231,20 +1230,20 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
                    
                     
     // set the input stream format, this is the format of the audio for mixer input
-    result = AudioUnitSetProperty(mixerUnitChOne, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &outputFormat, sizeof(outputFormat));
+    result = AudioUnitSetProperty(mixerUnitChOne, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &asbdChOne, sizeof(asbdChOne));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
 	
      
     // set the output stream format of the mixer
-	result = AudioUnitSetProperty(mixerUnitChOne, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &outputFormat, sizeof(outputFormat));
+	result = AudioUnitSetProperty(mixerUnitChOne, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &asbdChOne, sizeof(asbdChOne));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
    
     result = AudioUnitSetProperty(converterUnitChOne
                                   ,kAudioUnitProperty_StreamFormat, 
                                   kAudioUnitScope_Input, 
                                   0,
-                                  &outputFormat,
-                                  sizeof(outputFormat));
+                                  &asbdChOne,
+                                  sizeof(asbdChOne));
     
     if(noErr != result) {
         NSLog(@"streamInputFormat failed converterUnit"); 
@@ -1285,20 +1284,20 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
                   */ 
     
     // set the input stream format, this is the format of the audio for mixer input
-    result = AudioUnitSetProperty(mixerUnitChTwo, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &stereoStreamFormat, sizeof(stereoStreamFormat));
+    result = AudioUnitSetProperty(mixerUnitChTwo, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &asbdChTwo, sizeof(asbdChTwo));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
     
     // set the output stream format of the mixer
-	result = AudioUnitSetProperty(mixerUnitChTwo, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &stereoStreamFormat, sizeof(stereoStreamFormat));
+	result = AudioUnitSetProperty(mixerUnitChTwo, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &asbdChTwo, sizeof(asbdChTwo));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
     result = AudioUnitSetProperty(converterUnitChTwo
                                   ,kAudioUnitProperty_StreamFormat, 
                                   kAudioUnitScope_Input, 
                                   0,
-                                  &stereoStreamFormat,
-                                  sizeof(stereoStreamFormat));
+                                  &asbdChTwo,
+                                  sizeof(asbdChTwo));
     
     if(noErr != result) {
         NSLog(@"streamInputFormat failed converterUnit"); 
@@ -1775,10 +1774,14 @@ static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
     
     n = 10;
     
-	memcpy(fftInBuffer, &buffer->mData, bytesRequired);
+    NSUInteger fftSize = (UInt32)[control->audioBufferCh1 readDataOfLength:bytesRequired intoAllocatedBuffer:&fftInBuffer];
+    
+    
+    
+	//memcpy(fftInBuffer, &buffer->mData, bytesRequired);
     
     // We want to deal with only floating point values here.
-    ConvertInt16ToFloat(control ,fftInBuffer, fftOutBuffer, bufferCapacity);
+    ConvertInt16ToFloat(control ,fftInBuffer, fftOutBuffer, bytesRequired);
    
     /** 
      Look at the real signal as an interleaved complex vector by casting it.
@@ -1796,7 +1799,7 @@ static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
     
     
     
-    [control->fftView updateFFT:&fftOutBuffer :nOver2];
+   // [control->fftView updateFFT:&fftOutBuffer :nOver2];
     
      memset(fftOutBuffer, 0, n*sizeof(SInt16));
     //	[self release];

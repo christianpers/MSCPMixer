@@ -39,6 +39,7 @@
     secondChannelView *secChView;
     BOOL chTwoActive;
     secondChannelUIViewController *chTwoViewController;
+    UIView *airplayIcon;
     
     
     
@@ -69,6 +70,8 @@
 @property (nonatomic, retain) searchViewController *searchController;
 @property (nonatomic, retain) secondChannelView *secChView;
 @property (nonatomic, retain) secondChannelUIViewController *chTwoViewController;
+
+@property (nonatomic, retain) UIView *airplayIcon;
 
 
 - (void)userLogout;

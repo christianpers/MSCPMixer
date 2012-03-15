@@ -34,6 +34,7 @@
 @synthesize secChView = _secChView;
 @synthesize chTwoActive;
 @synthesize chTwoViewController;
+@synthesize airplayIcon;
 
 
 int labelWidth = 300;
@@ -301,6 +302,7 @@ int labelWidth = 300;
     [self.cueView removeFromSuperview];
     [self.playlistLabel removeFromSuperview];
     [self.secChView removeFromSuperview];
+    [self.airplayIcon removeFromSuperview];
     
 }
 
@@ -389,6 +391,7 @@ int labelWidth = 300;
     [mpVolumeViewParentView addSubview: myVolumeView];
     //myVolumeView.showsRouteButton = YES;
     myVolumeView.showsVolumeSlider = NO;
+    self.airplayIcon = mpVolumeViewParentView;
     [myVolumeView release];
     [mpVolumeViewParentView release];
     
@@ -579,6 +582,7 @@ NSUInteger loadTrack;
 - (void)mainMenuClick:(UITapGestureRecognizer *)gesture{
     UIView *lbl = [gesture view];
     if (lbl.tag == 10){
+        self.airplayIcon.hidden = NO;
         [self.mainViewController.view bringSubviewToFront:self.pllistView];
         self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
         self.playbackLabel.textColor = [UIColor whiteColor];
@@ -593,6 +597,7 @@ NSUInteger loadTrack;
         
     }
     else if (lbl.tag == 11){
+        self.airplayIcon.hidden = NO;
         [self.mainViewController.view bringSubviewToFront:self.plbackView];
         [self.mainViewController.view bringSubviewToFront:self.secChView];
         self.playbackLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
@@ -609,9 +614,9 @@ NSUInteger loadTrack;
         
     }
     else if (lbl.tag == 12){
-       // [self.playbackManager checkavailableOutputRoutes];
+       
+        self.airplayIcon.hidden = YES;
         
-        //  [self.mainViewController.view bringSubviewToFront:self.spSearchView.view];
         self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
         self.playbackLabel.textColor = [UIColor whiteColor];
         
