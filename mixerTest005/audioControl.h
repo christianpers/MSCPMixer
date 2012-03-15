@@ -99,6 +99,9 @@
 	
 }
 
+@property (nonatomic) AudioUnit mixerUnit;
+
+
 - (void)setFFTView: (fftAnalyzerView *)fftViewer;
 
 

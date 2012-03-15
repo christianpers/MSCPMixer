@@ -30,6 +30,7 @@ void ConvertInt16ToFloat(audioControl* THIS ,void *buf, float *outputBuf, size_t
 	outFormat.mChannelsPerFrame = 1;	
 	outFormat.mBytesPerPacket = bytesPerSample * outFormat.mFramesPerPacket;
 	outFormat.mBytesPerFrame = bytesPerSample * outFormat.mChannelsPerFrame;		
+    //outFormat.mBytesPerFrame = 4;
 	outFormat.mSampleRate = 44100;
 	
 	const AudioStreamBasicDescription inFormat = THIS->asbdChOne;
@@ -37,6 +38,7 @@ void ConvertInt16ToFloat(audioControl* THIS ,void *buf, float *outputBuf, size_t
 	UInt32 inSize = capacity*sizeof(SInt16);
 	UInt32 outSize = capacity*sizeof(float);
 	err = AudioConverterNew(&inFormat, &outFormat, &converter);
+  //  err = AudioConverterConvertComplexBuffer(converter, capacity, buf, outputBuf);
 	err = AudioConverterConvertBuffer(converter, inSize, buf, &outSize, outputBuf);
 }
 
@@ -63,6 +65,29 @@ void rioInterruptionListener(void *inClientData, UInt32 inInterruption){
 	if (inInterruption == kAudioSessionBeginInterruption) {
 		//AudioOutputUnitStop(THIS->audioUnit);
     }
+}
+
+static OSStatus outputCallback(void *inRefCon, 
+								 AudioUnitRenderActionFlags *ioActionFlags, 
+								 const AudioTimeStamp *inTimeStamp, 
+								 UInt32 inBusNumber, 
+								 UInt32 inNumberFrames, 
+								 AudioBufferList *ioData) {  
+    
+    
+    audioControl *manager = (audioControl *)inRefCon;
+    OSStatus err = 0;
+    
+   // if (inBusNumber == 0){
+    err = AudioUnitRender(manager.mixerUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+        
+   // }
+  /*  else if (inBusNumber == 1){
+        err = AudioUnitRender(manager.mixerUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+        
+        
+    }
+  */  
 }
 
 
@@ -288,6 +313,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 @synthesize asbdChTwo, asbdChOne;
 @synthesize playbackIsPaused;
 @synthesize fftView;
+@synthesize mixerUnit;
 
 - (void)setFFTView: (fftAnalyzerView *)fftViewer{
     
@@ -1004,11 +1030,20 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 
     result = AUGraphConnectNodeInput(graph, pitchNodeChTwo, 0, mixerNode, 1);
 	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
-  
     
-    result = AUGraphConnectNodeInput(graph, mixerNode, 0, outputNode, 0);
-	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
-	
+  //  result = AUGraphConnectNodeInput(graph, mixerNode, 0, outputNode, 0);
+  //	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
+    
+    /**
+     set callback on ioUnit
+     */
+    AURenderCallbackStruct ioRenderCallback;
+    ioRenderCallback.inputProc = outputCallback;
+    ioRenderCallback.inputProcRefCon = self;
+    
+    result = AUGraphSetNodeInputCallback(graph, outputNode, 0, &ioRenderCallback);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+
 
        CAShow(graph);
     // open the graph AudioUnits are open but not initialized (no resource allocation occurs here)
@@ -1774,14 +1809,14 @@ static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
     
     n = 10;
     
-    NSUInteger fftSize = (UInt32)[control->audioBufferCh1 readDataOfLength:bytesRequired intoAllocatedBuffer:&fftInBuffer];
+   // NSUInteger fftSize = (SInt16)[control->audioBufferCh1 readDataOfLength:bufferCapacity intoAllocatedBuffer:&fftInBuffer];
     
     
     
-	//memcpy(fftInBuffer, &buffer->mData, bytesRequired);
+	memcpy(fftInBuffer, buffer->mData, bytesRequired);
     
     // We want to deal with only floating point values here.
-    ConvertInt16ToFloat(control ,fftInBuffer, fftOutBuffer, bytesRequired);
+    ConvertInt16ToFloat(control ,fftInBuffer, fftOutBuffer, bufferCapacity);
    
     /** 
      Look at the real signal as an interleaved complex vector by casting it.
