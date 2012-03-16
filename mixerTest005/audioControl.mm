@@ -33,13 +33,38 @@ void ConvertInt16ToFloat(audioControl* THIS ,void *buf, float *outputBuf, size_t
     //outFormat.mBytesPerFrame = 4;
 	outFormat.mSampleRate = 44100;
 	
-	const AudioStreamBasicDescription inFormat = THIS->asbdChOne;
+	const AudioStreamBasicDescription inFormat = THIS->effectUnitInputFormat;
 	
 	UInt32 inSize = capacity*sizeof(SInt16);
 	UInt32 outSize = capacity*sizeof(float);
 	err = AudioConverterNew(&inFormat, &outFormat, &converter);
   //  err = AudioConverterConvertComplexBuffer(converter, capacity, buf, outputBuf);
 	err = AudioConverterConvertBuffer(converter, inSize, buf, &outSize, outputBuf);
+}
+void ConvertInt16ToFloatTest(audioControl* THIS ,AudioBufferList *inBuf, AudioBufferList *outBuf, UInt32 inNumberFrames){
+    
+    AudioConverterRef converter;
+	OSStatus err;
+	
+	size_t bytesPerSample = sizeof(float);
+	AudioStreamBasicDescription outFormat = {0};
+	outFormat.mFormatID = kAudioFormatLinearPCM;
+	outFormat.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked;
+	outFormat.mBitsPerChannel = 8 * bytesPerSample;
+	outFormat.mFramesPerPacket = 1;
+	outFormat.mChannelsPerFrame = 2;	
+	outFormat.mBytesPerPacket = bytesPerSample * outFormat.mFramesPerPacket;
+	outFormat.mBytesPerFrame = bytesPerSample * outFormat.mChannelsPerFrame;		
+    //outFormat.mBytesPerFrame = 4;
+	outFormat.mSampleRate = 44100;
+	
+	const AudioStreamBasicDescription inFormat = THIS->asbdChOne;
+	
+//	UInt32 inSize = capacity*sizeof(SInt16);
+//	UInt32 outSize = capacity*sizeof(float);
+	err = AudioConverterNew(&inFormat, &outFormat, &converter);
+    err = AudioConverterConvertComplexBuffer(converter, inNumberFrames, inBuf, outBuf);
+	//err = AudioConverterConvertBuffer(converter, inSize, buf, &outSize, outputBuf);
 }
 
 
@@ -66,6 +91,19 @@ void rioInterruptionListener(void *inClientData, UInt32 inInterruption){
 		//AudioOutputUnitStop(THIS->audioUnit);
     }
 }
+static OSStatus fftCallback(AudioConverterRef                   inAudioConverter,
+                            AudioConverterComplexInputDataProc  inInputDataProc,
+                            void                                *inInputDataProcUserData,
+                            UInt32                              *ioOutputDataPacketSize,
+                            AudioBufferList                     *outOutputData,
+                            AudioStreamPacketDescription        *outPacketDescription) {
+    
+    
+    
+    
+    
+}
+
 
 static OSStatus outputCallback(void *inRefCon, 
 								 AudioUnitRenderActionFlags *ioActionFlags, 
@@ -75,19 +113,79 @@ static OSStatus outputCallback(void *inRefCon,
 								 AudioBufferList *ioData) {  
     
     
-    audioControl *manager = (audioControl *)inRefCon;
+    audioControl *control = (audioControl *)inRefCon;
     OSStatus err = 0;
     
-   // if (inBusNumber == 0){
-    err = AudioUnitRender(manager.mixerUnitChOne, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+    AudioBufferList *outBufferList = (AudioBufferList*)malloc(sizeof(AudioBufferList) * 2);
+   // outBufferList->mNumberBuffers = 2; 
+    
+    
+    
+    if (inBusNumber == 0){
+        err = AudioUnitRender(control.timePitchUnitChOne, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
         
-   // }
-  /*  else if (inBusNumber == 1){
-        err = AudioUnitRender(manager.mixerUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+        /*************** FFT ***************/	
+        //  memset(control->fftOutBuffer, 0, control->n*sizeof(SInt16));
+        
+       // buffer = ioData->mBuffers[0];
+       //outBufferList = ioData
+       // outBufferList->mNumberBuffers = ioData->mNumberBuffers;
+        //outBufferList->mBuffers[0].mDataByteSize = ioData->mBuffers[0].mDataByteSize;
+        
+        void *fftInBuffer = control->fftInBuffer;
+        float *fftOutBuffer = control->fftOutBuffer;
+        FFTSetup fftSetup = control->fftSetup;
+        COMPLEX_SPLIT A = control->A;
+        
+        uint32_t log2n = control->log2n;
+        uint32_t n = control->n;
+        uint32_t nOver2 = control->nOver2;
+        uint32_t stride = 1;
+        int bufferCapacity = control->bufferCapacity;
+        SInt16 index = control->index;
+        
+        n = 10;
+        
+        err = AudioConverterFillComplexBuffer(<#AudioConverterRef inAudioConverter#>, <#AudioConverterComplexInputDataProc inInputDataProc#>, <#void *inInputDataProcUserData#>, <#UInt32 *ioOutputDataPacketSize#>, <#AudioBufferList *outOutputData#>, <#AudioStreamPacketDescription *outPacketDescription#>)
+        
+       // memcpy(fftInBuffer, ioData->mBuffers[0].mData, bufferCapacity);
+        
+      //  ConvertInt16ToFloatTest(control, ioData, outBufferList, inNumberFrames);
+        
+        // We want to deal with only floating point values here.
+      //  ConvertInt16ToFloatTest(control ,fftInBuffer, fftOutBuffer, bufferCapacity);
+        
+        fftOutBuffer = (float *)ioData->mBuffers[0].mData;
+        
+        /** 
+         Look at the real signal as an interleaved complex vector by casting it.
+         Then call the transformation function vDSP_ctoz to get a split complex 
+         vector, which for a real signal, divides into an even-odd configuration.
+         */
+        vDSP_ctoz((COMPLEX*)fftOutBuffer, 2, &A, 1, nOver2);
+        
+        // Carry out a Forward FFT transform.
+        vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_FORWARD);
+        
+        // The output signal is now in a split real form. Use the vDSP_ztoc to get
+        // a split real vector.
+        vDSP_ztoc(&A, 1, (COMPLEX *)fftOutBuffer, 2, nOver2);
+        
+        
+        
+        // [control->fftView updateFFT:&fftOutBuffer :nOver2];
+        
+        memset(fftOutBuffer, 0, n*sizeof(SInt16));
+        //	[self release];
+
+        
+    }
+    else if (inBusNumber == 1){
+        err = AudioUnitRender(control.timePitchUnitChTwo, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
         
         
     }
-  */  
+    
 }
 
 
@@ -437,6 +535,9 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     UInt32 numInteractions = 0;
     result = AUGraphCountNodeInteractions(graph, mixerNodeChTwo, &numInteractions);
     if (numInteractions == 1){
+        result = AUGraphSetNodeInputCallback(graph, mixerNode, 1, &ioRenderCallback);
+        if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+        
         // set a callback for the specified node's specified input
         result = AUGraphSetNodeInputCallback(graph, mixerNodeChTwo, 0, &rcbsSecond);
         if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
@@ -458,6 +559,10 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     UInt32 numInteractions = 0;
     result = AUGraphCountNodeInteractions(graph, mixerNodeChTwo, &numInteractions);
     if (numInteractions == 2){
+        
+        result = AUGraphDisconnectNodeInput(graph, mixerNode, 1);
+        if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+        
         
         result = AUGraphDisconnectNodeInput(graph, mixerNodeChTwo, 0);
         if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
@@ -1037,15 +1142,18 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     /**
      set callback on ioUnit
      */
-    AURenderCallbackStruct ioRenderCallback;
     ioRenderCallback.inputProc = outputCallback;
     ioRenderCallback.inputProcRefCon = self;
     
+    //channel 1
     result = AUGraphSetNodeInputCallback(graph, mixerNode, 0, &ioRenderCallback);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-
-
-       CAShow(graph);
+    
+    /* CHANNEL 1
+     connect channel 1 callback */ 
+    [self connectFirstChannelCallback];
+  
+    CAShow(graph);
     // open the graph AudioUnits are open but not initialized (no resource allocation occurs here)
 	result = AUGraphOpen(graph);
 	if (result) { printf("AUGraphOpen result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
@@ -1256,13 +1364,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	asbdChTwo.mBytesPerPacket               = 4;
 	asbdChTwo.mBytesPerFrame                = 4;
     
-    /* CHANNEL 1
-       connect channel 1 callback */ 
-    
-    
-    [self connectFirstChannelCallback];
-    
-                   
                     
     // set the input stream format, this is the format of the audio for mixer input
     result = AudioUnitSetProperty(mixerUnitChOne, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &asbdChOne, sizeof(asbdChOne));
@@ -1283,7 +1384,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     if(noErr != result) {
         NSLog(@"streamInputFormat failed converterUnit"); 
     } 
-    AudioStreamBasicDescription effectUnitInputFormat;
+    
     UInt32 propSize = sizeof(AudioStreamBasicDescription);
     
     memset(&effectUnitInputFormat, 0, propSize);
@@ -1371,14 +1472,16 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     
     // set the input stream format, this is the format of the audio for mixer input
-    result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &asbdChOne, sizeof(asbdChOne));
+    result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &effectUnitInputFormat, sizeof(effectUnitInputFormat));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
-    // set the input stream format, this is the format of the audio for mixer input
-    result = AudioUnitSetProperty(mixerUnitChOne, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &asbdChOne, sizeof(asbdChOne));
+    result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1, &effectUnitInputFormatCh2, sizeof(effectUnitInputFormatCh2));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-	
-	
+    
+    
+  	result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &asbdChOne, sizeof(asbdChOne));
+    if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
     
     
     
@@ -1806,53 +1909,7 @@ static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
 	}
     
     
-    /*************** FFT ***************/	
-  //  memset(control->fftOutBuffer, 0, control->n*sizeof(SInt16));
-    
-    void *fftInBuffer = control->fftInBuffer;
-    float *fftOutBuffer = control->fftOutBuffer;
-    FFTSetup fftSetup = control->fftSetup;
-    COMPLEX_SPLIT A = control->A;
-    
-    uint32_t log2n = control->log2n;
-	uint32_t n = control->n;
-	uint32_t nOver2 = control->nOver2;
-	uint32_t stride = 1;
-	int bufferCapacity = control->bufferCapacity;
-	SInt16 index = control->index;
-    
-    n = 10;
-    
-   // NSUInteger fftSize = (SInt16)[control->audioBufferCh1 readDataOfLength:bufferCapacity intoAllocatedBuffer:&fftInBuffer];
-    
-    
-    
-	memcpy(fftInBuffer, buffer->mData, bytesRequired);
-    
-    // We want to deal with only floating point values here.
-    ConvertInt16ToFloat(control ,fftInBuffer, fftOutBuffer, bufferCapacity);
-   
-    /** 
-     Look at the real signal as an interleaved complex vector by casting it.
-     Then call the transformation function vDSP_ctoz to get a split complex 
-     vector, which for a real signal, divides into an even-odd configuration.
-     */
-     vDSP_ctoz((COMPLEX*)fftOutBuffer, 2, &A, 1, nOver2);
-    
-     // Carry out a Forward FFT transform.
-     vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_FORWARD);
-    
-    // The output signal is now in a split real form. Use the vDSP_ztoc to get
-    // a split real vector.
-     vDSP_ztoc(&A, 1, (COMPLEX *)fftOutBuffer, 2, nOver2);
-    
-    
-    
-   // [control->fftView updateFFT:&fftOutBuffer :nOver2];
-    
-     memset(fftOutBuffer, 0, n*sizeof(SInt16));
-    //	[self release];
-    
+     
     return noErr;
 }
 

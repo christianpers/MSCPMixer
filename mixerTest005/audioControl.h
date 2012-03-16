@@ -60,6 +60,7 @@
     AudioUnit                   mixerUnitChTwo;
     AUNode                      mixerNodeChOne;
     AUNode                      mixerNodeChTwo;
+    AUNode                      mixerNode;
     AudioUnit                   converterUnitChOne;
     AudioUnit                   converterUnitChTwo;
     NSTimer                     *timer;
@@ -70,12 +71,15 @@
    
     AURenderCallbackStruct          rcbsFirst;
     AURenderCallbackStruct          rcbsSecond; //second channel
+    AURenderCallbackStruct          ioRenderCallback;
+    
     
     CFArrayRef audioOutputRoutes;
     
 @public
     AudioStreamBasicDescription     asbdChOne;
     AudioStreamBasicDescription     asbdChTwo;
+    AudioStreamBasicDescription     effectUnitInputFormat;
     float tempbuf[8000];
 	//float monobuf[4000]; 
 	//float inputbuf[1024]; 
