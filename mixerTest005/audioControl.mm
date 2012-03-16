@@ -78,10 +78,10 @@ static OSStatus outputCallback(void *inRefCon,
     audioControl *manager = (audioControl *)inRefCon;
     OSStatus err = 0;
     
-   // if (inBusNumber == 0){
-    err = AudioUnitRender(manager.mixerUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+    if (inBusNumber == 0){
+        err = AudioUnitRender(manager.timePitchUnitChOne, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
         
-   // }
+    }
   /*  else if (inBusNumber == 1){
         err = AudioUnitRender(manager.mixerUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
         
@@ -313,7 +313,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 @synthesize asbdChTwo, asbdChOne;
 @synthesize playbackIsPaused;
 @synthesize fftView;
-@synthesize mixerUnit;
+@synthesize mixerUnit, mixerUnitChOne, mixerUnitChTwo, timePitchUnitChOne;
 
 - (void)setFFTView: (fftAnalyzerView *)fftViewer{
     
@@ -1009,10 +1009,10 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
 	
     result = AUGraphConnectNodeInput(graph, hipassNodeChOne, 0, pitchNodeChOne, 0);
-	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
+  	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
 	
-    result = AUGraphConnectNodeInput(graph, pitchNodeChOne, 0, mixerNode, 0);
-	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
+  //  result = AUGraphConnectNodeInput(graph, pitchNodeChOne, 0, mixerNode, 0);
+//	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
 	
    
     // CHANNEL 2
@@ -1028,11 +1028,19 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     result = AUGraphConnectNodeInput(graph, hipassNodeChTwo, 0, pitchNodeChTwo, 0);
 	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
 
-    result = AUGraphConnectNodeInput(graph, pitchNodeChTwo, 0, mixerNode, 1);
-	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
-    
-  //  result = AUGraphConnectNodeInput(graph, mixerNode, 0, outputNode, 0);
+  //  result = AUGraphConnectNodeInput(graph, pitchNodeChTwo, 0, mixerNode, 1);
   //	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
+    
+    result = AUGraphConnectNodeInput(graph, mixerNode, 0, outputNode, 0);
+  	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
+    
+    /* CHANNEL 1
+     connect channel 1 callback */ 
+    
+    
+    [self connectFirstChannelCallback];
+    
+    
     
     /**
      set callback on ioUnit
@@ -1041,11 +1049,14 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     ioRenderCallback.inputProc = outputCallback;
     ioRenderCallback.inputProcRefCon = self;
     
-    result = AUGraphSetNodeInputCallback(graph, outputNode, 0, &ioRenderCallback);
+    result = AUGraphSetNodeInputCallback(graph, mixerNode, 0, &ioRenderCallback);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
+    result = AUGraphSetNodeInputCallback(graph, mixerNode, 1, &ioRenderCallback);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
 
 
-       CAShow(graph);
+    CAShow(graph);
     // open the graph AudioUnits are open but not initialized (no resource allocation occurs here)
 	result = AUGraphOpen(graph);
 	if (result) { printf("AUGraphOpen result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
@@ -1256,13 +1267,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	asbdChTwo.mBytesPerPacket               = 4;
 	asbdChTwo.mBytesPerFrame                = 4;
     
-    /* CHANNEL 1
-       connect channel 1 callback */ 
-    
-    
-    [self connectFirstChannelCallback];
-    
-                   
+   
+                      
                     
     // set the input stream format, this is the format of the audio for mixer input
     result = AudioUnitSetProperty(mixerUnitChOne, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &asbdChOne, sizeof(asbdChOne));
@@ -1302,6 +1308,62 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         NSLog(@"streamInputFormat failed mixerinput 1"); 
     }
     
+    result = AudioUnitSetProperty(lopassUnitChOne
+                                  ,kAudioUnitProperty_StreamFormat, 
+                                  kAudioUnitScope_Input, 
+                                  0,
+                                  &effectUnitInputFormat,
+                                  sizeof(effectUnitInputFormat));
+    
+    if(noErr != result) {
+        NSLog(@"streamInputFormat failed mixerinput 1"); 
+    }
+    
+    result = AudioUnitSetProperty(lopassUnitChOne
+                                  ,kAudioUnitProperty_StreamFormat, 
+                                  kAudioUnitScope_Output, 
+                                  0,
+                                  &effectUnitInputFormat,
+                                  sizeof(effectUnitInputFormat));
+    
+    if(noErr != result) {
+        NSLog(@"streamInputFormat failed mixerinput 1"); 
+    }
+    
+    result = AudioUnitSetProperty(hipassUnitChOne
+                                  ,kAudioUnitProperty_StreamFormat, 
+                                  kAudioUnitScope_Input, 
+                                  0,
+                                  &effectUnitInputFormat,
+                                  sizeof(effectUnitInputFormat));
+    
+    if(noErr != result) {
+        NSLog(@"streamInputFormat failed mixerinput 1"); 
+    }
+    
+    result = AudioUnitSetProperty(hipassUnitChOne
+                                  ,kAudioUnitProperty_StreamFormat, 
+                                  kAudioUnitScope_Output, 
+                                  0,
+                                  &effectUnitInputFormat,
+                                  sizeof(effectUnitInputFormat));
+    
+    if(noErr != result) {
+        NSLog(@"streamInputFormat failed mixerinput 1"); 
+    }
+    
+    result = AudioUnitSetProperty(timePitchUnitChOne
+                                  ,kAudioUnitProperty_StreamFormat, 
+                                  kAudioUnitScope_Input, 
+                                  0,
+                                  &effectUnitInputFormat,
+                                  sizeof(effectUnitInputFormat));
+    
+    if(noErr != result) {
+        NSLog(@"streamInputFormat failed mixerinput 1"); 
+    }
+    
+      
     result = AudioUnitSetProperty(timePitchUnitChOne
                                   ,kAudioUnitProperty_StreamFormat, 
                                   kAudioUnitScope_Output, 
@@ -1367,6 +1429,18 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     if(noErr != result) {
         NSLog(@"streamInputFormat failed mixerinput 1"); 
     }
+    
+    
+    
+    // set the input stream format, this is the format of the audio for mixer input
+    result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &asbdChOne, sizeof(asbdChOne));
+    if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+	
+    // set the input stream format, this is the format of the audio for mixer input
+    result = AudioUnitSetProperty(mixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1, &asbdChTwo, sizeof(asbdChTwo));
+    if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
+    
     
     result = AudioUnitSetParameter(mixerUnit, kMultiChannelMixerParam_Enable, kAudioUnitScope_Input, 1, 1, 0);
     
