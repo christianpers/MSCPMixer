@@ -100,6 +100,12 @@
 }
 
 @property (nonatomic) AudioUnit mixerUnit;
+@property (nonatomic) AudioUnit mixerUnitChOne;
+@property (nonatomic) AudioUnit mixerUnitChTwo;
+@property (nonatomic) AudioUnit timePitchUnitChOne;
+@property (nonatomic) AudioUnit timePitchUnitChTwo;
+
+
 
 
 - (void)setFFTView: (fftAnalyzerView *)fftViewer;
