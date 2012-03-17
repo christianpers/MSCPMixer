@@ -1011,8 +1011,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     result = AUGraphConnectNodeInput(graph, hipassNodeChOne, 0, pitchNodeChOne, 0);
   	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
 	
-  //  result = AUGraphConnectNodeInput(graph, pitchNodeChOne, 0, mixerNode, 0);
-//	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
+    result = AUGraphConnectNodeInput(graph, pitchNodeChOne, 0, mixerNode, 0);
+	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
 	
    
     // CHANNEL 2
@@ -1028,8 +1028,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     result = AUGraphConnectNodeInput(graph, hipassNodeChTwo, 0, pitchNodeChTwo, 0);
 	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
 
-  //  result = AUGraphConnectNodeInput(graph, pitchNodeChTwo, 0, mixerNode, 1);
-  //	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
+    result = AUGraphConnectNodeInput(graph, pitchNodeChTwo, 0, mixerNode, 1);
+  	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
     
     result = AUGraphConnectNodeInput(graph, mixerNode, 0, outputNode, 0);
   	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
@@ -1044,7 +1044,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     /**
      set callback on ioUnit
-     */
+    
     AURenderCallbackStruct ioRenderCallback;
     ioRenderCallback.inputProc = outputCallback;
     ioRenderCallback.inputProcRefCon = self;
@@ -1054,7 +1054,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     result = AUGraphSetNodeInputCallback(graph, mixerNode, 1, &ioRenderCallback);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-
+      */
 
     CAShow(graph);
     // open the graph AudioUnits are open but not initialized (no resource allocation occurs here)
