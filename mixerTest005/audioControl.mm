@@ -101,7 +101,7 @@ static OSStatus fftCallback(AudioConverterRef                   inAudioConverter
     
     
     
-    
+    return noErr;   
 }
 
 
@@ -145,9 +145,9 @@ static OSStatus outputCallback(void *inRefCon,
         SInt16 index = control->index;
         
         n = 10;
-        
+     /*   
         err = AudioConverterFillComplexBuffer(<#AudioConverterRef inAudioConverter#>, <#AudioConverterComplexInputDataProc inInputDataProc#>, <#void *inInputDataProcUserData#>, <#UInt32 *ioOutputDataPacketSize#>, <#AudioBufferList *outOutputData#>, <#AudioStreamPacketDescription *outPacketDescription#>)
-        
+       */ 
        // memcpy(fftInBuffer, ioData->mBuffers[0].mData, bufferCapacity);
         
       //  ConvertInt16ToFloatTest(control, ioData, outBufferList, inNumberFrames);
@@ -155,36 +155,38 @@ static OSStatus outputCallback(void *inRefCon,
         // We want to deal with only floating point values here.
       //  ConvertInt16ToFloatTest(control ,fftInBuffer, fftOutBuffer, bufferCapacity);
         
-        fftOutBuffer = (float *)ioData->mBuffers[0].mData;
+     //   fftOutBuffer = (float *)ioData->mBuffers[0].mData;
         
         /** 
          Look at the real signal as an interleaved complex vector by casting it.
          Then call the transformation function vDSP_ctoz to get a split complex 
          vector, which for a real signal, divides into an even-odd configuration.
          */
-        vDSP_ctoz((COMPLEX*)fftOutBuffer, 2, &A, 1, nOver2);
+     //   vDSP_ctoz((COMPLEX*)fftOutBuffer, 2, &A, 1, nOver2);
         
         // Carry out a Forward FFT transform.
-        vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_FORWARD);
+     //   vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_FORWARD);
         
         // The output signal is now in a split real form. Use the vDSP_ztoc to get
         // a split real vector.
-        vDSP_ztoc(&A, 1, (COMPLEX *)fftOutBuffer, 2, nOver2);
+    //    vDSP_ztoc(&A, 1, (COMPLEX *)fftOutBuffer, 2, nOver2);
         
         
         
         // [control->fftView updateFFT:&fftOutBuffer :nOver2];
         
-        memset(fftOutBuffer, 0, n*sizeof(SInt16));
+    //    memset(fftOutBuffer, 0, n*sizeof(SInt16));
         //	[self release];
 
         
     }
     else if (inBusNumber == 1){
-        err = AudioUnitRender(control.timePitchUnitChTwo, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+        err = AudioUnitRender(control.timePitchUnitChTwo, ioActionFlags, inTimeStamp, 0, inNumberFrames, ioData);
         
         
     }
+    
+    return noErr;
     
 }
 
@@ -434,6 +436,19 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	fftSetup = vDSP_create_fftsetup(log2n, FFT_RADIX2);
 }
 
+-(void)connectFirstChannelMasterMixer{
+    
+    OSStatus result;
+    
+    // set a callback for the specified node's specified input
+    result = AUGraphSetNodeInputCallback(graph, mixerNode, 0, &ioRenderCallback);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+
+    result = AUGraphUpdate(graph, NULL);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
+    
+}
 
 
 -(void)connectFirstChannelCallback{
@@ -457,6 +472,10 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     OSStatus result;
     result = AUGraphDisconnectNodeInput(graph, mixerNodeChOne, 0);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
+    result = AUGraphDisconnectNodeInput(graph, mixerNode, 0);
+    if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    
     
     result = AUGraphUpdate(graph, NULL);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
@@ -524,6 +543,40 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     }
 }
 
+-(void)connectSecMastermixerBus{
+    
+    OSStatus result;
+    UInt32 numInteractions = 0;
+    result = AUGraphCountNodeInteractions(graph, mixerNode, &numInteractions);
+    if (numInteractions == 2){
+        
+        result = AUGraphSetNodeInputCallback(graph, mixerNode, 1, &ioRenderCallback);
+        if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+        
+        result = AUGraphUpdate(graph, NULL);
+        if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    }
+    
+    result = AUGraphCountNodeInteractions(graph, mixerNode, &numInteractions);
+    
+}
+
+-(void)removeSecMastermixerBus{
+    OSStatus result;
+    UInt32 numInteractions = 0;
+    result = AUGraphCountNodeInteractions(graph, mixerNode, &numInteractions);
+    if (numInteractions == 3){
+        
+        result = AUGraphDisconnectNodeInput(graph, mixerNode, 1);
+        if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+        
+        
+        result = AUGraphUpdate(graph, NULL);
+        if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+    }
+    
+}
+
 
 -(void)connectSecChannelCallback{
     
@@ -535,8 +588,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     UInt32 numInteractions = 0;
     result = AUGraphCountNodeInteractions(graph, mixerNodeChTwo, &numInteractions);
     if (numInteractions == 1){
-        result = AUGraphSetNodeInputCallback(graph, mixerNode, 1, &ioRenderCallback);
-        if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
         
         // set a callback for the specified node's specified input
         result = AUGraphSetNodeInputCallback(graph, mixerNodeChTwo, 0, &rcbsSecond);
@@ -544,6 +595,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         
         result = AUGraphUpdate(graph, NULL);
         if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
+        
+     
         
         startedCallback = YES;
         noInterrupt = YES;
@@ -559,9 +612,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     UInt32 numInteractions = 0;
     result = AUGraphCountNodeInteractions(graph, mixerNodeChTwo, &numInteractions);
     if (numInteractions == 2){
-        
-        result = AUGraphDisconnectNodeInput(graph, mixerNode, 1);
-        if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
         
         
         result = AUGraphDisconnectNodeInput(graph, mixerNodeChTwo, 0);
@@ -598,6 +648,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [main.plbackView setTrackTitleAndArtist:self.currentTrack];
 		self.playbackSession.playing = YES;
+        [main.cueView.tableView reloadData];
     }
 	else{
 		self.currentTrack = nil;
@@ -621,7 +672,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     result = AudioUnitSetParameter(mixerUnitChOne, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
     self.volume-=.003; 
     NSLog(@"volume: %f",self.volume);
-    if (self.volume > 1){
+    if (self.volume > 0){
         [self performSelector:_cmd withObject:nil afterDelay:0.01];
         return;
         
@@ -632,7 +683,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     result = AudioUnitSetParameter(mixerUnitChTwo, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
     self.volume-=.003; 
     NSLog(@"volume: %f",self.volume);
-    if (self.volume > 1){
+    if (self.volume > 0){
         [self performSelector:_cmd withObject:nil afterDelay:0.01];
         return;
         
@@ -981,7 +1032,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     /*Generic AUs
      */
     AUNode     outputNode;
-    AUNode     mixerNode;
+  //  AUNode     mixerNode;
     
    // AUNode      mixerNodeChOne;
    // AUNode      mixerNodeChTwo;
@@ -1140,7 +1191,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
   	if (result) { printf("AUGraphConnectNodeInput result %lu %4.4s\n", result, (char*)&result); return; }
     
     /**
-     set callback on ioUnit
+     set callback on ioUnit node 1
      */
     ioRenderCallback.inputProc = outputCallback;
     ioRenderCallback.inputProcRefCon = self;
@@ -1149,8 +1200,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     result = AUGraphSetNodeInputCallback(graph, mixerNode, 0, &ioRenderCallback);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
-    /* CHANNEL 1
-     connect channel 1 callback */ 
     [self connectFirstChannelCallback];
   
     CAShow(graph);
@@ -1685,7 +1734,9 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
             result = AUGraphCountNodeInteractions(graph, mixerNodeChOne, &numInteractions);
             if (numInteractions == 1){
                 
+                [self connectFirstChannelMasterMixer];
                 [self connectFirstChannelCallback];
+                
             
             }
         }
@@ -1704,6 +1755,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
             result = AUGraphCountNodeInteractions(graph, mixerNodeChOne, &numInteractions);
             if (numInteractions == 1){
                 
+                [self connectFirstChannelMasterMixer];
                 [self connectFirstChannelCallback];
             }
            
@@ -1766,9 +1818,14 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 }
                                  
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
                                      
     if ([keyPath isEqualToString:@"playbackSession.playing"] && context == kSPPlaybackManagerKVOContext) {
        if (self.playbackSession.isPlaying) {
+           //[main.cueView.tableView reloadData];
+           
            [self startAUGraph];
            if (self.volume < 0.1){
                
@@ -1777,14 +1834,15 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         } 
        else
         {
-           // Explicitly stop the audio unit, otherwise it'll continue playing audio from the buffers it has.
-           //[self stopAUGraph];
             
             OSStatus result;
             UInt32 numInteractions;
+            
+            [main.cueView.tableView reloadData];
+            
             result = AUGraphCountNodeInteractions(graph, mixerNodeChOne, &numInteractions);
             if (numInteractions == 2){
-                [self fadeOutMusicCh1];
+               // [self fadeOutMusicCh1];
                 [self removeFirstChannelCallback];
             }
             if (!chTwoPlaying){

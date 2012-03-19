@@ -71,7 +71,7 @@
    
     AURenderCallbackStruct          rcbsFirst;
     AURenderCallbackStruct          rcbsSecond; //second channel
-    AURenderCallbackStruct          ioRenderCallback;
+    AURenderCallbackStruct          ioRenderCallback; //mastermixerCallbackStruckt
     
     
     CFArrayRef audioOutputRoutes;
@@ -191,6 +191,8 @@
 - (void) setMasterVolCh2:(AudioUnitParameterValue)val;
 - (void) connectSecChannelCallback;
 - (void) removeSecChannelCallback;
+- (void) connectSecMastermixerBus;
+- (void) removeSecMastermixerBus;
 - (void) closeDownChannelTwo;
 - (void) toggleChannelTwoPlayingStatus:(BOOL)playingStatus;
 - (void) canRead;

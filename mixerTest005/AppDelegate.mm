@@ -181,6 +181,7 @@ int labelWidth = 300;
     // [self.playbackManager stopAUGraph];
     //  [self.mainViewController dismissModalViewControllerAnimated:YES];
     
+    
     SPTrack *trackToPlay = track;
     
     if (trackToPlay != nil) {
@@ -204,6 +205,9 @@ int labelWidth = 300;
             [[alert autorelease] show];
         }
         self.currentTrack = track;
+        
+        [self.cueView.tableView reloadData];
+        
         return;
     }
 	
@@ -556,6 +560,8 @@ NSUInteger loadTrack;
         [self playnewTrack:track];
         
     }
+    
+    [self.cueView.tableView reloadData];
 }
 
 -(void)removeSongFromPlaybackCue:(int)selRow{

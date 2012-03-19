@@ -194,6 +194,7 @@
 	}	
 	//initialise the audio player
     [main.playbackManager connectSecChannelCallback];
+    [main.playbackManager connectSecMastermixerBus];
 
 	playingflag_ =1; 
 	
@@ -644,7 +645,8 @@ audiofileProblem:
     
     [self initDataVar];
     
-    [main.playbackManager removeSecChannelCallback];
+    //[main.playbackManager removeSecChannelCallback];
+    [main.playbackManager removeSecMastermixerBus];
     
     [main.playbackManager toggleChannelTwoPlayingStatus:NO];
     

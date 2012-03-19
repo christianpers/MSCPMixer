@@ -135,18 +135,31 @@
     NSUInteger section = [indexPath section];
     NSUInteger row = [indexPath row];
     
+    for (UIView *v in cell.contentView.subviews){
+        
+        [v removeFromSuperview];
+    }
+    
+    UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, self.frame.size.width-10, 30)];
+    lbl.backgroundColor = [UIColor clearColor];
+    lbl.textColor = [UIColor whiteColor];
+    [cell.contentView addSubview:lbl];
+    
     if ([[dataArray objectAtIndex:section]isKindOfClass:[NSMutableArray class]]){
         NSArray *arr = [[NSArray alloc]initWithArray:[dataArray objectAtIndex:section]];
-        cell.textLabel.text = [arr objectAtIndex:row];
+       // cell.textLabel.text = [arr objectAtIndex:row];
+        lbl.text = [arr objectAtIndex:row];
         
     }
     else{
-        cell.textLabel.text = [dataArray objectAtIndex:indexPath.row];
+       // cell.textLabel.text = [dataArray objectAtIndex:indexPath.row];
+        lbl.text = [dataArray objectAtIndex:indexPath.row];
     }
     
-    cell.contentView.backgroundColor = [UIColor clearColor];
-    cell.textLabel.textColor = [UIColor whiteColor];
-    cell.textLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(18.0)];
+    
+    
+    [lbl release];
+    
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     return cell;    

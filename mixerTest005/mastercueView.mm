@@ -68,7 +68,7 @@
         
         self.tableView.hidden = YES;
         
-        UIButton *edit = [[UIButton alloc]initWithFrame:CGRectMake(320, 20, 60, 40)];
+        UIButton *edit = [[UIButton alloc]initWithFrame:CGRectMake(320, 20, 60, 30)];
         edit.backgroundColor = [UIColor whiteColor];
         [edit setTitle:[NSString stringWithFormat:@"edit"] forState:UIControlStateNormal];
         [edit setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];

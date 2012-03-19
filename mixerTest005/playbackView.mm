@@ -281,6 +281,8 @@
         if ([[Shared sharedInstance].masterCue count] > 0){
             NSURL *url = [[Shared sharedInstance].masterCue objectAtIndex:0];
             
+            [Shared sharedInstance].currTrackCueNum = 0;
+            
             SPTrack *trackToPlay = [SPTrack trackForTrackURL:url inSession:[SPSession sharedSession]];
             [main.playbackManager playTrack:trackToPlay error:nil];
             
@@ -313,6 +315,7 @@
     else{
         [[SPSession sharedSession]setPlaying:YES];
         main.playbackManager.playbackIsPaused = NO;
+        [main.cueView.tableView reloadData];
         
     }
     
