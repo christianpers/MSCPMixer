@@ -35,6 +35,7 @@
 @synthesize chTwoActive;
 @synthesize chTwoViewController;
 @synthesize airplayIcon;
+@synthesize plViewController;
 
 
 int labelWidth = 300;
@@ -52,6 +53,7 @@ int labelWidth = 300;
     
     self.searchController = [[searchViewController alloc]init];
     self.chTwoViewController = [[secondChannelUIViewController alloc]init];
+   // self.plViewController = [[playlistViewController alloc]init];
     
     
     //  searchTableViewController *rootView = [[searchTableViewController alloc]init];
@@ -68,11 +70,8 @@ int labelWidth = 300;
     
     [[SPSession sharedSession] setDelegate:self];
     
-    
-    //  [self.window addSubview:self.navigationController.view];
     [self performSelector:@selector(showLogin) withObject:nil afterDelay:0.0];
     //[self showLogin];
-    
     
     return YES;
 }
@@ -108,7 +107,6 @@ int labelWidth = 300;
     [av startAnimating];
     
     self.loadingView = newloadingView;
-    
     
     [newloadingView release];
     
@@ -163,6 +161,8 @@ int labelWidth = 300;
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    [self.cueView.tableView reloadData];
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -383,9 +383,8 @@ int labelWidth = 300;
                action:@selector(userLogout)
      forControlEvents:UIControlEventTouchDown];
     
-    //[self.window addSubview:logout];
+   // [self.window addSubview:logout];
     
-    //[logout release];
     
     UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(20, 30, 50, 50)];
     mpVolumeViewParentView.backgroundColor = [UIColor clearColor];
@@ -425,6 +424,7 @@ int labelWidth = 300;
     self.chTwoViewController.view = self.secChView;
     [self.mainViewController.view insertSubview:self.chTwoViewController.view aboveSubview:self.plbackView];
     
+  
 }
 
 NSUInteger playlistsAttempts;
@@ -493,9 +493,7 @@ NSUInteger loadTrack;
        
         self.pllistView = newplView;
         
-        
         [newplView release];
-        
     }
 }
 
@@ -512,6 +510,8 @@ NSUInteger loadTrack;
 -(void)addSongFromSearch:(NSURL *)trackURL{
     
     [[Shared sharedInstance].masterCue addObject:trackURL];
+    
+    [self.cueView.tableView reloadData];
     
     SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
     
@@ -640,8 +640,7 @@ NSUInteger loadTrack;
 
 -(void)userLogout{
     
-    [self.playbackManager checkavailableOutputRoutes];
-    //[[SPSession sharedSession] logout];
+    [[SPSession sharedSession] logout];
     
     
 }
@@ -669,8 +668,9 @@ NSUInteger loadTrack;
         
         [view removeFromSuperview];
     }
-    [self.pllistView removeFromSuperview];
+   // [self.pllistView removeFromSuperview];
     self.pllistView = nil;
+    [self.pllistView release];
   //  [self.pllistView dealloc];
   //  [self.pllistViewController.view removeFromSuperview];
     

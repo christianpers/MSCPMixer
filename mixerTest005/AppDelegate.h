@@ -27,6 +27,7 @@
 	audioControl *_playbackManager;
 	SPTrack *_currentTrack;
     UINavigationController *navigationController;
+    playlistViewController *plViewController;
     playbackView *plbackView;
     playlistView *pllistView;
     searchViewController *searchController;
@@ -55,6 +56,7 @@
 @property (nonatomic, retain) UINavigationController *navigationController;
 @property (nonatomic, retain) SPPlaylist *loadPlaylist;
 
+@property (nonatomic, retain) playlistViewController *plViewController;
 @property (nonatomic, retain) playbackView *plbackView;
 @property (nonatomic, retain) playlistView *pllistView;
 
@@ -72,7 +74,6 @@
 @property (nonatomic, retain) secondChannelUIViewController *chTwoViewController;
 
 @property (nonatomic, retain) UIView *airplayIcon;
-
 
 - (void)userLogout;
 - (void)initLoadGUI;

@@ -9,6 +9,7 @@
 #import "mastercueView.h"
 #import "CocoaLibSpotify.h"
 #import "Shared.h"
+#import "AppDelegate.h"
 
 @implementation mastercueView
 
@@ -173,15 +174,16 @@
 {
     UIView *piece = [gestureRecognizer view];
     
-    //   [self adjustAnchorPointForGestureRecognizer:gestureRecognizer];
-    
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
         CGPoint translation = [gestureRecognizer translationInView:[piece superview]];
         
         [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
         [gestureRecognizer setTranslation:CGPointZero inView:[piece superview]];
+        
+       
     }
 }
+
 
 
 -(void)dealloc{
@@ -189,6 +191,7 @@
     [masterCuePan release];
     [tableView release];
     [editbtn release];
+    [super dealloc];
 }
 
 @end

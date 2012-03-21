@@ -68,6 +68,7 @@
 		AAAD79C114F0EE6B00E337E9 /* mainwindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */; };
 		AAC8A5241501732C00B26830 /* pauseCh2.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC8A51F1501732C00B26830 /* pauseCh2.png */; };
 		AAC8A5271501732C00B26830 /* stopCh2.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC8A5221501732C00B26830 /* stopCh2.png */; };
+		AAFF3AD6151829D000B4C2C0 /* mscp logo special edition.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AAFF3AD5151829D000B4C2C0 /* mscp logo special edition.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -180,6 +181,7 @@
 		AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = mainwindow.xib; sourceTree = "<group>"; };
 		AAC8A51F1501732C00B26830 /* pauseCh2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pauseCh2.png; sourceTree = "<group>"; };
 		AAC8A5221501732C00B26830 /* stopCh2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopCh2.png; sourceTree = "<group>"; };
+		AAFF3AD5151829D000B4C2C0 /* mscp logo special edition.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "mscp logo special edition.jpg"; path = "../../../../Desktop/mscp logo special edition.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -423,6 +425,7 @@
 		AA97EF5114F0D0DA00A2B892 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				AAFF3AD5151829D000B4C2C0 /* mscp logo special edition.jpg */,
 				AA5B97D8150E7D790061D969 /* iPublicUtility */,
 				AAC8A51F1501732C00B26830 /* pauseCh2.png */,
 				AAC8A5221501732C00B26830 /* stopCh2.png */,
@@ -518,6 +521,7 @@
 				AA9C4D04150092C8002FE0DE /* appiconMSCP.png in Resources */,
 				AAC8A5241501732C00B26830 /* pauseCh2.png in Resources */,
 				AAC8A5271501732C00B26830 /* stopCh2.png in Resources */,
+				AAFF3AD6151829D000B4C2C0 /* mscp logo special edition.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
