@@ -50,7 +50,6 @@
 		AA97EF5F14F0D1A800A2B892 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5B14F0D1A800A2B892 /* pause.png */; };
 		AA97EF6114F0D1A800A2B892 /* nextTrack.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5D14F0D1A800A2B892 /* nextTrack.png */; };
 		AA97EF6214F0D1A800A2B892 /* stopbtn.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5E14F0D1A800A2B892 /* stopbtn.png */; };
-		AA97EF6714F0D1C100A2B892 /* playlistView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF6414F0D1C100A2B892 /* playlistView.m */; };
 		AA97EF6814F0D1C100A2B892 /* plTableView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF6614F0D1C100A2B892 /* plTableView.mm */; };
 		AA97EF7114F0D1CE00A2B892 /* searchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF6A14F0D1CE00A2B892 /* searchViewController.mm */; };
 		AA97EF7214F0D1CE00A2B892 /* searchTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF6C14F0D1CE00A2B892 /* searchTableViewController.mm */; };
@@ -149,8 +148,6 @@
 		AA97EF5B14F0D1A800A2B892 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
 		AA97EF5D14F0D1A800A2B892 /* nextTrack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nextTrack.png; sourceTree = "<group>"; };
 		AA97EF5E14F0D1A800A2B892 /* stopbtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopbtn.png; sourceTree = "<group>"; };
-		AA97EF6314F0D1C100A2B892 /* playlistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playlistView.h; sourceTree = "<group>"; };
-		AA97EF6414F0D1C100A2B892 /* playlistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = playlistView.m; sourceTree = "<group>"; };
 		AA97EF6514F0D1C100A2B892 /* plTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plTableView.h; sourceTree = "<group>"; };
 		AA97EF6614F0D1C100A2B892 /* plTableView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = plTableView.mm; sourceTree = "<group>"; };
 		AA97EF6914F0D1CE00A2B892 /* searchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = searchViewController.h; sourceTree = "<group>"; };
@@ -399,8 +396,6 @@
 			children = (
 				AA83DAD714F7327300BF43F0 /* playlistViewController.h */,
 				AA83DAD814F7327300BF43F0 /* playlistViewController.m */,
-				AA97EF6314F0D1C100A2B892 /* playlistView.h */,
-				AA97EF6414F0D1C100A2B892 /* playlistView.m */,
 				AA97EF6514F0D1C100A2B892 /* plTableView.h */,
 				AA97EF6614F0D1C100A2B892 /* plTableView.mm */,
 			);
@@ -553,7 +548,6 @@
 				AA97EF4C14F0BF4600A2B892 /* SPUser.m in Sources */,
 				AA97EF5914F0D19300A2B892 /* mastercueView.mm in Sources */,
 				AA97EF5A14F0D19300A2B892 /* masterCueTableView.mm in Sources */,
-				AA97EF6714F0D1C100A2B892 /* playlistView.m in Sources */,
 				AA97EF6814F0D1C100A2B892 /* plTableView.mm in Sources */,
 				AA97EF7114F0D1CE00A2B892 /* searchViewController.mm in Sources */,
 				AA97EF7214F0D1CE00A2B892 /* searchTableViewController.mm in Sources */,

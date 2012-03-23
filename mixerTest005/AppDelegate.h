@@ -12,7 +12,6 @@
 #import "plTableView.h"
 #import "masterCueTableView.h"
 #import "playbackView.h"
-#import "playlistView.h"
 #import "mastercueView.h"
 #import "searchTableViewController.h"
 #import "searchViewController.h"
@@ -29,7 +28,6 @@
     UINavigationController *navigationController;
     playlistViewController *plViewController;
     playbackView *plbackView;
-    playlistView *pllistView;
     searchViewController *searchController;
     UILabel *playlistLabel;
     UILabel *playbackLabel;
@@ -58,7 +56,6 @@
 
 @property (nonatomic, retain) playlistViewController *plViewController;
 @property (nonatomic, retain) playbackView *plbackView;
-@property (nonatomic, retain) playlistView *pllistView;
 
 @property (nonatomic, retain) UILabel *playlistLabel;
 @property (nonatomic, retain) UILabel *playbackLabel;

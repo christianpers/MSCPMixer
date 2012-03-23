@@ -7,7 +7,6 @@
 //
 
 #import "plTableView.h"
-#import "playlistView.h"
 #import "AppDelegate.h"
 
 @implementation plTableView

@@ -23,7 +23,6 @@
 @synthesize navigationController = _navigationController;
 @synthesize loadPlaylist = _loadPlaylist;
 @synthesize plbackView = _plbackView;
-@synthesize pllistView = _pllistView;
 @synthesize playbackLabel = _playbackLabel;
 @synthesize playlistLabel = _playlistLabel;
 @synthesize searchLabel = _searchLabel;
@@ -53,7 +52,6 @@ int labelWidth = 300;
     
     self.searchController = [[searchViewController alloc]init];
     self.chTwoViewController = [[secondChannelUIViewController alloc]init];
-   // self.plViewController = [[playlistViewController alloc]init];
     
     
     //  searchTableViewController *rootView = [[searchTableViewController alloc]init];
@@ -383,7 +381,7 @@ int labelWidth = 300;
                action:@selector(userLogout)
      forControlEvents:UIControlEventTouchDown];
     
-   // [self.window addSubview:logout];
+    [self.window addSubview:logout];
     
     
     UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(20, 30, 50, 50)];
@@ -482,7 +480,13 @@ NSUInteger loadTrack;
         
         [self.loadingView removeFromSuperview];
        // [self.loadingView release];
-  
+        
+        self.plViewController = [[playlistViewController alloc]init];
+        [self.mainViewController.view addSubview:self.plViewController.view];
+        
+    //    [self.plViewController initMainScrollView];
+        
+  /*
         playlistView *newplView = [[playlistView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
         
         [self.mainViewController.view insertSubview:newplView belowSubview:self.plbackView]; 
@@ -494,6 +498,8 @@ NSUInteger loadTrack;
         self.pllistView = newplView;
         
         [newplView release];
+   
+   */
     }
 }
 
@@ -589,7 +595,7 @@ NSUInteger loadTrack;
     UIView *lbl = [gesture view];
     if (lbl.tag == 10){
         self.airplayIcon.hidden = NO;
-        [self.mainViewController.view bringSubviewToFront:self.pllistView];
+        [self.mainViewController.view bringSubviewToFront:self.plViewController.view];
         self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
         self.playbackLabel.textColor = [UIColor whiteColor];
         
@@ -660,18 +666,20 @@ NSUInteger loadTrack;
     NSLog(@"session logged out");
     [self removeGUI];
     
-  //  [self.pllistView removeObservers];
+   // [self.plViewController.plMainView removeObservers];
     
     [self.playbackManager stopAUGraph];
     
-    for (UIView *view in [self.pllistView subviews]){
+    for (UIView *view in [self.plViewController.view subviews]){
         
         [view removeFromSuperview];
     }
-   // [self.pllistView removeFromSuperview];
-    self.pllistView = nil;
-    [self.pllistView release];
-  //  [self.pllistView dealloc];
+    [self.plViewController.plMainView removeFromSuperview];
+  //  self.pllistView = nil;
+   // [self.pllistView release];
+  //  [self.plViewController.plMainView release];
+  
+   //  [self.pllistView dealloc];
   //  [self.pllistViewController.view removeFromSuperview];
     
   //  self.pllistViewController = nil;
@@ -714,7 +722,6 @@ NSUInteger loadTrack;
     [_playlistLabel release];
     [_playbackLabel release];
     [_searchLabel release];
-    [_pllistView release];
     [_plbackView release];
     [_loadPlaylist release];
  	[_currentTrack release];
