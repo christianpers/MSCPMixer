@@ -648,7 +648,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [main.plbackView setTrackTitleAndArtist:self.currentTrack];
 		self.playbackSession.playing = YES;
-        [main.cueView.tableView reloadData];
+        [main.cueController.tableView reloadData];
     }
 	else{
 		self.currentTrack = nil;
@@ -1838,7 +1838,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
             OSStatus result;
             UInt32 numInteractions;
             
-            [main.cueView.tableView reloadData];
+            [main.cueController.tableView reloadData];
             
             result = AUGraphCountNodeInteractions(graph, mixerNodeChOne, &numInteractions);
             if (numInteractions == 2){

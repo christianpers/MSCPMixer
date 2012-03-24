@@ -53,20 +53,12 @@
     self.plViewController = [[UIViewController alloc]init];
     missedPlArray = [[NSMutableArray alloc] init];
     
-    self.plMainView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 500, 500)];
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    CGSize winSize = window.frame.size;
+    self.plMainView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, winSize.width,winSize.height)];
     self.view = self.plMainView;
-  //  self.plMainView.backgroundColor = [UIColor blackColor];
     
-  //  UIView *viewT = [[UIView alloc]initWithFrame:CGRectMake(0,0, 400, 400)];
-  //  viewT.backgroundColor = [UIColor yellowColor];
-  //  self.view = viewT;
-    
-    UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(200, 200, 200, 200)];
-    lbl.text = @"fuckin hell !";
-    lbl.textColor = [UIColor blackColor];
-    lbl.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:lbl];
-    [lbl release];
+  
 }
 
 
@@ -569,7 +561,7 @@
     
     [self.plViewController.view addSubview:plSongTable];
     
-    [self setScrollEnabled:NO];
+    [self.plMainView setScrollEnabled:NO];
     
     [plContainerArray release];
     [plbgView release];    

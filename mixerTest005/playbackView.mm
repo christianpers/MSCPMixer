@@ -32,7 +32,7 @@
         //fft shieed
         self.fftView = [[fftAnalyzerView alloc]initWithFrame:CGRectMake(100, 100, 200, 100)];
     //    self.fftView.backgroundColor = [UIColor whiteColor];
-        [self addSubview:self.fftView];
+      //  [self addSubview:self.fftView];
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [main.playbackManager setFFTView:self.fftView];
         
@@ -315,7 +315,7 @@
     else{
         [[SPSession sharedSession]setPlaying:YES];
         main.playbackManager.playbackIsPaused = NO;
-        [main.cueView.tableView reloadData];
+        [main.cueController.tableView reloadData];
         
     }
     

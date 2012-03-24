@@ -26,7 +26,6 @@
 @synthesize playbackLabel = _playbackLabel;
 @synthesize playlistLabel = _playlistLabel;
 @synthesize searchLabel = _searchLabel;
-@synthesize cueView = _cueView;
 @synthesize loadingView = _loadingView;
 @synthesize searchTViewController = _searchTViewController;
 @synthesize searchController = _searchController;
@@ -35,6 +34,7 @@
 @synthesize chTwoViewController;
 @synthesize airplayIcon;
 @synthesize plViewController;
+@synthesize cueController;
 
 
 int labelWidth = 300;
@@ -159,7 +159,7 @@ int labelWidth = 300;
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
-    [self.cueView.tableView reloadData];
+    [self.cueController.tableView reloadData];
     
 }
 
@@ -204,7 +204,7 @@ int labelWidth = 300;
         }
         self.currentTrack = track;
         
-        [self.cueView.tableView reloadData];
+        [self.cueController.tableView reloadData];
         
         return;
     }
@@ -236,7 +236,7 @@ int labelWidth = 300;
             self.plbackView.frame = CGRectMake(0, 0, bounds.size.width, bounds.size.height/2);
             self.secChView.frame = CGRectMake(0, bounds.size.height/2, bounds.size.width, bounds.size.height/2);
             
-            self.cueView.frame = CGRectMake(200, bounds.size.height-700, self.cueView.bounds.size.width, self.cueView.bounds.size.height);
+            self.cueController.view.frame = CGRectMake(200, bounds.size.height-700, self.cueController.view.bounds.size.width, self.cueController.view.bounds.size.height);
             self.plbackView.trackControlBG.frame = CGRectMake(400, bounds.size.height-700, self.plbackView.trackControlBG.bounds.size.width, self.plbackView.trackControlBG.bounds.size.height);
             
             
@@ -301,7 +301,7 @@ int labelWidth = 300;
     [self.searchLabel removeFromSuperview];
     [self.plbackView removeFromSuperview];
     [self.playbackLabel removeFromSuperview];
-    [self.cueView removeFromSuperview];
+    [self.cueController.view removeFromSuperview];
     [self.playlistLabel removeFromSuperview];
     [self.secChView removeFromSuperview];
     [self.airplayIcon removeFromSuperview];
@@ -349,10 +349,13 @@ int labelWidth = 300;
     
     [menuTouchPlayback release];
     
-    self.cueView = [[mastercueView alloc]initWithFrame:CGRectMake((winSize.width/2-600/2), winSize.height-200, 400, 60)];
+    self.cueController = [[cueViewController alloc]init];
+    [self.mainViewController.view addSubview:self.cueController.view];
     
-    [self.window addSubview:self.cueView];
-    self.cueView.hidden = YES;
+   // self.cueView = [[mastercueView alloc]initWithFrame:CGRectMake((winSize.width/2-600/2), winSize.height-200, 400, 60)];
+    
+  //  [self.window addSubview:self.cueView];
+    self.cueController.view.hidden = YES;
     
     UITapGestureRecognizer *menuTouchPlaylist = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];
     menuTouchPlaylist.numberOfTapsRequired = 1;
@@ -371,20 +374,9 @@ int labelWidth = 300;
     [menuTouchPlaylist release];
     
     
-    UIButton *logout = [UIButton buttonWithType:UIButtonTypeCustom];
-    logout.frame = CGRectMake(winSize.width-200, 300, 200, 40);// position in the parent view and set the size of the
-    logout.backgroundColor = [UIColor clearColor];
-    [logout setTitle:[NSString stringWithFormat:@"Logout"] forState:UIControlStateNormal];
-    [logout setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    [logout addTarget:self 
-               action:@selector(userLogout)
-     forControlEvents:UIControlEventTouchDown];
-    
-    [self.window addSubview:logout];
     
     
-    UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(20, 30, 50, 50)];
+    UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(60, 30, 50, 50)];
     mpVolumeViewParentView.backgroundColor = [UIColor clearColor];
     [self.window addSubview:mpVolumeViewParentView];
     MPVolumeView *myVolumeView =
@@ -459,7 +451,7 @@ NSUInteger loadTrack;
             return;
         }
         else{
-            self.cueView.hidden = NO;
+            self.cueController.view.hidden = NO;
             self.playlistLabel.hidden = NO;
             self.searchLabel.hidden = NO;
             self.playbackLabel.hidden = NO;
@@ -473,7 +465,7 @@ NSUInteger loadTrack;
     else{
         NSLog(@"loaded playlists");
         
-        self.cueView.hidden = NO;
+        self.cueController.view.hidden = NO;
         self.playlistLabel.hidden = NO;
         self.searchLabel.hidden = NO;
         self.playbackLabel.hidden = NO;
@@ -482,25 +474,26 @@ NSUInteger loadTrack;
        // [self.loadingView release];
         
         self.plViewController = [[playlistViewController alloc]init];
-        [self.mainViewController.view addSubview:self.plViewController.view];
+        [self.mainViewController.view insertSubview:self.plViewController.view belowSubview:self.plbackView];
         
-    //    [self.plViewController initMainScrollView];
+        SPUser *user = [[SPSession sharedSession]user];
         
-  /*
-        playlistView *newplView = [[playlistView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
+        NSString *userName = user.displayName;
         
-        [self.mainViewController.view insertSubview:newplView belowSubview:self.plbackView]; 
+        UIButton *logout = [UIButton buttonWithType:UIButtonTypeCustom];
+        logout.frame = CGRectMake(5, 20, 200, 18);// position in the parent view and set the size of the
+        logout.backgroundColor = [UIColor clearColor];
+        [logout setTitle:[NSString stringWithFormat:@"Logged in as: %@",userName] forState:UIControlStateNormal];
+        logout.titleLabel.textAlignment = UITextAlignmentLeft;
+        [logout setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        logout.titleLabel.font = [UIFont systemFontOfSize:14];
         
-        [newplView initGridParams];
-        [newplView loadPlaylistView:[[SPSession sharedSession] userPlaylists]];
-        [newplView checkPlLoad:[[SPSession sharedSession]userPlaylists]];
-       
-        self.pllistView = newplView;
+        [logout addTarget:self 
+                   action:@selector(userLogout)
+         forControlEvents:UIControlEventTouchDown];
         
-        [newplView release];
-   
-   */
-    }
+        [self.window addSubview:logout];
+    }  
 }
 
 -(void)sessionLostPlayToken:(SPSession *)session;
@@ -517,7 +510,7 @@ NSUInteger loadTrack;
     
     [[Shared sharedInstance].masterCue addObject:trackURL];
     
-    [self.cueView.tableView reloadData];
+    [self.cueController.tableView reloadData];
     
     SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
     
@@ -567,7 +560,7 @@ NSUInteger loadTrack;
         
     }
     
-    [self.cueView.tableView reloadData];
+    [self.cueController.tableView reloadData];
 }
 
 -(void)removeSongFromPlaybackCue:(int)selRow{
@@ -596,6 +589,8 @@ NSUInteger loadTrack;
     if (lbl.tag == 10){
         self.airplayIcon.hidden = NO;
         [self.mainViewController.view bringSubviewToFront:self.plViewController.view];
+        [self.mainViewController.view bringSubviewToFront:self.cueController.view];
+       
         self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
         self.playbackLabel.textColor = [UIColor whiteColor];
         
@@ -612,6 +607,8 @@ NSUInteger loadTrack;
         self.airplayIcon.hidden = NO;
         [self.mainViewController.view bringSubviewToFront:self.plbackView];
         [self.mainViewController.view bringSubviewToFront:self.secChView];
+        [self.mainViewController.view bringSubviewToFront:self.cueController.view];
+        
         self.playbackLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
         self.playbackLabel.textColor = [UIColor blackColor];
         
@@ -627,6 +624,8 @@ NSUInteger loadTrack;
     }
     else if (lbl.tag == 12){
        
+        [self.mainViewController.view bringSubviewToFront:self.cueController.view];
+        
         self.airplayIcon.hidden = YES;
         
         self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];

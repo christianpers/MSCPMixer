@@ -135,11 +135,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/AppDelegate.mm"
-         timestampString = "354086237.108512"
+         timestampString = "354322498.243299"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "473"
-         endingLineNumber = "473"
+         startingLineNumber = "465"
+         endingLineNumber = "465"
          landmarkName = "-sessionDidLoginSuccessfully:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -191,11 +191,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/AppDelegate.mm"
-         timestampString = "354086237.108512"
+         timestampString = "354322498.243299"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "475"
-         endingLineNumber = "475"
+         startingLineNumber = "467"
+         endingLineNumber = "467"
          landmarkName = "-sessionDidLoginSuccessfully:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -205,11 +205,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/AppDelegate.mm"
-         timestampString = "354086237.108512"
+         timestampString = "354322498.243299"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "456"
-         endingLineNumber = "456"
+         startingLineNumber = "448"
+         endingLineNumber = "448"
          landmarkName = "-sessionDidLoginSuccessfully:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -275,11 +275,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/effectController.mm"
-         timestampString = "353122211.447651"
+         timestampString = "354322498.243299"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "84"
-         endingLineNumber = "84"
+         startingLineNumber = "85"
+         endingLineNumber = "85"
          landmarkName = "-panPiece:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -457,11 +457,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/effectController.mm"
-         timestampString = "352791233.742203"
+         timestampString = "354322498.243299"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "45"
-         endingLineNumber = "45"
+         startingLineNumber = "46"
+         endingLineNumber = "46"
          landmarkName = "-panPiece:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -527,11 +527,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/AppDelegate.mm"
-         timestampString = "354086237.108512"
+         timestampString = "354322498.243299"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "442"
-         endingLineNumber = "442"
+         startingLineNumber = "434"
+         endingLineNumber = "434"
          landmarkName = "-sessionDidLoginSuccessfully:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1080,11 +1080,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/AppDelegate.mm"
-         timestampString = "354086237.108512"
+         timestampString = "354323203.299346"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "678"
-         endingLineNumber = "678"
+         startingLineNumber = "677"
+         endingLineNumber = "677"
          landmarkName = "-sessionDidLogOut:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1132,11 +1132,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/AppDelegate.mm"
-         timestampString = "354086237.108512"
+         timestampString = "354322498.243299"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "476"
-         endingLineNumber = "476"
+         startingLineNumber = "468"
+         endingLineNumber = "468"
          landmarkName = "-sessionDidLoginSuccessfully:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1210,11 +1210,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/playlistViewController.m"
-         timestampString = "354172445.51856"
+         timestampString = "354204923.261422"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "56"
-         endingLineNumber = "56"
+         startingLineNumber = "58"
+         endingLineNumber = "58"
          landmarkName = "-loadView"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1223,11 +1223,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/AppDelegate.mm"
-         timestampString = "354086120.826942"
+         timestampString = "354322498.243299"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "484"
-         endingLineNumber = "484"
+         startingLineNumber = "476"
+         endingLineNumber = "476"
          landmarkName = "-sessionDidLoginSuccessfully:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1236,11 +1236,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/playlistViewController.m"
-         timestampString = "354173384.032996"
+         timestampString = "354204923.261422"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "79"
-         endingLineNumber = "79"
+         startingLineNumber = "71"
+         endingLineNumber = "71"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1249,11 +1249,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/playlistViewController.m"
-         timestampString = "354173384.032996"
+         timestampString = "354204923.261422"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "175"
-         endingLineNumber = "175"
+         startingLineNumber = "167"
+         endingLineNumber = "167"
          landmarkName = "-initGridParams"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1262,11 +1262,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/playlistViewController.m"
-         timestampString = "354173710.464318"
+         timestampString = "354204923.261422"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "185"
-         endingLineNumber = "185"
+         startingLineNumber = "177"
+         endingLineNumber = "177"
          landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1275,11 +1275,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/playlistViewController.m"
-         timestampString = "354173710.464318"
+         timestampString = "354204923.261422"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "197"
-         endingLineNumber = "197"
+         startingLineNumber = "189"
+         endingLineNumber = "189"
          landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1288,11 +1288,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/playlistViewController.m"
-         timestampString = "354173710.464318"
+         timestampString = "354204923.261422"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "273"
-         endingLineNumber = "273"
+         startingLineNumber = "265"
+         endingLineNumber = "265"
          landmarkName = "-loadPlaylistView:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1314,11 +1314,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/playlistViewController.m"
-         timestampString = "354173384.032996"
+         timestampString = "354204923.261422"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "77"
-         endingLineNumber = "77"
+         startingLineNumber = "69"
+         endingLineNumber = "69"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>

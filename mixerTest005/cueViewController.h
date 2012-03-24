@@ -1,20 +1,21 @@
 //
-//  mastercueView.h
-//  mixerTest003
+//  cueViewController.h
+//  mixerTest005
 //
-//  Created by Christian Persson on 2012-01-24.
+//  Created by Christian Persson on 2012-03-24.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#import "CocoaLibSpotify.h"
 #import "masterCueTableView.h"
 
-@interface mastercueView : UIView{
+@interface cueViewController : UIViewController{
+    
     
     UIPanGestureRecognizer *masterCuePan;
     masterCueTableView *tableView;
     UIButton *editbtn;
-    
 }
 
 @property (nonatomic, retain) UIPanGestureRecognizer *masterCuePan;

@@ -60,9 +60,10 @@
     searchBtn.frame = CGRectMake(480, 400, 150, 58);// position in the parent view and set the size of the
     //searchBtn.layer.backgroundColor = [[UIColor whiteColor]CGColor];
     [searchBtn setTitle:[NSString stringWithFormat:@"Search"] forState:UIControlStateNormal];
-    searchBtn.backgroundColor = [UIColor clearColor];
-    [searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    searchBtn.titleLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(39.0)];
+    searchBtn.backgroundColor = [UIColor whiteColor];
+    searchBtn.layer.cornerRadius = 10;
+    [searchBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    searchBtn.titleLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(26.0)];
     [searchBtn addTarget:self 
                   action:@selector(searchClicked:)
         forControlEvents:UIControlEventTouchDown];
@@ -122,7 +123,7 @@
     main.playbackLabel.hidden = YES;
     main.playlistLabel.hidden = YES;
     main.searchLabel.hidden = YES;
-    main.cueView.hidden = YES;
+    main.cueController.view.hidden = YES;
     
     NSMutableArray *albumarr;
     NSMutableArray *trackarr;

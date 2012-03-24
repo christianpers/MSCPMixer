@@ -12,13 +12,13 @@
 #import "plTableView.h"
 #import "masterCueTableView.h"
 #import "playbackView.h"
-#import "mastercueView.h"
 #import "searchTableViewController.h"
 #import "searchViewController.h"
 #import "playlistViewController.h"
 #import "secondChannelView.h"
 #import "secondChannelUIViewController.h"
 #import "playlistViewController.h"
+#import "cueViewController.h"
 
 @interface AppDelegate : NSObject <UIApplicationDelegate, SPSessionDelegate> {
     UIViewController *_mainViewController;
@@ -32,16 +32,13 @@
     UILabel *playlistLabel;
     UILabel *playbackLabel;
     UILabel *searchLabel;
-    mastercueView *cueView;
     UIView *loadingView;
     searchTableViewController *searchTViewController;
     secondChannelView *secChView;
     BOOL chTwoActive;
     secondChannelUIViewController *chTwoViewController;
     UIView *airplayIcon;
-    
-    
-    
+    cueViewController *cueController;
 }
 
 
@@ -61,7 +58,7 @@
 @property (nonatomic, retain) UILabel *playbackLabel;
 @property (nonatomic, retain) UILabel *searchLabel;
 
-@property (nonatomic, retain) mastercueView *cueView;
+@property (nonatomic, retain) cueViewController *cueController;
 @property (nonatomic, retain) UIView *loadingView;
 
 @property (nonatomic, retain) searchTableViewController *searchTViewController;

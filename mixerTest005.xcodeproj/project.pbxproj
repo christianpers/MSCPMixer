@@ -45,7 +45,6 @@
 		AA97EF4A14F0BF4600A2B892 /* SPSession.m in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF3F14F0BF3F00A2B892 /* SPSession.m */; };
 		AA97EF4B14F0BF4600A2B892 /* SPTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF4114F0BF4300A2B892 /* SPTrack.m */; };
 		AA97EF4C14F0BF4600A2B892 /* SPUser.m in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF4314F0BF4500A2B892 /* SPUser.m */; };
-		AA97EF5914F0D19300A2B892 /* mastercueView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF5614F0D19300A2B892 /* mastercueView.mm */; };
 		AA97EF5A14F0D19300A2B892 /* masterCueTableView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF5814F0D19300A2B892 /* masterCueTableView.mm */; };
 		AA97EF5F14F0D1A800A2B892 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5B14F0D1A800A2B892 /* pause.png */; };
 		AA97EF6114F0D1A800A2B892 /* nextTrack.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5D14F0D1A800A2B892 /* nextTrack.png */; };
@@ -67,6 +66,7 @@
 		AAAD79C114F0EE6B00E337E9 /* mainwindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */; };
 		AAC8A5241501732C00B26830 /* pauseCh2.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC8A51F1501732C00B26830 /* pauseCh2.png */; };
 		AAC8A5271501732C00B26830 /* stopCh2.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC8A5221501732C00B26830 /* stopCh2.png */; };
+		AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA25C151E63ED0066AC86 /* cueViewController.m */; };
 		AAFF3AD6151829D000B4C2C0 /* mscp logo special edition.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AAFF3AD5151829D000B4C2C0 /* mscp logo special edition.jpg */; };
 /* End PBXBuildFile section */
 
@@ -141,8 +141,6 @@
 		AA97EF4114F0BF4300A2B892 /* SPTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPTrack.m; sourceTree = "<group>"; };
 		AA97EF4214F0BF4400A2B892 /* SPUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPUser.h; sourceTree = "<group>"; };
 		AA97EF4314F0BF4500A2B892 /* SPUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUser.m; sourceTree = "<group>"; };
-		AA97EF5514F0D19300A2B892 /* mastercueView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mastercueView.h; sourceTree = "<group>"; };
-		AA97EF5614F0D19300A2B892 /* mastercueView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = mastercueView.mm; sourceTree = "<group>"; };
 		AA97EF5714F0D19300A2B892 /* masterCueTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = masterCueTableView.h; sourceTree = "<group>"; };
 		AA97EF5814F0D19300A2B892 /* masterCueTableView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = masterCueTableView.mm; sourceTree = "<group>"; };
 		AA97EF5B14F0D1A800A2B892 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
@@ -178,6 +176,8 @@
 		AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = mainwindow.xib; sourceTree = "<group>"; };
 		AAC8A51F1501732C00B26830 /* pauseCh2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pauseCh2.png; sourceTree = "<group>"; };
 		AAC8A5221501732C00B26830 /* stopCh2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopCh2.png; sourceTree = "<group>"; };
+		AAEFA25B151E63ED0066AC86 /* cueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cueViewController.h; sourceTree = "<group>"; };
+		AAEFA25C151E63ED0066AC86 /* cueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cueViewController.m; sourceTree = "<group>"; };
 		AAFF3AD5151829D000B4C2C0 /* mscp logo special edition.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "mscp logo special edition.jpg"; path = "../../../../Desktop/mscp logo special edition.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -281,7 +281,7 @@
 				AA97EF5014F0D0C700A2B892 /* searchView */,
 				AA97EF4F14F0D0B500A2B892 /* playlistView */,
 				AA97EF4E14F0D0AA00A2B892 /* playbackView */,
-				AA97EF4D14F0D09500A2B892 /* mastercueView */,
+				AA97EF4D14F0D09500A2B892 /* cueViewController */,
 				AA97EEF714F0B06500A2B892 /* AppDelegate.h */,
 				AA97EEF814F0B06500A2B892 /* AppDelegate.mm */,
 				AA97EF1314F0BE0100A2B892 /* cocoaWrapper */,
@@ -365,15 +365,15 @@
 			name = metadata;
 			sourceTree = "<group>";
 		};
-		AA97EF4D14F0D09500A2B892 /* mastercueView */ = {
+		AA97EF4D14F0D09500A2B892 /* cueViewController */ = {
 			isa = PBXGroup;
 			children = (
-				AA97EF5514F0D19300A2B892 /* mastercueView.h */,
-				AA97EF5614F0D19300A2B892 /* mastercueView.mm */,
 				AA97EF5714F0D19300A2B892 /* masterCueTableView.h */,
 				AA97EF5814F0D19300A2B892 /* masterCueTableView.mm */,
+				AAEFA25B151E63ED0066AC86 /* cueViewController.h */,
+				AAEFA25C151E63ED0066AC86 /* cueViewController.m */,
 			);
-			name = mastercueView;
+			name = cueViewController;
 			sourceTree = "<group>";
 		};
 		AA97EF4E14F0D0AA00A2B892 /* playbackView */ = {
@@ -546,7 +546,6 @@
 				AA97EF4A14F0BF4600A2B892 /* SPSession.m in Sources */,
 				AA97EF4B14F0BF4600A2B892 /* SPTrack.m in Sources */,
 				AA97EF4C14F0BF4600A2B892 /* SPUser.m in Sources */,
-				AA97EF5914F0D19300A2B892 /* mastercueView.mm in Sources */,
 				AA97EF5A14F0D19300A2B892 /* masterCueTableView.mm in Sources */,
 				AA97EF6814F0D1C100A2B892 /* plTableView.mm in Sources */,
 				AA97EF7114F0D1CE00A2B892 /* searchViewController.mm in Sources */,
@@ -564,6 +563,7 @@
 				AA2D5D0414FB17E000F1DAAA /* secondChannelView.m in Sources */,
 				AA58C0F314FC86090074837F /* secondChannelUIViewController.mm in Sources */,
 				AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */,
+				AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

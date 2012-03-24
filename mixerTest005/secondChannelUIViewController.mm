@@ -92,7 +92,7 @@
                              main.playlistLabel.hidden = NO;
                              main.playbackLabel.hidden = NO;
                              main.searchLabel.hidden = NO;
-                             main.cueView.hidden = NO;
+                             main.cueController.view.hidden = NO;
                          }];
         
         [UIView beginAnimations : @"Display notif" context:nil];
@@ -119,7 +119,7 @@
                          main.playlistLabel.hidden = NO;
                          main.playbackLabel.hidden = NO;
                          main.searchLabel.hidden = NO;
-                         main.cueView.hidden = NO;
+                         main.cueController.view.hidden = NO;
                      }];
     
     [UIView beginAnimations : @"Display notif" context:nil];
@@ -146,7 +146,7 @@
     main.playlistLabel.hidden = YES;
     main.playbackLabel.hidden = YES;
     main.searchLabel.hidden = YES;
-    main.cueView.hidden = YES;
+    main.cueController.view.hidden = YES;
     
     MPMediaQuery *everything = [[MPMediaQuery alloc] init];
     [everything setGroupingType: MPMediaGroupingAlbum];

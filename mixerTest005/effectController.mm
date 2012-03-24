@@ -33,6 +33,7 @@ CGSize parentSize;
         UIPanGestureRecognizer *effectSwipe = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panPiece:)];
         [self addGestureRecognizer:effectSwipe]; 
         [effectSwipe release];
+        self.layer.cornerRadius = 5;
         
     }
     return self;
@@ -58,7 +59,7 @@ CGSize parentSize;
         main.playbackLabel.hidden = YES;
         main.playlistLabel.hidden = YES;
         main.searchLabel.hidden = YES;
-        main.cueView.hidden = YES;
+        main.cueController.view.hidden = YES;
         parentView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.16];
        // parentView.layer.borderWidth = 4.0f;
         
@@ -138,7 +139,7 @@ CGSize parentSize;
         main.playbackLabel.hidden = NO;
         main.playlistLabel.hidden = NO;
         main.searchLabel.hidden = NO;
-        main.cueView.hidden = NO;
+        main.cueController.view.hidden = NO;
         parentView.backgroundColor = [UIColor clearColor];
      //   parentView.layer.borderWidth = 0.0f;
         
