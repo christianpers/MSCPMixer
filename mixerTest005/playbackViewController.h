@@ -1,20 +1,19 @@
 //
-//  playbackView.h
-//  mixerTest003
+//  playbackViewController.h
+//  mixerTest005
 //
-//  Created by Christian Persson on 2012-01-16.
+//  Created by Christian Persson on 2012-03-25.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import <UIKit/UIKit.h>
 #import "effectController.h"
 #import "CocoaLibSpotify.h"
 #import "fftAnalyzerView.h"
 
-
-
-@interface playbackView : UIView{
-
+@interface playbackViewController : UIViewController{
+    
     UILabel *artistLbl;
     UILabel *titleLbl;
     UIButton *selBtn;
@@ -31,10 +30,6 @@
     
     //fft analyzing
     fftAnalyzerView *fftView;
-    
-   
-    
-   
 }
 
 @property(nonatomic, retain) UILabel *artistLbl;
@@ -64,6 +59,5 @@
 - (void)setPlayduration:(double)length;
 - (void)updatePlayduration:(double)val;
 - (void)trackdurationSwipe:(UISwipeGestureRecognizer *)gesture;
-
 
 @end

@@ -404,7 +404,7 @@
 }
 
 -(void)dealloc{
-     
+    [super dealloc];
     
 }
 

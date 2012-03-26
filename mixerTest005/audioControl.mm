@@ -646,7 +646,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	BOOL result = [self.playbackSession playTrack:self.currentTrack error:error];
 	if (result){
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [main.plbackView setTrackTitleAndArtist:self.currentTrack];
+        [main.plbackViewController setTrackTitleAndArtist:self.currentTrack];
 		self.playbackSession.playing = YES;
         [main.cueController.tableView reloadData];
     }
