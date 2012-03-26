@@ -161,6 +161,11 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
+    for (UIView *view in cell.contentView.subviews){
+        [view removeFromSuperview];
+    }
+    
+    
     NSString *lbl;
     
     //    NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[self.detailArr objectAtIndex:indexPath.section]];
@@ -178,15 +183,34 @@
         NSString *artists = [[track.artists valueForKey:@"name"] componentsJoinedByString:@","];
         lbl = [NSString stringWithFormat:@"%@ - %@",artists,track.name];
         
+        
+        UILabel *cue = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-130, 10, 100, 20)];
+        cue.text = @"Cue Song";
+        cue.textAlignment = UITextAlignmentCenter;
+        cue.textColor = [UIColor blackColor];
+        
+        cue.backgroundColor = [UIColor whiteColor];
+        [cell.contentView addSubview:cue];
+        [cue release];
+
+        
     }
     
     if ([lbl length]== 0){
         NSLog(@"fuck");
     }
     
-    cell.textLabel.text = lbl;
+    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.view.frame.size.width-140, 30)];
+    title.text = lbl;
+    title.textColor = [UIColor whiteColor];
+    
+    title.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:title];
+    [title release];
+    
+  //  cell.textLabel.text = lbl;
     // Configure the cell...
-    cell.textLabel.textColor = [UIColor whiteColor];
+    //cell.textLabel.textColor = [UIColor whiteColor];
     return cell;
     
 }
@@ -263,7 +287,7 @@
     main.playbackLabel.hidden = NO;
     main.playlistLabel.hidden = NO;
     main.searchLabel.hidden = NO;
-    main.cueView.hidden = NO;
+    main.cueController.view.hidden = NO;
     
 }
 

@@ -1,39 +1,64 @@
 //
-//  effectController.m
-//  mixerTest003
+//  effectViewController.m
+//  mixerTest005
 //
-//  Created by Christian Persson on 2012-01-20.
+//  Created by Christian Persson on 2012-03-25.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "effectController.h"
+#import "effectViewController.h"
 #import "Shared.h"
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
-@implementation effectController
+
+@implementation effectViewController
 
 @synthesize gridView;
 
-BOOL aboveMiddleY = NO;
-AudioUnitParameterValue paramVal1;
-AudioUnitParameterValue paramVal2;
-float setY;
-float setX;
-CGSize parentSize;
-
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Initialization code
-        UIPanGestureRecognizer *effectSwipe = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panPiece:)];
-        [self addGestureRecognizer:effectSwipe]; 
-        [effectSwipe release];
-        self.layer.cornerRadius = 5;
-        
+        // Custom initialization
     }
     return self;
+}
+
+// Implement loadView to create a view hierarchy programmatically, without using a nib.
+- (void)loadView
+{
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    CGSize winSize = window.frame.size;
+    
+    UIView *effectView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
+    self.view = effectView;
+    
+    [effectView release];
+    
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+    aboveMiddleY = NO;
+    
+    UIPanGestureRecognizer *effectSwipe = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panPiece:)];
+    [self.view addGestureRecognizer:effectSwipe]; 
+    [effectSwipe release];
+    self.view.layer.cornerRadius = 5;
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+	return YES;
 }
 
 - (void)panPiece:(UIPanGestureRecognizer *)gestureRecognizer
@@ -46,6 +71,7 @@ CGSize parentSize;
     
     CGPoint pos = piece.frame.origin;
     CGPoint translation = [gestureRecognizer translationInView:[piece superview]];
+      
     
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan){
         
@@ -56,7 +82,7 @@ CGSize parentSize;
         main.searchLabel.hidden = YES;
         main.cueController.view.hidden = YES;
         parentView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.26];
-        //parentView.layer.borderWidth = 4.0f;
+        // parentView.layer.borderWidth = 4.0f;
         
         if (pos.x <= 0) {
             [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
@@ -70,41 +96,56 @@ CGSize parentSize;
         
         
         if (piece.tag <= 5){
-           // [[(playbackView *)[self superview] controlView] setHidden:YES];
-           // [[(playbackView *)[self superview] artistLbl] setHidden:YES];
-           // [[(playbackView *)[self superview] titleLbl] setHidden:YES];
+            // [[(playbackView *)[self superview] controlView] setHidden:YES];
+            // [[(playbackView *)[self superview] artistLbl] setHidden:YES];
+            // [[(playbackView *)[self superview] titleLbl] setHidden:YES];
             
             
         }
         else{
-           // [[(secondChannelView *)[self superview] controlView] setHidden:YES];
+            // [[(secondChannelView *)[self superview] controlView] setHidden:YES];
             
         }
-     }
+        
+        
+        [UIView animateWithDuration:1
+                         animations:^{
+                         }];
+        
+        [UIView beginAnimations : @"Display notif" context:nil];
+        [UIView setAnimationDuration:1];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        
+        piece.frame = CGRectMake(pos.x, pos.y, piece.frame.size.width+10, piece.frame.size.height+10);
+        
+        
+        [UIView commitAnimations];
+        
+
+        
+    }
     
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
         
-        NSLog(@"pos.y: %f, pos.x: %f",pos.y,pos.x);
         
         
-        if((pos.x+translation.x >= 0 && pos.x+translation.x <= (parentView.bounds.size.width-43))&&(pos.y+translation.y >= 0 && pos.y+translation.y <= (parentView.bounds.size.height-43))){
-            
+        
+        if((pos.x >= 0 && pos.x <= (parentView.bounds.size.width-53))&&(pos.y >= 0 && pos.y <= (parentView.bounds.size.height-53))){
             [self.gridView setNeedsDisplay];
             self.gridView.param1 = paramVal1;
             self.gridView.param2 = paramVal2;
             
             if (piece.tag <= 5){
-            //    piece.backgroundColor = [UIColor whiteColor];
-                
+                piece.backgroundColor = [UIColor whiteColor];
             }
             else{
-            //    piece.backgroundColor = [UIColor blackColor];
+                piece.backgroundColor = [UIColor blackColor];
                 
             }
             
             [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
             [gestureRecognizer setTranslation:CGPointZero inView:[piece superview]];
-           // setY = [piece center].y + translation.y;
+            // setY = [piece center].y + translation.y;
             setY = pos.y;
             setX = [piece center].x + translation.x;
             if(setY < parentSize.height/2){
@@ -113,17 +154,20 @@ CGSize parentSize;
             else{
                 aboveMiddleY = NO;
             }
+            
         }
     }
     if ([gestureRecognizer state] == UIGestureRecognizerStateEnded){
         if (piece.tag <= 5){
-          //  piece.backgroundColor = [UIColor clearColor];
-          //  [[(playbackView *)[self superview] artistLbl] setHidden:NO];
-          //  [[(playbackView *)[self superview] titleLbl] setHidden:NO];
-          //  [[(playbackView *)[self superview] controlView] setHidden:NO];
+            piece.backgroundColor = [UIColor clearColor];
+            //  [[(playbackView *)[self superview] artistLbl] setHidden:NO];
+            //  [[(playbackView *)[self superview] titleLbl] setHidden:NO];
+            //  [[(playbackView *)[self superview] controlView] setHidden:NO];
+            
+            
         }
         else{
-          //  piece.backgroundColor = [UIColor clearColor];
+            piece.backgroundColor = [UIColor clearColor];
             
         }
         [self.gridView removeFromSuperview];
@@ -134,26 +178,23 @@ CGSize parentSize;
         main.searchLabel.hidden = NO;
         main.cueController.view.hidden = NO;
         parentView.backgroundColor = [UIColor clearColor];
-     //   parentView.layer.borderWidth = 0.0f;
+        //   parentView.layer.borderWidth = 0.0f;
         
-        if (piece.tag <= 5){
-            if (((pos.x >= 100)&&(pos.x<=500))&&((pos.y>=195)&&(pos.y<=260))){
-                if (piece.tag == 5)
-                    piece.frame = CGRectMake(pos.x, 180, 60, 60);
-                else 
-                    piece.frame = CGRectMake(pos.x, 180, 40, 40);
-            }
-        }
-        if (piece.tag > 5){
-            if (((pos.x >= 230)&&(pos.x<=400))&&((pos.y>=70)&&(pos.y<=150))){
-                if (piece.tag == 7)
-                    piece.frame = CGRectMake(pos.x, 60, 60, 60);
-                else 
-                    piece.frame = CGRectMake(pos.x, 60, 40, 40);
-            }
-        }
-       
-    } //end gesturerec-ended
+        [UIView animateWithDuration:.4
+                         animations:^{
+                         }];
+        
+        [UIView beginAnimations : @"Display notif" context:nil];
+        [UIView setAnimationDuration:.4];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        
+        piece.frame = CGRectMake(pos.x, pos.y, piece.frame.size.width-10, piece.frame.size.height-10);
+        
+        
+        [UIView commitAnimations];
+        
+        
+    }
     
     if ([main.playbackManager isaugraphRunning]){
         switch (piece.tag) {
@@ -188,9 +229,8 @@ CGSize parentSize;
                 break;
         }
     }
-   
+    
 }
-
 
 - (void)variSpeedUnit{
     if ([Shared sharedInstance].curVariSpeedEffect == 0){
@@ -348,7 +388,7 @@ CGSize parentSize;
     
     int x = 0;
     int y = 0;
-    UIView *parentView = [self superview];
+    UIView *parentView = [self.view superview];
     CGSize window = parentView.frame.size;
     
     self.gridView = [[effectgridView alloc]initWithFrame:CGRectMake(0, 0, window.width, window.height)];
@@ -463,12 +503,6 @@ CGSize parentSize;
     [self.gridView setNeedsDisplay];
     
     
-}
-
-- (void)dealloc{
-    
-    [gridView release];
-    [super dealloc];
 }
 
 

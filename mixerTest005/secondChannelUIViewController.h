@@ -39,11 +39,14 @@
     NSString *glArtist;
     NSString *glTitle;
     BOOL    isPaused;
+    
+    UILabel *secChLabel;
    
 }
 
 @property(nonatomic, retain) UIView *controlView;
 @property(nonatomic, retain) UIView *effectParentView;
+@property(nonatomic, retain) UILabel *secChLabel;
 
 
 - (void)showMediaPicker;
@@ -56,5 +59,6 @@
 - (void)removeChannelTwoUI;
 - (void)createChannelTwoUI;
 - (void)freeAudio;
+- (void)newChannel:(UITapGestureRecognizer *)gesture;
 
 @end

@@ -42,8 +42,16 @@ numberOfSectionsInTableView:(UITableView *)tableView {
     return [[Shared sharedInstance].masterCue count];
 } 
 
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView     
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    
+    NSString* imagePathPlay = [[NSBundle mainBundle] pathForResource:@"playNew" ofType:@"png"];
+    UIImage *playImg = [UIImage imageWithContentsOfFile:imagePathPlay];
     
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = 
@@ -55,6 +63,12 @@ numberOfSectionsInTableView:(UITableView *)tableView {
                                        reuseIdentifier:CellIdentifier] autorelease];   
     }
     
+    for (UIView *view in cell.contentView.subviews){
+        [view removeFromSuperview];
+    }
+   
+    
+    
     NSURL *url = [[Shared sharedInstance].masterCue objectAtIndex:indexPath.row];
     
     SPTrack *track = [[SPSession sharedSession] trackForURL:url];
@@ -62,14 +76,46 @@ numberOfSectionsInTableView:(UITableView *)tableView {
     NSString *title = track.name;
     NSString *finalStr = [NSString stringWithFormat:@"%@ - %@",artists,title];
     
-    cell.textLabel.text = finalStr;
+   // cell.textLabel.text = finalStr;
     
     cell.contentView.backgroundColor = [UIColor clearColor];
-    cell.textLabel.textColor = [UIColor whiteColor];
+  //  cell.textLabel.textColor = [UIColor whiteColor];
+  //  cell.textLabel.adjustsFontSizeToFitWidth = YES;
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
+    
+    if (indexPath.row == [Shared sharedInstance].currTrackCueNum && main.playbackManager.isPlaying){
+        UIImageView *playView = [[UIImageView alloc]initWithFrame:CGRectMake(4, 14, 12, 12)];
+        playView.image = playImg;
+        [cell.contentView addSubview:playView];
+        [playView release];
+        
+        UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.frame.size.width-10, 30)];
+        lbl.text = finalStr;
+        lbl.textColor = [UIColor whiteColor];
+        
+        lbl.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:lbl];
+        [lbl release];
+        
+    }else{
+        
+        UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, self.frame.size.width-10, 30)];
+        lbl.text = finalStr;
+        lbl.textColor = [UIColor whiteColor];
+        
+        lbl.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:lbl];
+        [lbl release];
+        
+    }
+        //cell.imageView.image = NULL;
+    
+    
     return cell;    
 }
+
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -83,6 +129,8 @@ numberOfSectionsInTableView:(UITableView *)tableView {
     [main playnewTrack:track];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    [tableView reloadData];
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{

@@ -60,6 +60,7 @@
     AudioUnit                   mixerUnitChTwo;
     AUNode                      mixerNodeChOne;
     AUNode                      mixerNodeChTwo;
+    AUNode                      mixerNode;
     AudioUnit                   converterUnitChOne;
     AudioUnit                   converterUnitChTwo;
     NSTimer                     *timer;
@@ -70,12 +71,15 @@
    
     AURenderCallbackStruct          rcbsFirst;
     AURenderCallbackStruct          rcbsSecond; //second channel
+    AURenderCallbackStruct          ioRenderCallback; //mastermixerCallbackStruckt
+    
     
     CFArrayRef audioOutputRoutes;
     
 @public
     AudioStreamBasicDescription     asbdChOne;
     AudioStreamBasicDescription     asbdChTwo;
+    AudioStreamBasicDescription     effectUnitInputFormat;
     float tempbuf[8000];
 	//float monobuf[4000]; 
 	//float inputbuf[1024]; 
@@ -103,6 +107,8 @@
 @property (nonatomic) AudioUnit mixerUnitChOne;
 @property (nonatomic) AudioUnit mixerUnitChTwo;
 @property (nonatomic) AudioUnit timePitchUnitChOne;
+@property (nonatomic) AudioUnit timePitchUnitChTwo;
+
 
 
 - (void)setFFTView: (fftAnalyzerView *)fftViewer;
@@ -184,6 +190,8 @@
 - (void) setMasterVolCh2:(AudioUnitParameterValue)val;
 - (void) connectSecChannelCallback;
 - (void) removeSecChannelCallback;
+- (void) connectSecMastermixerBus;
+- (void) removeSecMastermixerBus;
 - (void) closeDownChannelTwo;
 - (void) toggleChannelTwoPlayingStatus:(BOOL)playingStatus;
 - (void) canRead;

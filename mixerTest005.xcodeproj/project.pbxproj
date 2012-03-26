@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AA2D5D0414FB17E000F1DAAA /* secondChannelView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2D5D0314FB17E000F1DAAA /* secondChannelView.m */; };
 		AA58C0ED14FC839C0074837F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EC14FC839C0074837F /* CoreMedia.framework */; };
 		AA58C0F014FC83CA0074837F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */; };
 		AA58C0F314FC86090074837F /* secondChannelUIViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA58C0F214FC86090074837F /* secondChannelUIViewController.mm */; };
@@ -45,18 +44,15 @@
 		AA97EF4A14F0BF4600A2B892 /* SPSession.m in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF3F14F0BF3F00A2B892 /* SPSession.m */; };
 		AA97EF4B14F0BF4600A2B892 /* SPTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF4114F0BF4300A2B892 /* SPTrack.m */; };
 		AA97EF4C14F0BF4600A2B892 /* SPUser.m in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF4314F0BF4500A2B892 /* SPUser.m */; };
-		AA97EF5914F0D19300A2B892 /* mastercueView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF5614F0D19300A2B892 /* mastercueView.mm */; };
 		AA97EF5A14F0D19300A2B892 /* masterCueTableView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF5814F0D19300A2B892 /* masterCueTableView.mm */; };
 		AA97EF5F14F0D1A800A2B892 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5B14F0D1A800A2B892 /* pause.png */; };
 		AA97EF6114F0D1A800A2B892 /* nextTrack.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5D14F0D1A800A2B892 /* nextTrack.png */; };
 		AA97EF6214F0D1A800A2B892 /* stopbtn.png in Resources */ = {isa = PBXBuildFile; fileRef = AA97EF5E14F0D1A800A2B892 /* stopbtn.png */; };
-		AA97EF6714F0D1C100A2B892 /* playlistView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF6414F0D1C100A2B892 /* playlistView.m */; };
 		AA97EF6814F0D1C100A2B892 /* plTableView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF6614F0D1C100A2B892 /* plTableView.mm */; };
 		AA97EF7114F0D1CE00A2B892 /* searchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF6A14F0D1CE00A2B892 /* searchViewController.mm */; };
 		AA97EF7214F0D1CE00A2B892 /* searchTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF6C14F0D1CE00A2B892 /* searchTableViewController.mm */; };
 		AA97EF7314F0D1CE00A2B892 /* detailTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF6E14F0D1CE00A2B892 /* detailTableViewController.mm */; };
 		AA97EF7414F0D1CE00A2B892 /* macroDetailTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF7014F0D1CE00A2B892 /* macroDetailTableViewController.mm */; };
-		AA97EF7B14F0D1DE00A2B892 /* playbackView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF7614F0D1DE00A2B892 /* playbackView.mm */; };
 		AA97EF7C14F0D1DE00A2B892 /* effectController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF7814F0D1DE00A2B892 /* effectController.mm */; };
 		AA97EF7D14F0D1DE00A2B892 /* effectgridView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF7A14F0D1DE00A2B892 /* effectgridView.mm */; };
 		AA97EF8114F0D1F200A2B892 /* LoginViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF7F14F0D1F200A2B892 /* LoginViewController.mm */; };
@@ -68,13 +64,15 @@
 		AAAD79C114F0EE6B00E337E9 /* mainwindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */; };
 		AAC8A5241501732C00B26830 /* pauseCh2.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC8A51F1501732C00B26830 /* pauseCh2.png */; };
 		AAC8A5271501732C00B26830 /* stopCh2.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC8A5221501732C00B26830 /* stopCh2.png */; };
+		AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA25C151E63ED0066AC86 /* cueViewController.m */; };
+		AAEFA263151F84BD0066AC86 /* playbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA262151F84BC0066AC86 /* playbackViewController.m */; };
+		AAEFA266151F88740066AC86 /* effectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA265151F88740066AC86 /* effectViewController.m */; };
+		AAFF3AD6151829D000B4C2C0 /* mscp logo special edition.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AAFF3AD5151829D000B4C2C0 /* mscp logo special edition.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AA2CEBCE150F032C00EBA96C /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = ../../../../../../Developer/Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
 		AA2CEBCF150F032C00EBA96C /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = ../../../../../../Developer/Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.h; sourceTree = "<group>"; };
-		AA2D5D0214FB17E000F1DAAA /* secondChannelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secondChannelView.h; sourceTree = "<group>"; };
-		AA2D5D0314FB17E000F1DAAA /* secondChannelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = secondChannelView.m; sourceTree = "<group>"; };
 		AA58C0EC14FC839C0074837F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		AA58C0F114FC86090074837F /* secondChannelUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secondChannelUIViewController.h; sourceTree = "<group>"; };
@@ -141,15 +139,11 @@
 		AA97EF4114F0BF4300A2B892 /* SPTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPTrack.m; sourceTree = "<group>"; };
 		AA97EF4214F0BF4400A2B892 /* SPUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPUser.h; sourceTree = "<group>"; };
 		AA97EF4314F0BF4500A2B892 /* SPUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPUser.m; sourceTree = "<group>"; };
-		AA97EF5514F0D19300A2B892 /* mastercueView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mastercueView.h; sourceTree = "<group>"; };
-		AA97EF5614F0D19300A2B892 /* mastercueView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = mastercueView.mm; sourceTree = "<group>"; };
 		AA97EF5714F0D19300A2B892 /* masterCueTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = masterCueTableView.h; sourceTree = "<group>"; };
 		AA97EF5814F0D19300A2B892 /* masterCueTableView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = masterCueTableView.mm; sourceTree = "<group>"; };
 		AA97EF5B14F0D1A800A2B892 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
 		AA97EF5D14F0D1A800A2B892 /* nextTrack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nextTrack.png; sourceTree = "<group>"; };
 		AA97EF5E14F0D1A800A2B892 /* stopbtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopbtn.png; sourceTree = "<group>"; };
-		AA97EF6314F0D1C100A2B892 /* playlistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playlistView.h; sourceTree = "<group>"; };
-		AA97EF6414F0D1C100A2B892 /* playlistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = playlistView.m; sourceTree = "<group>"; };
 		AA97EF6514F0D1C100A2B892 /* plTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plTableView.h; sourceTree = "<group>"; };
 		AA97EF6614F0D1C100A2B892 /* plTableView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = plTableView.mm; sourceTree = "<group>"; };
 		AA97EF6914F0D1CE00A2B892 /* searchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = searchViewController.h; sourceTree = "<group>"; };
@@ -160,8 +154,6 @@
 		AA97EF6E14F0D1CE00A2B892 /* detailTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = detailTableViewController.mm; sourceTree = "<group>"; };
 		AA97EF6F14F0D1CE00A2B892 /* macroDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macroDetailTableViewController.h; sourceTree = "<group>"; };
 		AA97EF7014F0D1CE00A2B892 /* macroDetailTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = macroDetailTableViewController.mm; sourceTree = "<group>"; };
-		AA97EF7514F0D1DE00A2B892 /* playbackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playbackView.h; sourceTree = "<group>"; };
-		AA97EF7614F0D1DE00A2B892 /* playbackView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = playbackView.mm; sourceTree = "<group>"; };
 		AA97EF7714F0D1DE00A2B892 /* effectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = effectController.h; sourceTree = "<group>"; };
 		AA97EF7814F0D1DE00A2B892 /* effectController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = effectController.mm; sourceTree = "<group>"; };
 		AA97EF7914F0D1DE00A2B892 /* effectgridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = effectgridView.h; sourceTree = "<group>"; };
@@ -180,6 +172,13 @@
 		AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = mainwindow.xib; sourceTree = "<group>"; };
 		AAC8A51F1501732C00B26830 /* pauseCh2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pauseCh2.png; sourceTree = "<group>"; };
 		AAC8A5221501732C00B26830 /* stopCh2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopCh2.png; sourceTree = "<group>"; };
+		AAEFA25B151E63ED0066AC86 /* cueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cueViewController.h; sourceTree = "<group>"; };
+		AAEFA25C151E63ED0066AC86 /* cueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cueViewController.m; sourceTree = "<group>"; };
+		AAEFA261151F84BC0066AC86 /* playbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playbackViewController.h; sourceTree = "<group>"; };
+		AAEFA262151F84BC0066AC86 /* playbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = playbackViewController.m; sourceTree = "<group>"; };
+		AAEFA264151F88740066AC86 /* effectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = effectViewController.h; sourceTree = "<group>"; };
+		AAEFA265151F88740066AC86 /* effectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = effectViewController.m; sourceTree = "<group>"; };
+		AAFF3AD5151829D000B4C2C0 /* mscp logo special edition.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "mscp logo special edition.jpg"; path = "../../../../Desktop/mscp logo special edition.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,8 +207,6 @@
 		AA2D5CFE14FAE49300F1DAAA /* secondChannel */ = {
 			isa = PBXGroup;
 			children = (
-				AA2D5D0214FB17E000F1DAAA /* secondChannelView.h */,
-				AA2D5D0314FB17E000F1DAAA /* secondChannelView.m */,
 				AA58C0F114FC86090074837F /* secondChannelUIViewController.h */,
 				AA58C0F214FC86090074837F /* secondChannelUIViewController.mm */,
 			);
@@ -282,7 +279,7 @@
 				AA97EF5014F0D0C700A2B892 /* searchView */,
 				AA97EF4F14F0D0B500A2B892 /* playlistView */,
 				AA97EF4E14F0D0AA00A2B892 /* playbackView */,
-				AA97EF4D14F0D09500A2B892 /* mastercueView */,
+				AA97EF4D14F0D09500A2B892 /* cueViewController */,
 				AA97EEF714F0B06500A2B892 /* AppDelegate.h */,
 				AA97EEF814F0B06500A2B892 /* AppDelegate.mm */,
 				AA97EF1314F0BE0100A2B892 /* cocoaWrapper */,
@@ -366,15 +363,15 @@
 			name = metadata;
 			sourceTree = "<group>";
 		};
-		AA97EF4D14F0D09500A2B892 /* mastercueView */ = {
+		AA97EF4D14F0D09500A2B892 /* cueViewController */ = {
 			isa = PBXGroup;
 			children = (
-				AA97EF5514F0D19300A2B892 /* mastercueView.h */,
-				AA97EF5614F0D19300A2B892 /* mastercueView.mm */,
 				AA97EF5714F0D19300A2B892 /* masterCueTableView.h */,
 				AA97EF5814F0D19300A2B892 /* masterCueTableView.mm */,
+				AAEFA25B151E63ED0066AC86 /* cueViewController.h */,
+				AAEFA25C151E63ED0066AC86 /* cueViewController.m */,
 			);
-			name = mastercueView;
+			name = cueViewController;
 			sourceTree = "<group>";
 		};
 		AA97EF4E14F0D0AA00A2B892 /* playbackView */ = {
@@ -382,12 +379,14 @@
 			children = (
 				AA5B97E4150EAF160061D969 /* fftAnalyzer */,
 				AA2D5CFE14FAE49300F1DAAA /* secondChannel */,
-				AA97EF7514F0D1DE00A2B892 /* playbackView.h */,
-				AA97EF7614F0D1DE00A2B892 /* playbackView.mm */,
 				AA97EF7714F0D1DE00A2B892 /* effectController.h */,
 				AA97EF7814F0D1DE00A2B892 /* effectController.mm */,
 				AA97EF7914F0D1DE00A2B892 /* effectgridView.h */,
 				AA97EF7A14F0D1DE00A2B892 /* effectgridView.mm */,
+				AAEFA261151F84BC0066AC86 /* playbackViewController.h */,
+				AAEFA262151F84BC0066AC86 /* playbackViewController.m */,
+				AAEFA264151F88740066AC86 /* effectViewController.h */,
+				AAEFA265151F88740066AC86 /* effectViewController.m */,
 			);
 			name = playbackView;
 			sourceTree = "<group>";
@@ -397,8 +396,6 @@
 			children = (
 				AA83DAD714F7327300BF43F0 /* playlistViewController.h */,
 				AA83DAD814F7327300BF43F0 /* playlistViewController.m */,
-				AA97EF6314F0D1C100A2B892 /* playlistView.h */,
-				AA97EF6414F0D1C100A2B892 /* playlistView.m */,
 				AA97EF6514F0D1C100A2B892 /* plTableView.h */,
 				AA97EF6614F0D1C100A2B892 /* plTableView.mm */,
 			);
@@ -423,6 +420,7 @@
 		AA97EF5114F0D0DA00A2B892 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				AAFF3AD5151829D000B4C2C0 /* mscp logo special edition.jpg */,
 				AA5B97D8150E7D790061D969 /* iPublicUtility */,
 				AAC8A51F1501732C00B26830 /* pauseCh2.png */,
 				AAC8A5221501732C00B26830 /* stopCh2.png */,
@@ -518,6 +516,7 @@
 				AA9C4D04150092C8002FE0DE /* appiconMSCP.png in Resources */,
 				AAC8A5241501732C00B26830 /* pauseCh2.png in Resources */,
 				AAC8A5271501732C00B26830 /* stopCh2.png in Resources */,
+				AAFF3AD6151829D000B4C2C0 /* mscp logo special edition.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,15 +546,12 @@
 				AA97EF4A14F0BF4600A2B892 /* SPSession.m in Sources */,
 				AA97EF4B14F0BF4600A2B892 /* SPTrack.m in Sources */,
 				AA97EF4C14F0BF4600A2B892 /* SPUser.m in Sources */,
-				AA97EF5914F0D19300A2B892 /* mastercueView.mm in Sources */,
 				AA97EF5A14F0D19300A2B892 /* masterCueTableView.mm in Sources */,
-				AA97EF6714F0D1C100A2B892 /* playlistView.m in Sources */,
 				AA97EF6814F0D1C100A2B892 /* plTableView.mm in Sources */,
 				AA97EF7114F0D1CE00A2B892 /* searchViewController.mm in Sources */,
 				AA97EF7214F0D1CE00A2B892 /* searchTableViewController.mm in Sources */,
 				AA97EF7314F0D1CE00A2B892 /* detailTableViewController.mm in Sources */,
 				AA97EF7414F0D1CE00A2B892 /* macroDetailTableViewController.mm in Sources */,
-				AA97EF7B14F0D1DE00A2B892 /* playbackView.mm in Sources */,
 				AA97EF7C14F0D1DE00A2B892 /* effectController.mm in Sources */,
 				AA97EF7D14F0D1DE00A2B892 /* effectgridView.mm in Sources */,
 				AA97EF8114F0D1F200A2B892 /* LoginViewController.mm in Sources */,
@@ -563,9 +559,11 @@
 				AA97EF8814F0D20700A2B892 /* audioControl.mm in Sources */,
 				AA97EF9414F0D26000A2B892 /* Shared.mm in Sources */,
 				AA83DAD914F7327300BF43F0 /* playlistViewController.m in Sources */,
-				AA2D5D0414FB17E000F1DAAA /* secondChannelView.m in Sources */,
 				AA58C0F314FC86090074837F /* secondChannelUIViewController.mm in Sources */,
 				AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */,
+				AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */,
+				AAEFA263151F84BD0066AC86 /* playbackViewController.m in Sources */,
+				AAEFA266151F88740066AC86 /* effectViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

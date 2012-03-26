@@ -22,19 +22,20 @@
 @synthesize currentTrack = _currentTrack;
 @synthesize navigationController = _navigationController;
 @synthesize loadPlaylist = _loadPlaylist;
-@synthesize plbackView = _plbackView;
-@synthesize pllistView = _pllistView;
 @synthesize playbackLabel = _playbackLabel;
 @synthesize playlistLabel = _playlistLabel;
 @synthesize searchLabel = _searchLabel;
-@synthesize cueView = _cueView;
 @synthesize loadingView = _loadingView;
 @synthesize searchTViewController = _searchTViewController;
 @synthesize searchController = _searchController;
-@synthesize secChView = _secChView;
 @synthesize chTwoActive;
 @synthesize chTwoViewController;
 @synthesize airplayIcon;
+@synthesize plViewController;
+@synthesize cueController;
+@synthesize logoutViewController;
+@synthesize plbackViewController;
+@synthesize userTxtBtn;
 
 
 int labelWidth = 300;
@@ -42,20 +43,11 @@ int labelWidth = 300;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  // CGSize winSize = self.window.frame.size;
-    //self.pllistView = [[playlistView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
-    //self.loadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
-    
-   // [self createLoadingPlView];
     // Override point for customization after application launch.
 	[self.window makeKeyAndVisible];
     
     self.searchController = [[searchViewController alloc]init];
     self.chTwoViewController = [[secondChannelUIViewController alloc]init];
-    
-    
-    //  searchTableViewController *rootView = [[searchTableViewController alloc]init];
-    //  self.navigationController = [[UINavigationController alloc]initWithRootViewController:rootView];
     
   	[SPSession initializeSharedSessionWithApplicationKey:[NSData dataWithBytes:&g_appkey length:g_appkey_size] 
 											   userAgent:@"MSCP.mixerTest005"
@@ -68,12 +60,8 @@ int labelWidth = 300;
     
     [[SPSession sharedSession] setDelegate:self];
     
-    
-    //  [self.window addSubview:self.navigationController.view];
     [self performSelector:@selector(showLogin) withObject:nil afterDelay:0.0];
-    //[self showLogin];
-    
-    
+  
     return YES;
 }
 
@@ -109,7 +97,6 @@ int labelWidth = 300;
     
     self.loadingView = newloadingView;
     
-    
     [newloadingView release];
     
 }
@@ -118,14 +105,14 @@ int labelWidth = 300;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"currentTrack.duration"]) {
 	//	self.positionSlider.maximumValue = self.currentTrack.duration;
-        [self.plbackView setPlayduration:self.currentTrack.duration];
+        [self.plbackViewController setPlayduration:self.currentTrack.duration];
         NSLog(@"duration set");
 	} else if ([keyPath isEqualToString:@"playbackManager.trackPosition"]) {
 		// Only update the slider if the user isn't currently dragging it.
 	//	if (!self.positionSlider.highlighted)
 	//		self.positionSlider.value = self.playbackManager.trackPosition;
      //   NSLog(@"trackposition: %f",self.playbackManager.trackPosition);
-        [self.plbackView updatePlayduration:self.playbackManager.trackPosition];
+        [self.plbackViewController updatePlayduration:self.playbackManager.trackPosition];
     }
     else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -163,6 +150,8 @@ int labelWidth = 300;
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    [self.cueController.tableView reloadData];
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -180,6 +169,7 @@ int labelWidth = 300;
 - (void)playnewTrack:(SPTrack *)track{
     // [self.playbackManager stopAUGraph];
     //  [self.mainViewController dismissModalViewControllerAnimated:YES];
+    
     
     SPTrack *trackToPlay = track;
     
@@ -204,88 +194,12 @@ int labelWidth = 300;
             [[alert autorelease] show];
         }
         self.currentTrack = track;
+        
+        [self.cueController.tableView reloadData];
+        
         return;
     }
 	
-}
-
-
--(void)newChannel:(UITapGestureRecognizer *)gesture{
-    
-    if ([self.playbackManager isaugraphRunning]){
-        CGRect bounds = self.plbackView.bounds;
-        CGSize winSize = self.window.frame.size;
-        CGPoint effectParentPos = self.plbackView.effectParentView.frame.origin;
-        CGRect effectParentSize = self.plbackView.effectParentView.bounds;
-        
-        if (!chTwoActive){
-            chTwoActive = YES;
-            [UIView animateWithDuration:1
-                             animations:^{
-                                 //     self.tableView.alpha = 1;
-                                 //     self.tableView.hidden = YES;
-                             }];
-            
-            [UIView beginAnimations : @"Display notif" context:nil];
-            [UIView setAnimationDuration:1];
-            [UIView setAnimationBeginsFromCurrentState:YES];
-            
-            self.plbackView.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, bounds.size.height/2-100);
-            self.plbackView.frame = CGRectMake(0, 0, bounds.size.width, bounds.size.height/2);
-            self.secChView.frame = CGRectMake(0, bounds.size.height/2, bounds.size.width, bounds.size.height/2);
-            
-            self.cueView.frame = CGRectMake(200, bounds.size.height-700, self.cueView.bounds.size.width, self.cueView.bounds.size.height);
-            self.plbackView.trackControlBG.frame = CGRectMake(400, bounds.size.height-700, self.plbackView.trackControlBG.bounds.size.width, self.plbackView.trackControlBG.bounds.size.height);
-            
-            
-            self.plbackView.timepitchController.frame = CGRectMake(20, bounds.size.height/4, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
-            
-            self.plbackView.lopassController.frame = CGRectMake(80, 30, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
-            
-            self.plbackView.hipassController.frame = CGRectMake(40, 100, self.plbackView.timepitchController.bounds.size.width, self.plbackView.timepitchController.bounds.size.height);
-            
-            self.plbackView.channelOneVolController.frame = CGRectMake(100, 200, self.plbackView.channelOneVolController.bounds.size.width, self.plbackView.channelOneVolController.bounds.size.height);
-            
-            self.plbackView.artistLbl.hidden = YES;
-            self.plbackView.titleLbl.hidden = YES;
-            
-            
-            [UIView commitAnimations];
-            
-            [self.chTwoViewController createChannelTwoUI];
-        }
-        else{
-            chTwoActive = NO;
-            [UIView animateWithDuration:1
-                             animations:^{
-                                 //     self.tableView.alpha = 1;
-                                 //     self.tableView.hidden = YES;
-                                 [self.chTwoViewController removeChannelTwoUI];
-                             }];
-            
-            [UIView beginAnimations : @"Display notif" context:nil];
-            [UIView setAnimationDuration:1];
-            [UIView setAnimationBeginsFromCurrentState:YES];
-            
-            
-            self.plbackView.artistLbl.hidden = NO;
-            self.plbackView.titleLbl.hidden = NO;
-            
-            self.plbackView.frame = CGRectMake(0, 0, winSize.width, winSize.height);
-            self.secChView.frame = CGRectMake(0, winSize.height-70, winSize.width,50);
-            self.plbackView.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, winSize.height-180);
-            
-            
-            [UIView commitAnimations];
-            
-        }
-    }else{
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Start spotify channel first" message:@"This channel is disabled until channel 1 is started, sorry dude." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-        [alert release];
-    }
-    
 }
 
 
@@ -297,11 +211,11 @@ int labelWidth = 300;
 
 - (void)removeGUI{
     [self.searchLabel removeFromSuperview];
-    [self.plbackView removeFromSuperview];
+    [self.plbackViewController.view removeFromSuperview];
     [self.playbackLabel removeFromSuperview];
-    [self.cueView removeFromSuperview];
+    [self.cueController.view removeFromSuperview];
     [self.playlistLabel removeFromSuperview];
-    [self.secChView removeFromSuperview];
+    [self.chTwoViewController.view removeFromSuperview];
     [self.airplayIcon removeFromSuperview];
     
 }
@@ -326,10 +240,9 @@ int labelWidth = 300;
     
     [menuTouchSearch release];
     
-    self.plbackView = [[playbackView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
-    self.plbackView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
-    [self.plbackView setTag:20];
-    [self.mainViewController.view addSubview:self.plbackView];
+    //PLAYBACK viewcontroller
+    self.plbackViewController = [[playbackViewController alloc]init];
+    [self.mainViewController.view addSubview:self.plbackViewController.view];
     
     UITapGestureRecognizer *menuTouchPlayback = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];
     menuTouchPlayback.numberOfTapsRequired = 1;
@@ -347,10 +260,11 @@ int labelWidth = 300;
     
     [menuTouchPlayback release];
     
-    self.cueView = [[mastercueView alloc]initWithFrame:CGRectMake((winSize.width/2-600/2), winSize.height-200, 400, 60)];
     
-    [self.window addSubview:self.cueView];
-    self.cueView.hidden = YES;
+    //CUE controller
+    self.cueController = [[cueViewController alloc]init];
+    [self.window addSubview:self.cueController.view];
+    self.cueController.view.hidden = YES;
     
     UITapGestureRecognizer *menuTouchPlaylist = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];
     menuTouchPlaylist.numberOfTapsRequired = 1;
@@ -369,21 +283,9 @@ int labelWidth = 300;
     [menuTouchPlaylist release];
     
     
-    UIButton *logout = [UIButton buttonWithType:UIButtonTypeCustom];
-    logout.frame = CGRectMake(winSize.width-200, 300, 200, 40);// position in the parent view and set the size of the
-    logout.backgroundColor = [UIColor clearColor];
-    [logout setTitle:[NSString stringWithFormat:@"Logout"] forState:UIControlStateNormal];
-    [logout setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
-    [logout addTarget:self 
-               action:@selector(userLogout)
-     forControlEvents:UIControlEventTouchDown];
-    
-    //[self.window addSubview:logout];
-    
-    //[logout release];
-    
-    UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(20, 30, 50, 50)];
+    //AIRPLAY view
+    UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(20, 60, 50, 50)];
     mpVolumeViewParentView.backgroundColor = [UIColor clearColor];
     [self.window addSubview:mpVolumeViewParentView];
     MPVolumeView *myVolumeView =
@@ -395,32 +297,12 @@ int labelWidth = 300;
     [myVolumeView release];
     [mpVolumeViewParentView release];
     
-    self.secChView = [[secondChannelView alloc] init];
-    self.secChView.frame = CGRectMake(0, self.plbackView.bounds.size.height-70, self.plbackView.bounds.size.width, 50);
-    self.secChView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
+
+    //CHANNEL 2 viewcontroller
+    self.chTwoViewController = [[secondChannelUIViewController alloc]init];
+    [self.mainViewController.view insertSubview:self.chTwoViewController.view aboveSubview:self.plbackViewController.view];
     
- //   [self.mainViewController.view insertSubview:self.secChView aboveSubview:self.plbackView];
-    
-    UITapGestureRecognizer *secChTouch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(newChannel:)];
-    secChTouch.numberOfTapsRequired = 1;
-   
-    UILabel *secChLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.plbackView.bounds.size.width, 40)];
-    secChLbl.backgroundColor = [UIColor clearColor];
-    secChLbl.textColor = [UIColor blackColor];
-    secChLbl.textAlignment = UITextAlignmentCenter;
-    secChLbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
-    secChLbl.text = [NSString stringWithFormat:@"Channel 2"];
-    [secChLbl addGestureRecognizer:secChTouch];
-    secChLbl.UserInteractionEnabled = YES;
-    [secChLbl setTag:10];
-    [self.secChView addSubview:secChLbl];
-    
-    [secChLbl release];
-    [secChTouch release];
-    
-    self.chTwoViewController.view = self.secChView;
-    [self.mainViewController.view insertSubview:self.chTwoViewController.view aboveSubview:self.plbackView];
-    
+  
 }
 
 NSUInteger playlistsAttempts;
@@ -457,7 +339,7 @@ NSUInteger loadTrack;
             return;
         }
         else{
-            self.cueView.hidden = NO;
+            self.cueController.view.hidden = NO;
             self.playlistLabel.hidden = NO;
             self.searchLabel.hidden = NO;
             self.playbackLabel.hidden = NO;
@@ -471,28 +353,35 @@ NSUInteger loadTrack;
     else{
         NSLog(@"loaded playlists");
         
-        self.cueView.hidden = NO;
+        self.cueController.view.hidden = NO;
         self.playlistLabel.hidden = NO;
         self.searchLabel.hidden = NO;
         self.playbackLabel.hidden = NO;
         
         [self.loadingView removeFromSuperview];
        // [self.loadingView release];
-  
-        playlistView *newplView = [[playlistView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
         
-        [self.mainViewController.view insertSubview:newplView belowSubview:self.plbackView]; 
+        self.plViewController = [[playlistViewController alloc]init];
+        [self.mainViewController.view insertSubview:self.plViewController.view belowSubview:self.plbackViewController.view];
         
-        [newplView initGridParams];
-        [newplView loadPlaylistView:[[SPSession sharedSession] userPlaylists]];
-        [newplView checkPlLoad:[[SPSession sharedSession]userPlaylists]];
-       
-        self.pllistView = newplView;
+        SPUser *user = [[SPSession sharedSession]user];
         
+        NSString *userName = user.displayName;
         
-        [newplView release];
+        self.userTxtBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.userTxtBtn.center = CGPointMake(10, 30);
+        self.userTxtBtn.backgroundColor = [UIColor clearColor];
+        [self.userTxtBtn setTitle:[NSString stringWithFormat:@"Logged in as: %@",userName] forState:UIControlStateNormal];
+        self.userTxtBtn.titleLabel.textAlignment = UITextAlignmentLeft;
+        [self.userTxtBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        self.userTxtBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+        [self.userTxtBtn sizeToFit];
+        [self.userTxtBtn addTarget:self 
+                   action:@selector(showlogoutViewController)
+         forControlEvents:UIControlEventTouchDown];
         
-    }
+        [self.window addSubview:self.userTxtBtn];
+    }  
 }
 
 -(void)sessionLostPlayToken:(SPSession *)session;
@@ -508,6 +397,8 @@ NSUInteger loadTrack;
 -(void)addSongFromSearch:(NSURL *)trackURL{
     
     [[Shared sharedInstance].masterCue addObject:trackURL];
+    
+    [self.cueController.tableView reloadData];
     
     SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
     
@@ -556,6 +447,8 @@ NSUInteger loadTrack;
         [self playnewTrack:track];
         
     }
+    
+    [self.cueController.tableView reloadData];
 }
 
 -(void)removeSongFromPlaybackCue:(int)selRow{
@@ -583,7 +476,9 @@ NSUInteger loadTrack;
     UIView *lbl = [gesture view];
     if (lbl.tag == 10){
         self.airplayIcon.hidden = NO;
-        [self.mainViewController.view bringSubviewToFront:self.pllistView];
+        self.userTxtBtn.hidden = NO;
+        [self.mainViewController.view bringSubviewToFront:self.plViewController.view];
+       
         self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
         self.playbackLabel.textColor = [UIColor whiteColor];
         
@@ -598,8 +493,10 @@ NSUInteger loadTrack;
     }
     else if (lbl.tag == 11){
         self.airplayIcon.hidden = NO;
-        [self.mainViewController.view bringSubviewToFront:self.plbackView];
-        [self.mainViewController.view bringSubviewToFront:self.secChView];
+        self.userTxtBtn.hidden = NO;
+        [self.mainViewController.view bringSubviewToFront:self.plbackViewController.view];
+        [self.mainViewController.view bringSubviewToFront:self.chTwoViewController.view];
+        
         self.playbackLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
         self.playbackLabel.textColor = [UIColor blackColor];
         
@@ -615,7 +512,9 @@ NSUInteger loadTrack;
     }
     else if (lbl.tag == 12){
        
+        
         self.airplayIcon.hidden = YES;
+        self.userTxtBtn.hidden = YES;
         
         self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
         self.playbackLabel.textColor = [UIColor whiteColor];
@@ -631,11 +530,56 @@ NSUInteger loadTrack;
     }
 }
 
+- (void)showlogoutViewController{
+    
+    self.logoutViewController = [[UIViewController alloc] init];
+    self.logoutViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.logoutViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self.mainViewController presentModalViewController:self.logoutViewController animated:YES];
+    self.logoutViewController.view.superview.frame = CGRectMake(0, 0, 240, 190); //it's important to do this after presentModalViewController
+    self.logoutViewController.view.superview.center = self.mainViewController.view.center;
+  
+    UIButton *logoutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    logoutBtn.frame = CGRectMake(30, 30, 180, 55);
+    logoutBtn.backgroundColor = [UIColor blackColor];
+    logoutBtn.layer.cornerRadius = 5;
+    [logoutBtn setTitle:[NSString stringWithFormat:@"Switch user"] forState:UIControlStateNormal];
+    logoutBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+    [logoutBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+   // logoutBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+  //  [logoutBtn sizeToFit];
+    [logoutBtn addTarget:self 
+               action:@selector(userLogout)
+     forControlEvents:UIControlEventTouchDown];
+    
+    [self.logoutViewController.view addSubview:logoutBtn];
+    
+    UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    cancelBtn.frame = CGRectMake(30, 95, 180, 55);
+    cancelBtn.backgroundColor = [UIColor blackColor];
+    cancelBtn.layer.cornerRadius = 5;
+    [cancelBtn setTitle:[NSString stringWithFormat:@"Cancel"] forState:UIControlStateNormal];
+    cancelBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+    [cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+  //  cancelBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+  //  [cancelBtn sizeToFit];
+    [cancelBtn addTarget:self 
+                  action:@selector(removeLogoutView)
+        forControlEvents:UIControlEventTouchDown];
+
+     [self.logoutViewController.view addSubview:cancelBtn];
+    
+}
+
+-(void)removeLogoutView{
+    
+    [self.logoutViewController dismissModalViewControllerAnimated:YES];
+}
 
 -(void)userLogout{
     
-    [self.playbackManager checkavailableOutputRoutes];
-    //[[SPSession sharedSession] logout];
+    [[SPSession sharedSession] logout];
+    [self removeLogoutView];
     
     
 }
@@ -655,21 +599,14 @@ NSUInteger loadTrack;
     NSLog(@"session logged out");
     [self removeGUI];
     
-  //  [self.pllistView removeObservers];
-    
     [self.playbackManager stopAUGraph];
     
-    for (UIView *view in [self.pllistView subviews]){
+    for (UIView *view in [self.plViewController.view subviews]){
         
         [view removeFromSuperview];
     }
-    [self.pllistView removeFromSuperview];
-    self.pllistView = nil;
-  //  [self.pllistView dealloc];
-  //  [self.pllistViewController.view removeFromSuperview];
-    
-  //  self.pllistViewController = nil;
-    
+    [self.plViewController.plMainView removeFromSuperview];
+   
     [Shared sharedInstance].relogin = true;
     
     [self.mainViewController presentModalViewController:[[[LoginViewController alloc] init] autorelease]
@@ -708,15 +645,13 @@ NSUInteger loadTrack;
     [_playlistLabel release];
     [_playbackLabel release];
     [_searchLabel release];
-    [_pllistView release];
-    [_plbackView release];
+    [self.plbackViewController release];
     [_loadPlaylist release];
  	[_currentTrack release];
 	[_playbackManager release];
 	[_window release];
 	[_mainViewController release];
 	[_navigationController release];
-    [_secChView release];
     [super dealloc];
 }
 @end
