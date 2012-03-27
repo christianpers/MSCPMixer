@@ -86,7 +86,6 @@
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    
     if ([main.playbackManager isaugraphRunning]){
         CGRect bounds = main.plbackViewController.view.bounds;
         CGSize winSize = main.window.frame.size;
@@ -709,8 +708,6 @@ audiofileProblem:
     self.controlView.layer.cornerRadius = 10;
     self.controlView.layer.borderWidth = 2;
     self.controlView.layer.borderColor = [[UIColor blackColor]CGColor];
-    [cView release];
-    
     [cView release];
     
     NSString* imagePathStop = [[NSBundle mainBundle] pathForResource:@"stopCh2" ofType:@"png"];
