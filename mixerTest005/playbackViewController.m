@@ -55,7 +55,7 @@
     //    self.fftView.backgroundColor = [UIColor whiteColor];
     //  [self addSubview:self.fftView];
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [main.playbackManager setFFTView:self.fftView];
+    //[main.playbackManager setFFTView:self.fftView];
     
     self.artistLbl = [[UILabel alloc]initWithFrame:CGRectMake(400,self.view.bounds.size.height-200,300,30)];
     self.artistLbl.textAlignment =  UITextAlignmentCenter;

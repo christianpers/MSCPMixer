@@ -41,8 +41,6 @@
     NSTimeInterval              currentTrackPosition;
     NSTimeInterval              trackPosition;
     AudioUnitParameterValue     volume;
-    int                         currentCoreAudioSampleRate;
-    
     
     AUGraph                     graph;
     AudioUnit                   ioUnit;
@@ -104,6 +102,7 @@
     int displayNumberOfInputChannels;
     SInt16 *conversionBufferLeft;   // for data conversion from fixed point to integer
     SInt16 *conversionBufferRight;   // for data conversion from fixed point to integer
+    int currentCoreAudioSampleRate;
 
 	
 }

@@ -12,6 +12,7 @@
 //#import "CAStreamBasicDescription.h"
 
 void fixedPointToSInt16( SInt32 * source, SInt16 * target, int length );
+float MagnitudeSquared(float x, float y);
 
 AudioBufferList* bufferList;
 BOOL startedCallback;
@@ -65,6 +66,13 @@ void fixedPointToSInt16( SInt32 * source, SInt16 * target, int length ) {
     }
     
 }
+
+// for some calculation in the fft callback
+// check to see if there is a vDsp library version
+float MagnitudeSquared(float x, float y) {
+	return ((x*x) + (y*y));
+}
+
 
 
 static OSStatus outputCallback(void *inRefCon, 
@@ -133,8 +141,10 @@ static OSStatus outputCallback(void *inRefCon,
         uint32_t n = control->n;
         uint32_t nOver2 = control->nOver2;
         uint32_t stride = 1;
-        int bufferCapacity = control->buffersize_;
+        int bufferCapacity = control->bufferCapacity;
         SInt16 index = control->index;
+        int numBars = 30;
+        float binSize = floor(nOver2/numBars);
 
         
         int read = bufferCapacity - index;
@@ -178,7 +188,36 @@ static OSStatus outputCallback(void *inRefCon,
             // an interleaved complex vector.
             
             vDSP_ztoc(&A, 1, (COMPLEX *)analysisBuffer, 2, nOver2);
-   
+            
+            for (int i=0;i<numBars;i++){
+                float sum = 0;
+                for (int j=0;j<binSize;j++){
+                    int arr = (i*binSize)+j;
+                    sum += analysisBuffer[arr];
+                }
+                
+                float average = sum/binSize;
+                
+                float barWidth = 500/binSize;
+                float scaledHeight = (average/256)*300;
+                
+                
+            }
+           /* 
+            float dominantFrequency = 0;
+            int bin = -1;
+            for (int i=0; i<n; i+=2) {
+                float curFreq = MagnitudeSquared(analysisBuffer[i], analysisBuffer[i+1]);
+                if (curFreq > dominantFrequency) {
+                    dominantFrequency = curFreq;
+                    bin = (i+1)/2;
+                }
+            }
+            
+            dominantFrequency = bin*(control->currentCoreAudioSampleRate/bufferCapacity);
+            
+          //  printf("Dominant frequency: %f   \n" , dominantFrequency);
+            */
         }
     }
     else if (inBusNumber == 1){
