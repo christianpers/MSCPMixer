@@ -137,12 +137,23 @@ CGSize parentSize;
      //   parentView.layer.borderWidth = 0.0f;
         
         if (piece.tag <= 5){
-            if (((pos.x >= 100)&&(pos.x<=500))&&((pos.y>=195)&&(pos.y<=260))){
-                if (piece.tag == 5)
-                    piece.frame = CGRectMake(pos.x, 180, 60, 60);
-                else 
-                    piece.frame = CGRectMake(pos.x, 180, 40, 40);
+            if(main.chTwoActive){
+                if (((pos.x >= 100)&&(pos.x<=500))&&((pos.y>=195)&&(pos.y<=260))){
+                    if (piece.tag == 5)
+                        piece.frame = CGRectMake(pos.x, 180, 60, 60);
+                    else 
+                        piece.frame = CGRectMake(pos.x, 180, 40, 40);
+                } 
+                
+            }else {
+                if (((pos.x >= 100)&&(pos.x<=500))&&((pos.y>=355)&&(pos.y<=420))){
+                    if (piece.tag == 5)
+                        piece.frame = CGRectMake(pos.x, 340, 60, 60);
+                    else 
+                        piece.frame = CGRectMake(pos.x, 340, 40, 40);
+                }
             }
+           
         }
         if (piece.tag > 5){
             if (((pos.x >= 230)&&(pos.x<=400))&&((pos.y>=70)&&(pos.y<=150))){

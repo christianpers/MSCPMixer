@@ -11,62 +11,11 @@
 #import "AppDelegate.h"
 //#import "CAStreamBasicDescription.h"
 
+void fixedPointToSInt16( SInt32 * source, SInt16 * target, int length );
 
 AudioBufferList* bufferList;
 BOOL startedCallback;
 BOOL noInterrupt; 
-
-void ConvertInt16ToFloat(audioControl* THIS ,void *buf, float *outputBuf, size_t capacity){
-    
-    AudioConverterRef converter;
-	OSStatus err;
-	
-	size_t bytesPerSample = sizeof(float);
-	AudioStreamBasicDescription outFormat = {0};
-	outFormat.mFormatID = kAudioFormatLinearPCM;
-	outFormat.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked;
-	outFormat.mBitsPerChannel = 8 * bytesPerSample;
-	outFormat.mFramesPerPacket = 1;
-	outFormat.mChannelsPerFrame = 1;	
-	outFormat.mBytesPerPacket = bytesPerSample * outFormat.mFramesPerPacket;
-	outFormat.mBytesPerFrame = bytesPerSample * outFormat.mChannelsPerFrame;		
-    //outFormat.mBytesPerFrame = 4;
-	outFormat.mSampleRate = 44100;
-	
-	const AudioStreamBasicDescription inFormat = THIS->effectUnitInputFormat;
-	
-	UInt32 inSize = capacity*sizeof(SInt16);
-	UInt32 outSize = capacity*sizeof(float);
-	err = AudioConverterNew(&inFormat, &outFormat, &converter);
-  //  err = AudioConverterConvertComplexBuffer(converter, capacity, buf, outputBuf);
-	err = AudioConverterConvertBuffer(converter, inSize, buf, &outSize, outputBuf);
-}
-void ConvertInt16ToFloatTest(audioControl* THIS ,AudioBufferList *inBuf, AudioBufferList *outBuf, UInt32 inNumberFrames){
-    
-    AudioConverterRef converter;
-	OSStatus err;
-	
-	size_t bytesPerSample = sizeof(float);
-	AudioStreamBasicDescription outFormat = {0};
-	outFormat.mFormatID = kAudioFormatLinearPCM;
-	outFormat.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked;
-	outFormat.mBitsPerChannel = 8 * bytesPerSample;
-	outFormat.mFramesPerPacket = 1;
-	outFormat.mChannelsPerFrame = 2;	
-	outFormat.mBytesPerPacket = bytesPerSample * outFormat.mFramesPerPacket;
-	outFormat.mBytesPerFrame = bytesPerSample * outFormat.mChannelsPerFrame;		
-    //outFormat.mBytesPerFrame = 4;
-	outFormat.mSampleRate = 44100;
-	
-	const AudioStreamBasicDescription inFormat = THIS->asbdChOne;
-	
-//	UInt32 inSize = capacity*sizeof(SInt16);
-//	UInt32 outSize = capacity*sizeof(float);
-	err = AudioConverterNew(&inFormat, &outFormat, &converter);
-    err = AudioConverterConvertComplexBuffer(converter, inNumberFrames, inBuf, outBuf);
-	//err = AudioConverterConvertBuffer(converter, inSize, buf, &outSize, outputBuf);
-}
-
 
 
 void propListener(	void *                  inClientData,
@@ -104,6 +53,19 @@ static OSStatus fftCallback(AudioConverterRef                   inAudioConverter
     return noErr;   
 }
 
+////////////////////////////////////////////////////////
+// convert sample vector from fixed point 8.24 to SInt16
+void fixedPointToSInt16( SInt32 * source, SInt16 * target, int length ) {
+    
+    int i;
+    
+    for(i = 0;i < length; i++ ) {
+        target[i] =  (SInt16) (source[i] >> 9);
+        
+    }
+    
+}
+
 
 static OSStatus outputCallback(void *inRefCon, 
 								 AudioUnitRenderActionFlags *ioActionFlags, 
@@ -116,68 +78,108 @@ static OSStatus outputCallback(void *inRefCon,
     audioControl *control = (audioControl *)inRefCon;
     OSStatus err = 0;
     
+    AudioUnitSampleType *inSamplesLeft;         // convenience pointers to sample data
+    AudioUnitSampleType *inSamplesRight;
+    
+    // Sint16 buffers to hold sample data after conversion 
+    
+    SInt16 *sampleBufferLeft = control->conversionBufferLeft;
+    SInt16 *sampleBufferRight = control->conversionBufferRight;
+    SInt16 *sampleBuffer;
+    
+    int i = 0;
+    
+    
+    int isStereo;               // c boolean - for deciding how many channels to process.
+    int numberOfChannels;       // 1 = mono, 2= stereo
+    
+    numberOfChannels = control->displayNumberOfInputChannels;
+    isStereo = numberOfChannels > 1 ? 1 : 0;  // decide stereo or mono
 
-    AudioBufferList *outBufferList = (AudioBufferList*)malloc(sizeof(AudioBufferList) * 2);
-   // outBufferList->mNumberBuffers = 2; 
     
     if (inBusNumber == 0){
         err = AudioUnitRender(control.timePitchUnitChOne, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
         
-        /*************** FFT ***************/	
-        //  memset(control->fftOutBuffer, 0, control->n*sizeof(SInt16));
+        inSamplesLeft = (AudioUnitSampleType *) ioData->mBuffers[0].mData; // left channel
+        fixedPointToSInt16(inSamplesLeft, sampleBufferLeft, inNumberFrames);
+
+        if(isStereo) {
+            inSamplesRight = (AudioUnitSampleType *) ioData->mBuffers[1].mData; // right channel
+            fixedPointToSInt16(inSamplesRight, sampleBufferRight, inNumberFrames);
+        }
         
-       // buffer = ioData->mBuffers[0];
-       //outBufferList = ioData
-       // outBufferList->mNumberBuffers = ioData->mNumberBuffers;
-        //outBufferList->mBuffers[0].mDataByteSize = ioData->mBuffers[0].mDataByteSize;
+        if(isStereo) {              // if stereo, combine left and right channels into left
+            for( i = 0; i < inNumberFrames; i++ ) {
+                sampleBufferLeft[i] = (SInt16) ((.5 * (float) sampleBufferLeft[i]) + (.5 * (float) sampleBufferRight[i]));
+            }
+        }    
+        sampleBuffer = sampleBufferLeft;
         
-        void *fftInBuffer = control->fftInBuffer;
-        float *fftOutBuffer = control->fftOutBuffer;
-        FFTSetup fftSetup = control->fftSetup;
-        COMPLEX_SPLIT A = control->A;
         
-        uint32_t log2n = control->log2n;
+        
+        /*************** FFT ***************/
+        
+        COMPLEX_SPLIT A = control->A;                // complex buffers
+        
+        void *dataBuffer = control->fftInBuffer;         // working sample buffers
+        float *outputBuffer = control->fftOutBuffer;
+        float *analysisBuffer = control->fftanalyzeBuffer;
+        
+        FFTSetup fftSetup = control->fftSetup;          // fft structure to support vdsp functions
+        
+        // fft params
+        
+        uint32_t log2n = control->log2n;             
         uint32_t n = control->n;
         uint32_t nOver2 = control->nOver2;
         uint32_t stride = 1;
-        int bufferCapacity = control->bufferCapacity;
+        int bufferCapacity = control->buffersize_;
         SInt16 index = control->index;
-        
-        n = 10;
-     /*   
-        err = AudioConverterFillComplexBuffer(<#AudioConverterRef inAudioConverter#>, <#AudioConverterComplexInputDataProc inInputDataProc#>, <#void *inInputDataProcUserData#>, <#UInt32 *ioOutputDataPacketSize#>, <#AudioBufferList *outOutputData#>, <#AudioStreamPacketDescription *outPacketDescription#>)
-       */ 
-       // memcpy(fftInBuffer, ioData->mBuffers[0].mData, bufferCapacity);
-        
-      //  ConvertInt16ToFloatTest(control, ioData, outBufferList, inNumberFrames);
-        
-        // We want to deal with only floating point values here.
-      //  ConvertInt16ToFloatTest(control ,fftInBuffer, fftOutBuffer, bufferCapacity);
-        
-     //   fftOutBuffer = (float *)ioData->mBuffers[0].mData;
-        
-        /** 
-         Look at the real signal as an interleaved complex vector by casting it.
-         Then call the transformation function vDSP_ctoz to get a split complex 
-         vector, which for a real signal, divides into an even-odd configuration.
-         */
-     //   vDSP_ctoz((COMPLEX*)fftOutBuffer, 2, &A, 1, nOver2);
-        
-        // Carry out a Forward FFT transform.
-     //   vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_FORWARD);
-        
-        // The output signal is now in a split real form. Use the vDSP_ztoc to get
-        // a split real vector.
-    //    vDSP_ztoc(&A, 1, (COMPLEX *)fftOutBuffer, 2, nOver2);
-        
-        
-        
-        // [control->fftView updateFFT:&fftOutBuffer :nOver2];
-        
-    //    memset(fftOutBuffer, 0, n*sizeof(SInt16));
-        //	[self release];
 
         
+        int read = bufferCapacity - index;
+        if (read > inNumberFrames) {
+            // NSLog(@"filling");
+            
+            memcpy((SInt16 *)dataBuffer + index, sampleBuffer, inNumberFrames * sizeof(SInt16));
+            control->index += inNumberFrames;
+        } else {
+            // NSLog(@"processing");
+            // If we enter this conditional, our buffer will be filled and we should 
+            // perform the FFT.
+            
+            memcpy((SInt16 *)dataBuffer + index, sampleBuffer, read * sizeof(SInt16));
+            
+            
+            // Reset the index.
+            control->index = 0;
+            
+            
+            // *************** FFT ***************		
+            // convert Sint16 to floating point
+            
+            vDSP_vflt16((SInt16 *) dataBuffer, stride, (float *) outputBuffer, stride, bufferCapacity );
+            
+            
+            //
+            // Look at the real signal as an interleaved complex vector by casting it.
+            // Then call the transformation function vDSP_ctoz to get a split complex 
+            // vector, which for a real signal, divides into an even-odd configuration.
+            //
+            
+            vDSP_ctoz((COMPLEX*)outputBuffer, 2, &A, 1, nOver2);
+            
+            // Carry out a Forward FFT transform.
+            
+            vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_FORWARD);
+            
+            
+            // The output signal is now in a split real form. Use the vDSP_ztoc to get
+            // an interleaved complex vector.
+            
+            vDSP_ztoc(&A, 1, (COMPLEX *)analysisBuffer, 2, nOver2);
+   
+        }
     }
     else if (inBusNumber == 1){
         err = AudioUnitRender(control.timePitchUnitChTwo, ioActionFlags, inTimeStamp, 0, inNumberFrames, ioData);
@@ -414,6 +416,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 @synthesize playbackIsPaused;
 @synthesize fftView;
 @synthesize mixerUnit, mixerUnitChOne, mixerUnitChTwo, timePitchUnitChOne, timePitchUnitChTwo;
+@synthesize conversionBufferLeft, conversionBufferRight;
 
 
 - (void)setFFTView: (fftAnalyzerView *)fftViewer{
@@ -423,9 +426,14 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 
 /* Setup our FFT */
 - (void)realFFTSetup {
+    
+    conversionBufferLeft = (SInt16 *) malloc(2048 * sizeof(SInt16));
+    conversionBufferRight = (SInt16 *) malloc(2048 * sizeof(SInt16));
+
 	UInt32 maxFrames = 2048;
 	fftInBuffer = (void*)malloc(maxFrames * sizeof(SInt16));
 	fftOutBuffer = (float*)malloc(maxFrames *sizeof(float));
+    fftanalyzeBuffer = (float*)malloc(maxFrames *sizeof(float));
 	log2n = log2f(maxFrames);
 	n = 1 << log2n;
 	assert(n == maxFrames);
@@ -435,6 +443,10 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	A.realp = (float *)malloc(nOver2 * sizeof(float));
 	A.imagp = (float *)malloc(nOver2 * sizeof(float));
 	fftSetup = vDSP_create_fftsetup(log2n, FFT_RADIX2);
+    if (fftSetup == (FFTSetup) 0){
+        
+        NSLog(@"Error fft");
+    }
 }
 
 -(void)connectFirstChannelMasterMixer{
@@ -1008,6 +1020,11 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     //add a property listener
 	AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange, propListener, self);
 	
+    
+    NSInteger numberOfChannels = [[AVAudioSession sharedInstance] currentHardwareInputNumberOfChannels];  
+	NSLog(@"number of channels: %d", numberOfChannels );	
+    displayNumberOfInputChannels = numberOfChannels;    // set instance variable for display
+
     
 	
 	if (!success && err != NULL) {

@@ -92,6 +92,9 @@
         CGPoint effectParentPos = main.plbackViewController.effectParentView.frame.origin;
         CGRect effectParentSize = main.plbackViewController.effectParentView.bounds;
         
+        CGPoint controlpos = main.plbackViewController.controlView.frame.origin;
+        CGSize controlsize = main.plbackViewController.controlView.frame.size;
+        
         if (!main.chTwoActive){
             main.chTwoActive = YES;
             [UIView animateWithDuration:1
@@ -123,6 +126,8 @@
             main.plbackViewController.artistLbl.hidden = YES;
             main.plbackViewController.titleLbl.hidden = YES;
             
+            main.plbackViewController.controlView.frame = CGRectMake(controlpos.x, 270, controlsize.width, controlsize.height);
+            
             
             [UIView commitAnimations];
             
@@ -148,6 +153,8 @@
             main.plbackViewController.view.frame = CGRectMake(0, 0, winSize.width, winSize.height);
             self.view.frame = CGRectMake(0, winSize.height-70, winSize.width,50);
             main.plbackViewController.effectParentView.frame = CGRectMake(effectParentPos.x, effectParentPos.y, effectParentSize.size.width, winSize.height-180);
+            
+            main.plbackViewController.controlView.frame = CGRectMake(controlpos.x, 430, controlsize.width, controlsize.height);
             
             
             [UIView commitAnimations];

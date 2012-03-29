@@ -96,10 +96,15 @@
 	COMPLEX_SPLIT A;
     void *fftInBuffer;
     float *fftOutBuffer;
+    float *fftanalyzeBuffer;
     size_t bufferCapacity;	// In samples
     int log2n, n, nOver2;
     size_t index;	// In samples
     fftAnalyzerView *fftView;
+    int displayNumberOfInputChannels;
+    SInt16 *conversionBufferLeft;   // for data conversion from fixed point to integer
+    SInt16 *conversionBufferRight;   // for data conversion from fixed point to integer
+
 	
 }
 
@@ -108,6 +113,10 @@
 @property (nonatomic) AudioUnit mixerUnitChTwo;
 @property (nonatomic) AudioUnit timePitchUnitChOne;
 @property (nonatomic) AudioUnit timePitchUnitChTwo;
+
+@property SInt16 *conversionBufferLeft;	
+@property SInt16 *conversionBufferRight;
+
 
 
 

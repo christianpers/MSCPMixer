@@ -80,7 +80,7 @@
     self.effectParentView.layer.borderColor = [[UIColor whiteColor] CGColor];
     [self.view addSubview:self.effectParentView];
     
-    UIView *cView = [[UIView alloc]initWithFrame:CGRectMake(170, 270, 400, 70)];
+    UIView *cView = [[UIView alloc]initWithFrame:CGRectMake((parentSize.width/2)-(400/2), 430, 400, 70)];
     cView.backgroundColor = [UIColor clearColor];
     self.controlView = cView;
     [self.view addSubview:self.controlView];

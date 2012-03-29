@@ -23,11 +23,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1503"
-         endingLineNumber = "1503"
+         startingLineNumber = "1506"
+         endingLineNumber = "1506"
          landmarkName = "-setupAudioGraphWithAudioFormat:error:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -37,12 +37,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1792"
-         endingLineNumber = "1792"
-         landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
+         startingLineNumber = "1795"
+         endingLineNumber = "1795"
+         landmarkName = "-startAUGraph"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -51,13 +51,13 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1759"
-         endingLineNumber = "1759"
-         landmarkName = "@implementation audioControl"
-         landmarkType = "3">
+         startingLineNumber = "1762"
+         endingLineNumber = "1762"
+         landmarkName = "-startAUGraph"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -93,11 +93,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1641"
-         endingLineNumber = "1641"
+         startingLineNumber = "1644"
+         endingLineNumber = "1644"
          landmarkName = "-session:shouldDeliverAudioFrames:ofCount:format:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -121,11 +121,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1261"
-         endingLineNumber = "1261"
+         startingLineNumber = "1264"
+         endingLineNumber = "1264"
          landmarkName = "-setupAudioGraphWithAudioFormat:error:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -149,11 +149,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1366"
-         endingLineNumber = "1366"
+         startingLineNumber = "1369"
+         endingLineNumber = "1369"
          landmarkName = "-setupAudioGraphWithAudioFormat:error:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -163,11 +163,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1230"
-         endingLineNumber = "1230"
+         startingLineNumber = "1233"
+         endingLineNumber = "1233"
          landmarkName = "-setupAudioGraphWithAudioFormat:error:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -219,11 +219,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/secondChannelUIViewController.mm"
-         timestampString = "354430482.311934"
+         timestampString = "354511944.568315"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "339"
-         endingLineNumber = "339"
+         startingLineNumber = "346"
+         endingLineNumber = "346"
          landmarkName = "-loadAudioFile"
          landmarkType = "5">
       </FileBreakpoint>
@@ -233,12 +233,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1649"
-         endingLineNumber = "1649"
-         landmarkName = "-teardownCoreAudio"
+         startingLineNumber = "1652"
+         endingLineNumber = "1652"
+         landmarkName = "-session:shouldDeliverAudioFrames:ofCount:format:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -247,11 +247,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1560"
-         endingLineNumber = "1560"
+         startingLineNumber = "1563"
+         endingLineNumber = "1563"
          landmarkName = "-setupAudioGraphWithAudioFormat:error:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -331,11 +331,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/secondChannelUIViewController.mm"
-         timestampString = "354430482.311934"
+         timestampString = "354511944.568315"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "543"
-         endingLineNumber = "543"
+         startingLineNumber = "550"
+         endingLineNumber = "550"
          landmarkName = "-loadAudioFile"
          landmarkType = "5">
       </FileBreakpoint>
@@ -345,40 +345,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "137"
-         endingLineNumber = "137"
-         landmarkName = "outputCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "167"
-         endingLineNumber = "167"
-         landmarkName = "outputCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "182"
-         endingLineNumber = "182"
-         landmarkName = "outputCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)"
+         startingLineNumber = "184"
+         endingLineNumber = "184"
+         landmarkName = "playbackCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)"
          landmarkType = "7">
       </FileBreakpoint>
       <FileBreakpoint
@@ -387,11 +359,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/secondChannelUIViewController.mm"
-         timestampString = "354430482.311934"
+         timestampString = "354511944.568315"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "305"
-         endingLineNumber = "305"
+         startingLineNumber = "312"
+         endingLineNumber = "312"
          landmarkName = "-exportAssetAtURL:withTitle:withArtist:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -401,13 +373,13 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "485"
-         endingLineNumber = "485"
-         landmarkName = "-closeDownChannelTwo"
-         landmarkType = "5">
+         startingLineNumber = "488"
+         endingLineNumber = "488"
+         landmarkName = "@implementation audioControl"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -415,13 +387,13 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "455"
-         endingLineNumber = "455"
-         landmarkName = "-connectFirstChannelCallback"
-         landmarkType = "5">
+         startingLineNumber = "458"
+         endingLineNumber = "458"
+         landmarkName = "@implementation audioControl"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -429,11 +401,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/secondChannelUIViewController.mm"
-         timestampString = "354430482.311934"
+         timestampString = "354511944.568315"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "252"
-         endingLineNumber = "252"
+         startingLineNumber = "259"
+         endingLineNumber = "259"
          landmarkName = "-showMediaPicker"
          landmarkType = "5">
       </FileBreakpoint>
@@ -457,12 +429,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "849"
-         endingLineNumber = "849"
-         landmarkName = "-sethipassEffectY::"
+         startingLineNumber = "852"
+         endingLineNumber = "852"
+         landmarkName = "-sethipassEffectX::"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -471,12 +443,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "880"
-         endingLineNumber = "880"
-         landmarkName = "-setReverbX:"
+         startingLineNumber = "883"
+         endingLineNumber = "883"
+         landmarkName = "-setReverbY:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -611,11 +583,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "574"
-         endingLineNumber = "574"
+         startingLineNumber = "577"
+         endingLineNumber = "577"
          landmarkName = "-connectSecChannelCallback"
          landmarkType = "5">
       </FileBreakpoint>
@@ -653,12 +625,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "846"
-         endingLineNumber = "846"
-         landmarkName = "-sethipassEffectY::"
+         startingLineNumber = "849"
+         endingLineNumber = "849"
+         landmarkName = "-sethipassEffectX::"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -667,12 +639,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "344"
-         endingLineNumber = "344"
-         landmarkName = "-initWithPlaybackSession:"
+         startingLineNumber = "346"
+         endingLineNumber = "346"
+         landmarkName = "-dealloc"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -695,26 +667,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "353620503.167475"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "49"
-         endingLineNumber = "49"
-         landmarkName = "ConvertInt16ToFloatTest(audioControl* THIS ,AudioBufferList *inBuf, AudioBufferList *outBuf, UInt32 inNumberFrames)"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "349"
-         endingLineNumber = "349"
-         landmarkName = "-initWithPlaybackSession:"
+         startingLineNumber = "351"
+         endingLineNumber = "351"
+         landmarkName = "-dealloc"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -765,12 +723,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1811"
-         endingLineNumber = "1811"
-         landmarkName = "-sessionDidEndPlayback:"
+         startingLineNumber = "1814"
+         endingLineNumber = "1814"
+         landmarkName = "-stopAUGraph"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -779,12 +737,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1828"
-         endingLineNumber = "1828"
-         landmarkName = "-sessionDidEndPlaybackOnMainThread:"
+         startingLineNumber = "1831"
+         endingLineNumber = "1831"
+         landmarkName = "-informDelegateOfAudioPlaybackStarting"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -807,11 +765,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1110"
-         endingLineNumber = "1110"
+         startingLineNumber = "1113"
+         endingLineNumber = "1113"
          landmarkName = "-setupAudioGraphWithAudioFormat:error:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -821,11 +779,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1175"
-         endingLineNumber = "1175"
+         startingLineNumber = "1178"
+         endingLineNumber = "1178"
          landmarkName = "-setupAudioGraphWithAudioFormat:error:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -835,13 +793,13 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "368"
-         endingLineNumber = "368"
-         landmarkName = "@implementation audioControl"
-         landmarkType = "3">
+         startingLineNumber = "370"
+         endingLineNumber = "370"
+         landmarkName = "-dealloc"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -863,11 +821,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1417"
-         endingLineNumber = "1417"
+         startingLineNumber = "1420"
+         endingLineNumber = "1420"
          landmarkName = "-setupAudioGraphWithAudioFormat:error:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -877,109 +835,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "477"
-         endingLineNumber = "477"
-         landmarkName = "-closeDownChannelTwo"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "141"
-         endingLineNumber = "141"
-         landmarkName = "outputCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "129"
-         endingLineNumber = "129"
-         landmarkName = "outputCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "353625176.892137"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "65"
-         endingLineNumber = "65"
-         landmarkName = "ConvertInt16ToFloatTest(audioControl* THIS ,AudioBufferList *inBuf, AudioBufferList *outBuf, UInt32 inNumberFrames)"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "353623125.403562"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "43"
-         endingLineNumber = "43"
-         landmarkName = "ConvertInt16ToFloat(audioControl* THIS ,void *buf, float *outputBuf, size_t capacity)"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "134"
-         endingLineNumber = "134"
-         landmarkName = "outputCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "154"
-         endingLineNumber = "154"
-         landmarkName = "outputCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "661"
-         endingLineNumber = "661"
-         landmarkName = "-fadeOutMusicCh1"
+         startingLineNumber = "480"
+         endingLineNumber = "480"
+         landmarkName = "-toggleChannelTwoPlayingStatus:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -987,11 +848,24 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "196"
-         endingLineNumber = "196"
+         startingLineNumber = "664"
+         endingLineNumber = "664"
+         landmarkName = "-fadeOutMusicCh2"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "mixerTest005/audioControl.mm"
+         timestampString = "354598556.797668"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "198"
+         endingLineNumber = "198"
          landmarkName = "playbackCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)"
          landmarkType = "7">
       </FileBreakpoint>
@@ -1000,25 +874,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "175"
-         endingLineNumber = "175"
-         landmarkName = "outputCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)"
-         landmarkType = "7">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "539"
-         endingLineNumber = "539"
-         landmarkName = "-connectSecMastermixerBus"
+         startingLineNumber = "542"
+         endingLineNumber = "542"
+         landmarkName = "-removeSecMastermixerBus"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1026,25 +887,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "578"
-         endingLineNumber = "578"
-         landmarkName = "-connectSecChannelCallback"
-         landmarkType = "5">
+         startingLineNumber = "581"
+         endingLineNumber = "581"
+         landmarkName = "@implementation audioControl"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/audioControl.mm"
-         timestampString = "354428240.636906"
+         timestampString = "354598556.797668"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1766"
-         endingLineNumber = "1766"
-         landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
+         startingLineNumber = "1769"
+         endingLineNumber = "1769"
+         landmarkName = "-startAUGraph"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1300,11 +1161,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/effectController.mm"
-         timestampString = "354425707.088968"
+         timestampString = "354511944.568315"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "155"
-         endingLineNumber = "155"
+         startingLineNumber = "166"
+         endingLineNumber = "166"
          landmarkName = "-panPiece:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1326,12 +1187,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mixerTest005/secondChannelUIViewController.mm"
-         timestampString = "354430835.902549"
+         timestampString = "354511944.568315"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "686"
-         endingLineNumber = "686"
+         startingLineNumber = "693"
+         endingLineNumber = "693"
          landmarkName = "-createChannelTwoUI"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "mixerTest005/audioControl.mm"
+         timestampString = "354601713.30396"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "444"
+         endingLineNumber = "444"
+         landmarkName = "-removeFirstChannelCallback"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
