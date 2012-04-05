@@ -52,6 +52,7 @@
 {
     self.plViewController = [[UIViewController alloc]init];
     missedPlArray = [[NSMutableArray alloc] init];
+    starredTracksArray = [[NSMutableArray alloc] init];
     
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     CGSize winSize = window.frame.size;
@@ -69,6 +70,11 @@
     [super viewDidLoad];
     
     [self initGridParams];
+    if (createStarredBox){
+        
+        [self createStarredTracksPlaylist:[[SPSession sharedSession] userPlaylists]];
+        
+    }
     [self addObserver:self forKeyPath:@"self.loadPlaylist.items" options:0 context:nil];
     [self addObserver:self forKeyPath:@"self.trackimg.album.cover.image" options:0 context:nil];
     [self loadPlaylistView:[[SPSession sharedSession] userPlaylists]];
@@ -92,6 +98,7 @@
     [_plCallback release];
     [_loadItem release];
     [missedPlArray release];
+    [starredTracksArray release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -120,12 +127,15 @@
 
 - (void)initGridParams{
     
+    if ([[[[SPSession sharedSession] starredPlaylist] items] count] > 0){
+        createStarredBox = YES;
+    
+    }else{
+        createStarredBox = NO;
+    } 
+    
     plCounter = 0;
     margin = 6;
-    x = 5;
-    y = 0;
-    height;
-    width;
     nrOfPl = 0;
     rows = 0;
     rowCount = 0;
@@ -157,7 +167,13 @@
     width = parentWidth/columns;
     
     y = 0;
-    x = 5;
+    if (createStarredBox){
+        x = width + 11;
+        
+    }else{
+        x = 5;
+        
+    }
     
     NSLog(@"height:%f, width:%f",height,width);
     
@@ -224,6 +240,8 @@
             if (itemloop.itemURLType == SP_LINKTYPE_TRACK){
                 
                 track = [SPTrack trackForTrackURL:itemloop.itemURL inSession:[SPSession sharedSession]];
+                int av = track.availability;
+                
                 if (track.availability == 1){
                     img = track.album.cover.image;
                     
@@ -260,6 +278,97 @@
     }
 }
 
+-(void)createStarredTracksPlaylist:(SPPlaylistContainer *)playlistContainer{
+    
+    SPPlaylist *starred = [[SPSession sharedSession]starredPlaylist];
+    
+    for (SPPlaylistItem *item in starred.items){
+        SPTrack *track = [[SPSession sharedSession]trackForURL:item.itemURL];
+        if (track.starred && track.availability == 1){
+            [starredTracksArray addObject:item.itemURL];
+        }
+    }
+    
+    UIButton *starredButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    starredButton.frame = CGRectMake(5, 0, width, height);// position in the parent view and set the size of the
+    // myButton.layer.borderWidth = 2;
+    starredButton.backgroundColor = [UIColor grayColor];
+    
+    [starredButton addTarget:self 
+                 action:@selector(starredClicked)
+       forControlEvents:UIControlEventTouchDown];
+    
+    NSString* imagepathStar = [[NSBundle mainBundle] pathForResource:@"starbg" ofType:@"jpg"];
+    
+    UIImage *starImg = [UIImage imageWithContentsOfFile:imagepathStar];
+    
+    [starredButton setBackgroundImage:starImg forState:UIControlStateNormal];
+    
+    CGSize size = starredButton.frame.size;
+    
+    UILabel *plTitle = [[ [UILabel alloc ] initWithFrame:CGRectMake(0, (size.height/2)-(30/2), size.width, 30)]autorelease];
+    plTitle.textAlignment =  UITextAlignmentCenter;
+    plTitle.textColor = [UIColor blackColor];
+    plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
+    plTitle.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(16.0)];
+    plTitle.text = [NSString stringWithFormat: @"Starred tracks"];
+    [starredButton addSubview:plTitle];
+    
+    [self.plMainView addSubview:starredButton];
+    
+    
+}
+-(void)starredClicked{
+    
+    CGSize rect = self.plMainView.window.frame.size;
+    CGPoint offsetPnt = self.plMainView.contentOffset;
+    int boxHeight = 600;
+    int boxWidth = 400;
+    
+    UITapGestureRecognizer *bgTouch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeplBg:)];
+    bgTouch.numberOfTapsRequired = 1;
+    
+    UIView *plbgView =[[UIView alloc] initWithFrame: CGRectMake(offsetPnt.x, offsetPnt.y, rect.width, rect.height)];
+    plbgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.86];   
+    [plbgView addGestureRecognizer:bgTouch]; 
+    
+    [bgTouch release];    
+    
+    UIView *plView=[[UIView alloc] initWithFrame: CGRectMake((rect.width/2)-(boxWidth/2)+offsetPnt.x,
+                                                             (rect.height/2)-(boxHeight/2)+offsetPnt.y,
+                                                             boxWidth,boxHeight)];
+    
+    plView.backgroundColor = [UIColor clearColor];
+    
+    self.plViewController.view = plView;
+    
+    [self.view addSubview:plbgView];    
+    [self.view addSubview:self.plViewController.view];
+    
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, boxWidth, 40) ];
+    headerLabel.textAlignment =  UITextAlignmentCenter;
+    headerLabel.textColor = [UIColor whiteColor];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+    [self.plViewController.view addSubview:headerLabel];
+    
+    headerLabel.text = @"Starred tracks";
+
+    
+    
+    plTableView *plSongTable = [[plTableView alloc]initWithFrame:CGRectMake(0, 80, 400, 400) andDataArray:starredTracksArray];
+    plSongTable.backgroundColor = [UIColor clearColor];
+    [self.plViewController.view addSubview:plSongTable];
+    [self.plMainView setScrollEnabled:NO];
+    
+    [plSongTable release];
+    [plbgView release];    
+    [plView release];
+    [headerLabel release];
+    
+    
+}
+
 -(void)loadPlaylistView:(SPPlaylistContainer *)playlistContainer {
     
     for (int i=0;i<nrOfPl;i++){
@@ -288,6 +397,8 @@
         [av startAnimating];
         //   [av release];
         [self.plMainView addSubview:myButton];
+        
+        myButton.enabled = NO;
         
         //   [myButton release];
         
@@ -364,9 +475,13 @@
     for (SPPlaylistItem *trackTest in playlistDetail.items){
         if (!foundValidTrack){
             if(trackTest.itemURLType == SP_LINKTYPE_TRACK){
+                SPTrack *trackAvailTest = [[SPSession sharedSession] trackForURL:trackTest.itemURL];
+                if (trackAvailTest.availability == 1){
+                    foundValidTrack = YES;
+                    playlistItem = trackTest;
+                    
+                }
                 
-                foundValidTrack = YES;
-                playlistItem = trackTest;
             }
         }
     }
@@ -376,6 +491,17 @@
             [view removeFromSuperview];
             
         }
+        
+        CGSize size = btn.frame.size;
+        
+        UILabel *plTitle = [[ [UILabel alloc ] initWithFrame:CGRectMake(0, (size.height/2)-(30/2), size.width, 30)]autorelease];
+        plTitle.textAlignment =  UITextAlignmentCenter;
+        plTitle.textColor = [UIColor blackColor];
+        plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
+        plTitle.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(16.0)];
+        plTitle.text = [NSString stringWithFormat: @"No valid tracks"];
+        [btn addSubview:plTitle];
+        
         NSNumber *missedplNum = [NSNumber numberWithInt:plCounter];
         [missedPlArray addObject:missedplNum];
         plCounter++;
@@ -383,22 +509,6 @@
         [self checkPlLoad:plContainer];
         
     }
-    // playlistItem = [playlistDetail.items objectAtIndex:0];
-    /* 
-     if (playlistItem.itemURLType == SP_LINKTYPE_INVALID){
-     
-     UIButton *btn = (UIButton *)[self viewWithTag:plCounter+tagAdd];
-     for (UIView *view in [btn subviews]){
-     [view removeFromSuperview];
-     
-     }
-     NSNumber *missedplNum = [NSNumber numberWithInt:plCounter];
-     [missedPlArray addObject:missedplNum];
-     plCounter++;
-     
-     [self checkPlLoad:plContainer];
-     }
-     */
     else{
         trackURL = playlistItem.itemURL;
         SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
@@ -428,6 +538,18 @@
                 [view removeFromSuperview];
                 
             }
+            
+            CGSize size = btn.frame.size;
+            UILabel *plTitle = [[ [UILabel alloc ] initWithFrame:CGRectMake(0, (size.height/2)-(30/2), size.width, 30)]autorelease];
+            plTitle.textAlignment =  UITextAlignmentCenter;
+            plTitle.textColor = [UIColor blackColor];
+            plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
+            plTitle.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(16.0)];
+            plTitle.text = [NSString stringWithFormat: @"No valid tracks"];
+            [btn addSubview:plTitle];
+            
+            
+            
             NSNumber *missedplNum = [NSNumber numberWithInt:plCounter];
             [missedPlArray addObject:missedplNum];
             plCounter++;
@@ -451,6 +573,8 @@
         [view removeFromSuperview];
         
     }
+    
+    btn.enabled = YES;
     
     SPPlaylist *playlist = [plContainer.playlists objectAtIndex:plCounter];
     
@@ -537,8 +661,9 @@
             for (int i=0;i<[plToShow.items count];i++){
                 
                 SPPlaylistItem *plItem = [plToShow.items objectAtIndex:i];
-                NSString *str = [self getTrackStr:plItem];
-                [plList addObject:str];
+            //    NSString *str = [self getTrackStr:plItem];
+                NSURL *url = plItem.itemURL;
+                [plList addObject:url];
                 
             }
             [plContainerArray addObject:plList];
@@ -550,8 +675,9 @@
         
         for (int i=0;i<[plToShow.items count];i++){
             SPPlaylistItem *plItem = [plToShow.items objectAtIndex:i];
-            NSString *str = [self getTrackStr:plItem];
-            [plContainerArray addObject:str];
+            //NSString *str = [self getTrackStr:plItem];
+            NSURL *url = plItem.itemURL;
+            [plContainerArray addObject:url];
             
         }
     }

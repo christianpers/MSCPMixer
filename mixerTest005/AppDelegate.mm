@@ -166,6 +166,20 @@ int labelWidth = 300;
     
 }
 
+- (void)callfadeInMusicCh1{
+    [self.playbackManager fadeInMusicCh1];
+    
+}
+
+- (void)handlecuetrackSelect:(SPTrack *)track{
+    
+    [self.playbackManager fadeOutMusicCh1];
+    [self performSelector:@selector(playnewTrack:) withObject:track afterDelay:.6];
+    [self performSelector:@selector(callfadeInMusicCh1) withObject:nil afterDelay:.8];
+    
+    
+}
+
 - (void)playnewTrack:(SPTrack *)track{
     // [self.playbackManager stopAUGraph];
     //  [self.mainViewController dismissModalViewControllerAnimated:YES];
@@ -193,9 +207,12 @@ int labelWidth = 300;
                                                   otherButtonTitles:nil];
             [[alert autorelease] show];
         }
-        self.currentTrack = track;
-        
-        [self.cueController.tableView reloadData];
+        else {
+            self.currentTrack = track;
+            
+            [self.cueController.tableView reloadData];
+            
+        }
         
         return;
     }
@@ -329,7 +346,7 @@ NSUInteger loadTrack;
     // Invoked by SPSession after a successful login.
 	[self.mainViewController dismissModalViewControllerAnimated:YES];
     
-    if (![[[SPSession sharedSession] userPlaylists] isLoaded])
+    if (![[[SPSession sharedSession] userPlaylists] isLoaded]&&[[[SPSession sharedSession] starredPlaylist] isLoaded])
     {
         playlistsAttempts++;
         
@@ -408,38 +425,9 @@ NSUInteger loadTrack;
     }
 }
 
--(void)addSongToPlaybackCue:(int)selRow:(int)selSection{
-    
-    NSLog(@"addSongtoplaybackcue %d",[Shared sharedInstance].curClickedPl);
-    
-    SPPlaylistContainer *container = [[SPSession sharedSession] userPlaylists];
-    
-    SPPlaylist *playlistDetail = [container.playlists objectAtIndex:[Shared sharedInstance].curClickedPl];
-    
-    if ([playlistDetail isKindOfClass:[SPPlaylistFolder class]]){
-        
-        SPPlaylistFolder *plFolder = [container.playlists objectAtIndex:[Shared sharedInstance].curClickedPl];
-        SPPlaylist *pl = [plFolder.playlists objectAtIndex:selSection];
-        playlistDetail = pl;
-        
-    }
-    SPPlaylistItem *playlistItem;
-    
-    NSURL *trackURL;
-    
-    playlistItem = [playlistDetail.items objectAtIndex:selRow];
-    
-    trackURL = playlistItem.itemURL;
-    
-    NSString *urlStr =[trackURL absoluteString];
-    
-    NSLog(@"track url: %@",urlStr);
+-(void)addSongToCueChannelOne:(NSURL *)trackURL{
     
     [[Shared sharedInstance].masterCue addObject:trackURL];
-    
-    for (NSURL *str in [Shared sharedInstance].masterCue){
-        NSLog(@"str:%@",str);
-    }
     
     SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
     
@@ -450,6 +438,7 @@ NSUInteger loadTrack;
     
     [self.cueController.tableView reloadData];
 }
+
 
 -(void)removeSongFromPlaybackCue:(int)selRow{
     

@@ -126,7 +126,7 @@ numberOfSectionsInTableView:(UITableView *)tableView {
     [Shared sharedInstance].currTrackCueNum = indexPath.row;
     SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
     
-    [main playnewTrack:track];
+    [main handlecuetrackSelect:track];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     

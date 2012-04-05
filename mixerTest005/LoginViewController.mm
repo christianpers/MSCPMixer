@@ -74,6 +74,7 @@
     NSLog(@"user stored: %@",storedUser);
     [[SPSession sharedSession] forgetStoredCredentials];
     self.usernameField.text = @"";
+    self.passwordField.text = @"";
 }
 
 -(void)session:(SPSession *)aSession didFailToLoginWithError:(NSError *)error; {
@@ -108,6 +109,8 @@
     // Do any additional setup after loading the view from its nib.
     
     NSError *error = nil;
+    
+    self.spinner.hidden = YES;
     
   	self.usernameField.text = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
     

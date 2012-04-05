@@ -41,19 +41,8 @@ void rioInterruptionListener(void *inClientData, UInt32 inInterruption){
 		//AudioOutputUnitStop(THIS->audioUnit);
     }
 }
-static OSStatus fftCallback(AudioConverterRef                   inAudioConverter,
-                            AudioConverterComplexInputDataProc  inInputDataProc,
-                            void                                *inInputDataProcUserData,
-                            UInt32                              *ioOutputDataPacketSize,
-                            AudioBufferList                     *outOutputData,
-                            AudioStreamPacketDescription        *outPacketDescription) {
-    
-    
-    
-    
-    return noErr;   
-}
 
+/* FFT functions */
 ////////////////////////////////////////////////////////
 // convert sample vector from fixed point 8.24 to SInt16
 void fixedPointToSInt16( SInt32 * source, SInt16 * target, int length ) {
@@ -107,6 +96,8 @@ static OSStatus outputCallback(void *inRefCon,
     
     if (inBusNumber == 0){
         err = AudioUnitRender(control.timePitchUnitChOne, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+     
+        /*************** FFT **************
         
         inSamplesLeft = (AudioUnitSampleType *) ioData->mBuffers[0].mData; // left channel
         fixedPointToSInt16(inSamplesLeft, sampleBufferLeft, inNumberFrames);
@@ -122,10 +113,6 @@ static OSStatus outputCallback(void *inRefCon,
             }
         }    
         sampleBuffer = sampleBufferLeft;
-        
-        
-        
-        /*************** FFT ***************/
         
         COMPLEX_SPLIT A = control->A;                // complex buffers
         
@@ -203,22 +190,9 @@ static OSStatus outputCallback(void *inRefCon,
                 
                 
             }
-           /* 
-            float dominantFrequency = 0;
-            int bin = -1;
-            for (int i=0; i<n; i+=2) {
-                float curFreq = MagnitudeSquared(analysisBuffer[i], analysisBuffer[i+1]);
-                if (curFreq > dominantFrequency) {
-                    dominantFrequency = curFreq;
-                    bin = (i+1)/2;
-                }
-            }
-            
-            dominantFrequency = bin*(control->currentCoreAudioSampleRate/bufferCapacity);
-            
-          //  printf("Dominant frequency: %f   \n" , dominantFrequency);
-            */
-        }
+          }
+         
+         */
     }
     else if (inBusNumber == 1){
         err = AudioUnitRender(control.timePitchUnitChTwo, ioActionFlags, inTimeStamp, 0, inNumberFrames, ioData);
@@ -719,16 +693,22 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     }
 }
 
+/*
+    TODO Fixing the fading sheit ! Fuckin hell Must work !
+*/
+
 -(void)fadeOutMusicCh1{
     OSStatus result = noErr;
     result = AudioUnitSetParameter(mixerUnitChOne, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
-    self.volume-=.003; 
+    self.volume-=.03; 
     NSLog(@"volume: %f",self.volume);
-    if (self.volume > 0){
+    if (self.volume > 0.01){
         [self performSelector:_cmd withObject:nil afterDelay:0.01];
         return;
         
     }
+ 
+   
 }
 -(void)fadeOutMusicCh2{
     OSStatus result = noErr;
@@ -747,7 +727,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     self.volume+=.003; 
     NSLog(@"volume: %f",self.volume);
     if (self.volume < 1){
-        [self performSelector:@selector(fadeInMusicCh1) withObject:nil afterDelay:0.01];
+        [self performSelector:@selector(fadeInMusicCh1) withObject:nil afterDelay:0.001];
         return;
     }
 }
@@ -1942,7 +1922,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
            [self startAUGraph];
            if (self.volume < 0.1){
                
-             //  [self fadeInMusicCh1];
+               [self fadeInMusicCh1];
            }
         } 
        else

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA1214621526A83E00F6A693 /* mscp logo special edition.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AA1214611526A83E00F6A693 /* mscp logo special edition.jpg */; };
+		AA29D202152D546300AD4052 /* starbg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AA29D201152D546300AD4052 /* starbg.jpg */; };
 		AA58C0ED14FC839C0074837F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EC14FC839C0074837F /* CoreMedia.framework */; };
 		AA58C0F014FC83CA0074837F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */; };
 		AA58C0F314FC86090074837F /* secondChannelUIViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA58C0F214FC86090074837F /* secondChannelUIViewController.mm */; };
@@ -66,10 +68,11 @@
 		AAC8A5271501732C00B26830 /* stopCh2.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC8A5221501732C00B26830 /* stopCh2.png */; };
 		AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA25C151E63ED0066AC86 /* cueViewController.m */; };
 		AAEFA263151F84BD0066AC86 /* playbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA262151F84BC0066AC86 /* playbackViewController.m */; };
-		AAEFA266151F88740066AC86 /* effectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA265151F88740066AC86 /* effectViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA1214611526A83E00F6A693 /* mscp logo special edition.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "mscp logo special edition.jpg"; sourceTree = "<group>"; };
+		AA29D201152D546300AD4052 /* starbg.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = starbg.jpg; sourceTree = "<group>"; };
 		AA2CEBCE150F032C00EBA96C /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = ../../../../../../Developer/Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
 		AA2CEBCF150F032C00EBA96C /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = ../../../../../../Developer/Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.h; sourceTree = "<group>"; };
 		AA58C0EC14FC839C0074837F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -175,8 +178,6 @@
 		AAEFA25C151E63ED0066AC86 /* cueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cueViewController.m; sourceTree = "<group>"; };
 		AAEFA261151F84BC0066AC86 /* playbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playbackViewController.h; sourceTree = "<group>"; };
 		AAEFA262151F84BC0066AC86 /* playbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = playbackViewController.m; sourceTree = "<group>"; };
-		AAEFA264151F88740066AC86 /* effectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = effectViewController.h; sourceTree = "<group>"; };
-		AAEFA265151F88740066AC86 /* effectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = effectViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -383,8 +384,6 @@
 				AA97EF7A14F0D1DE00A2B892 /* effectgridView.mm */,
 				AAEFA261151F84BC0066AC86 /* playbackViewController.h */,
 				AAEFA262151F84BC0066AC86 /* playbackViewController.m */,
-				AAEFA264151F88740066AC86 /* effectViewController.h */,
-				AAEFA265151F88740066AC86 /* effectViewController.m */,
 			);
 			name = playbackView;
 			sourceTree = "<group>";
@@ -418,6 +417,8 @@
 		AA97EF5114F0D0DA00A2B892 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				AA29D201152D546300AD4052 /* starbg.jpg */,
+				AA1214611526A83E00F6A693 /* mscp logo special edition.jpg */,
 				AA5B97D8150E7D790061D969 /* iPublicUtility */,
 				AAC8A51F1501732C00B26830 /* pauseCh2.png */,
 				AAC8A5221501732C00B26830 /* stopCh2.png */,
@@ -513,6 +514,8 @@
 				AA9C4D04150092C8002FE0DE /* appiconMSCP.png in Resources */,
 				AAC8A5241501732C00B26830 /* pauseCh2.png in Resources */,
 				AAC8A5271501732C00B26830 /* stopCh2.png in Resources */,
+				AA1214621526A83E00F6A693 /* mscp logo special edition.jpg in Resources */,
+				AA29D202152D546300AD4052 /* starbg.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,7 +562,6 @@
 				AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */,
 				AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */,
 				AAEFA263151F84BD0066AC86 /* playbackViewController.m in Sources */,
-				AAEFA266151F88740066AC86 /* effectViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

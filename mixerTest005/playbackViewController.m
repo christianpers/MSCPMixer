@@ -269,47 +269,49 @@
     }
 }
 
+- (void)callmainplaytrack:(SPTrack *)track{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  
+    [main playnewTrack:track];
+    
+}
+
+-(void)callfadeInMusicCh1{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  
+    [main.playbackManager fadeInMusicCh1];
+    
+}
+
 
 - (void)playnextTrack:(id)sender{
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    //  NSURL *currTrack = [[main.playbackManager currentTrack]spotifyURL];
-    //  int currTrackIndex = 0;
     int indexPlaying = [Shared sharedInstance].currTrackCueNum;
     int cueLength = [[Shared sharedInstance].masterCue count];
-    /*  for (NSURL *url in [Shared sharedInstance].masterCue){
-     if ([url isEqual:currTrack]){
-     indexPlaying = currTrackIndex;
-     }
-     currTrackIndex++;
-     }*/
+   
     if (indexPlaying+1 < cueLength){
         [Shared sharedInstance].currTrackCueNum++;
         NSURL *url = [[Shared sharedInstance].masterCue objectAtIndex:indexPlaying+1];
         SPTrack *track =[[SPSession sharedSession]trackForURL:url];
-        [main playnewTrack:track];
+        [main.playbackManager fadeOutMusicCh1];
+        [self performSelector:@selector(callmainplaytrack:) withObject:track afterDelay:.6];
+        [self performSelector:@selector(callfadeInMusicCh1) withObject:nil afterDelay:.8];
         
     }    
 }
 - (void)playprevTrack:(id)sender{
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    // NSURL *currTrack = [[main.playbackManager currentTrack]spotifyURL];
-    //  int currTrackIndex = [Shared sharedInstance].currTrackCueNum;
     int indexPlaying = [Shared sharedInstance].currTrackCueNum;
-    /* for (NSURL *url in [Shared sharedInstance].masterCue){
-     if ([url isEqual:currTrack]){
-     indexPlaying = currTrackIndex;
-     }
-     currTrackIndex++;
-     }*/
+ 
     if (indexPlaying-1 >= 0){
         [Shared sharedInstance].currTrackCueNum -= 1;
         NSURL *url = [[Shared sharedInstance].masterCue objectAtIndex:indexPlaying-1];
         SPTrack *track =[[SPSession sharedSession]trackForURL:url];
-        [main playnewTrack:track];
-        
-        
+        [main.playbackManager fadeOutMusicCh1];
+        [self performSelector:@selector(callmainplaytrack:) withObject:track afterDelay:.6];
+        [self performSelector:@selector(callfadeInMusicCh1) withObject:nil afterDelay:.8];
     }    
 }
 - (void)playTrack:(id)sender{

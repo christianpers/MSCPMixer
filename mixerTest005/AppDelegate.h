@@ -84,14 +84,16 @@
 - (void)playnewTrack:(SPTrack *)track;
 
 - (void)addSongFromSearch:(NSURL *)trackURL;
-- (void)addSongToPlaybackCue:(int)selRow :(int)selSection;
 - (void)removeSongFromPlaybackCue:(int)selRow;
 
 - (NSString *)getTrackStr:(SPPlaylistItem *)plItem;
 
 - (void)setTrackPosition:(double)newVal;
 - (void)newChannel:(UITapGestureRecognizer *)gesture;
+- (void)addSongToCueChannelOne:(NSURL *)trackURL;
 
+- (void)handlecuetrackSelect:(SPTrack *)track;
+- (void)callfadeInMusicCh1;
 
 @end
 

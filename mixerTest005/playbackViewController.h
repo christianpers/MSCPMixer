@@ -60,4 +60,7 @@
 - (void)updatePlayduration:(double)val;
 - (void)trackdurationSwipe:(UISwipeGestureRecognizer *)gesture;
 
+- (void)callmainplaytrack:(SPTrack *)track;
+-(void)callfadeInMusicCh1;
+
 @end

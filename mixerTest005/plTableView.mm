@@ -146,19 +146,40 @@
     
     if ([[dataArray objectAtIndex:section]isKindOfClass:[NSMutableArray class]]){
         NSArray *arr = [[NSArray alloc]initWithArray:[dataArray objectAtIndex:section]];
-       // cell.textLabel.text = [arr objectAtIndex:row];
-        lbl.text = [arr objectAtIndex:row];
+     
+        SPTrack *track = [[SPSession sharedSession]trackForURL:[arr objectAtIndex:indexPath.row]];
+        
+        NSString *artists = [[track.artists valueForKey:@"name"] componentsJoinedByString:@","];
+        NSString *title = track.name;
+        NSString *finalStr = [NSString stringWithFormat:@"%@ - %@",artists,title];
+        lbl.text = finalStr;
+        
+        if (track.availability != 1){
+            lbl.textColor = [UIColor grayColor];
+            lbl.font = [UIFont fontWithName:@"Arial-ItalicMT" size:14];
+            
+        }
+        
+        [arr release];
         
     }
     else{
-       // cell.textLabel.text = [dataArray objectAtIndex:indexPath.row];
-        lbl.text = [dataArray objectAtIndex:indexPath.row];
+        SPTrack *track = [[SPSession sharedSession]trackForURL:[dataArray objectAtIndex:indexPath.row]];
+    
+        NSString *artists = [[track.artists valueForKey:@"name"] componentsJoinedByString:@","];
+        NSString *title = track.name;
+        NSString *finalStr = [NSString stringWithFormat:@"%@ - %@",artists,title];
+        lbl.text = finalStr;
+        
+        if (track.availability != 1){
+            lbl.textColor = [UIColor grayColor];
+            lbl.font = [UIFont fontWithName:@"Arial-ItalicMT" size:14];
+            
+        }
+        
     }
     
-    
-    
     [lbl release];
-    
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     return cell;    
@@ -166,11 +187,33 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    NSURL *url;
+    
     NSLog(@"song selected: %d",indexPath.row);
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    [main addSongToPlaybackCue:indexPath.row :indexPath.section];
+    if ([[dataArray objectAtIndex:indexPath.section] isKindOfClass:[NSMutableArray class]]){
+        
+        NSMutableArray *plArray = [[NSMutableArray alloc]initWithArray:[dataArray objectAtIndex:indexPath.section]];
+        url = [plArray objectAtIndex:indexPath.row];
+        
+        [plArray release];
+    }else{
+        url = [dataArray objectAtIndex:indexPath.row];
+        
+    }
+    
+    SPTrack *track = [[SPSession sharedSession]trackForURL:url];
+    
+    if (track.availability == 1){
+        
+        [main addSongToCueChannelOne:url];
+        
+    }
+    
+    
+   // [main addSongToPlaybackCue:indexPath.row :indexPath.section];
    // [tableView setEditing:YES animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
@@ -178,12 +221,6 @@
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-   /* NSLog(@"song deselected: %d",indexPath.row);
-    
-    mixerTest003AppDelegate *main = (mixerTest003AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    [main removeSongFromPlaybackCue:indexPath.row];
-    */
     
 }
 

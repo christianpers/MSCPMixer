@@ -72,7 +72,7 @@
     self.secChLabel.textColor = [UIColor blackColor];
     self.secChLabel.textAlignment = UITextAlignmentCenter;
     self.secChLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
-    self.secChLabel.text = [NSString stringWithFormat:@"Channel 2"];
+    self.secChLabel.text = [NSString stringWithFormat:@"Channel 2 (iTunes)"];
     [self.secChLabel addGestureRecognizer:secChTouch];
     self.secChLabel.UserInteractionEnabled = YES;
     [self.secChLabel setTag:10];

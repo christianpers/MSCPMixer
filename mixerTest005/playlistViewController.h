@@ -20,6 +20,7 @@
     SPPlaylistItem *loadItem;
     sp_linktype itemCallback;
     NSMutableArray *missedPlArray;
+    NSMutableArray *starredTracksArray;
    
     UIScrollView *plMainView;
     
@@ -37,6 +38,7 @@
     int parentHeight;
     
     int tagAdd;
+    BOOL createStarredBox;
 }
 
 
@@ -64,7 +66,8 @@
 - (void)removeObservers;
 - (void)setMissedPlaylists;
 - (void)checkMissedPlaylists:(SPPlaylist *)pl;
-
+- (void)createStarredTracksPlaylist:(SPPlaylistContainer *)playlistContainer;
+- (void)starredClicked;
 
 
 @end
