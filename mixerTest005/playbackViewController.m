@@ -9,7 +9,7 @@
 #import "playbackViewController.h"
 #import "Shared.h"
 #import "AppDelegate.h"
-#import <QuartzCore/QuartzCore.h>
+
 
 @implementation playbackViewController
 
@@ -46,10 +46,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     CGSize parentSize = self.view.frame.size;
-    int yPos = parentSize.height-170;
-    int cntrlHeight = 100;
-    int mastervolHeight = 200;
-    
+ 
     //fft shieed
     self.fftView = [[fftAnalyzerView alloc]initWithFrame:CGRectMake(100, 100, 200, 100)];
     //    self.fftView.backgroundColor = [UIColor whiteColor];
@@ -94,6 +91,7 @@
     NSString* imagePathStop = [[NSBundle mainBundle] pathForResource:@"stopbtn" ofType:@"png"];
     NSString* imagePathPause = [[NSBundle mainBundle] pathForResource:@"pause" ofType:@"png"];
     NSString* imagePathPlay = [[NSBundle mainBundle] pathForResource:@"playNew" ofType:@"png"];
+    
     
     UIImage *nextImg = [UIImage imageWithContentsOfFile:imagePathNext];
     UIImage *prevImg = [UIImage imageWithContentsOfFile:imagePathPrev];
@@ -285,7 +283,19 @@
 
 
 - (void)playnextTrack:(id)sender{
+    UIButton *next = (UIButton *)sender;
+    
+    CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
+    fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
+    fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
+    fadeAnimation.duration=.1;
+    fadeAnimation.repeatCount=0;
+    // fadeAnimation.autoreverses=YES;
+    [next.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
+    
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    
     
     int indexPlaying = [Shared sharedInstance].currTrackCueNum;
     int cueLength = [[Shared sharedInstance].masterCue count];
@@ -301,6 +311,16 @@
     }    
 }
 - (void)playprevTrack:(id)sender{
+    UIButton *prev = (UIButton *)sender;
+    
+    CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
+    fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
+    fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
+    fadeAnimation.duration=.1;
+    fadeAnimation.repeatCount=0;
+    // fadeAnimation.autoreverses=YES;
+    [prev.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
+    
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     int indexPlaying = [Shared sharedInstance].currTrackCueNum;
@@ -315,7 +335,16 @@
     }    
 }
 - (void)playTrack:(id)sender{
+    UIButton *play = (UIButton *)sender;
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
+    fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
+    fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
+    fadeAnimation.duration=.1;
+    fadeAnimation.repeatCount=0;
+    // fadeAnimation.autoreverses=YES;
+    [play.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
     
     if (!main.playbackManager.isPlaying){
         if ([[Shared sharedInstance].masterCue count] > 0){
@@ -333,16 +362,27 @@
 }
 
 - (void)stopTrack:(id)sender{
+    UIButton *stop = (UIButton *)sender;
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
+    fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
+    fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
+    fadeAnimation.duration=.1;
+    fadeAnimation.repeatCount=0;
+    // fadeAnimation.autoreverses=YES;
+    [stop.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
     
     if (main.playbackManager.isPlaying){
         // [main.playbackManager stopAUGraph];
         [main.playbackManager setIsPlaying:NO];
+        [self resetTrackTitleAndArtist];
     }
     
 }
 
 - (void)pauseTrack:(id)sender{
+    UIButton *pause = (UIButton *)sender;
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (!main.playbackManager.playbackIsPaused){
@@ -350,6 +390,15 @@
         if (main.playbackManager.isPlaying){
             main.playbackManager.playbackIsPaused = YES;
             [[SPSession sharedSession]setPlaying:NO];
+            
+            CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
+            fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
+            fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
+            fadeAnimation.duration=.7;
+            fadeAnimation.repeatCount=INFINITY;
+            fadeAnimation.autoreverses=YES;
+            
+            [pause.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
         }
     }
     else{
@@ -357,10 +406,19 @@
         main.playbackManager.playbackIsPaused = NO;
         [main.cueController.tableView reloadData];
         
+        [pause.layer removeAllAnimations];
+        
+        
     }
     
     
     
+}
+
+- (void)resetTrackTitleAndArtist{
+    
+    self.artistLbl.text = @"Artist";
+    self.titleLbl.text = @"Title";
 }
 
 - (void)setTrackTitleAndArtist:(SPTrack *)track{

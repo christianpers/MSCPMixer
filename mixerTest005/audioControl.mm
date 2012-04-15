@@ -75,17 +75,6 @@ static OSStatus outputCallback(void *inRefCon,
     audioControl *control = (audioControl *)inRefCon;
     OSStatus err = 0;
     
-    AudioUnitSampleType *inSamplesLeft;         // convenience pointers to sample data
-    AudioUnitSampleType *inSamplesRight;
-    
-    // Sint16 buffers to hold sample data after conversion 
-    
-    SInt16 *sampleBufferLeft = control->conversionBufferLeft;
-    SInt16 *sampleBufferRight = control->conversionBufferRight;
-    SInt16 *sampleBuffer;
-    
-    int i = 0;
-    
     
     int isStereo;               // c boolean - for deciding how many channels to process.
     int numberOfChannels;       // 1 = mono, 2= stereo

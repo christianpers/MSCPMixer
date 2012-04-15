@@ -12,6 +12,7 @@
 #import <Foundation/Foundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "effectController.h"
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface secondChannelUIViewController : UIViewController <MPMediaPickerControllerDelegate> {

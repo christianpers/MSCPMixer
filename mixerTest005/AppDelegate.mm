@@ -234,7 +234,8 @@ int labelWidth = 300;
     [self.playlistLabel removeFromSuperview];
     [self.chTwoViewController.view removeFromSuperview];
     [self.airplayIcon removeFromSuperview];
-    
+    [[Shared sharedInstance].masterCue removeAllObjects];
+    [self.userTxtBtn removeFromSuperview];
 }
 
 - (void)initLoadGUI{
@@ -331,9 +332,6 @@ NSUInteger loadTrack;
 
 -(void)sessionDidLoginSuccessfully:(SPSession *)aSession; {
     
-    
-    CGSize winSize = self.window.frame.size;
-    
     if (![Shared sharedInstance].hasLoggedin){
         
         [self createLoadingPlView];
@@ -362,9 +360,6 @@ NSUInteger loadTrack;
             self.playbackLabel.hidden = NO;
             
             [self.loadingView removeFromSuperview];
-           // [self.loadingView release];
-            
-            
         }
     }
     else{
@@ -386,7 +381,7 @@ NSUInteger loadTrack;
         NSString *userName = user.displayName;
         
         self.userTxtBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.userTxtBtn.center = CGPointMake(10, 30);
+        self.userTxtBtn.center = CGPointMake(25, 30);
         self.userTxtBtn.backgroundColor = [UIColor clearColor];
         [self.userTxtBtn setTitle:[NSString stringWithFormat:@"Logged in as: %@",userName] forState:UIControlStateNormal];
         self.userTxtBtn.titleLabel.textAlignment = UITextAlignmentLeft;
@@ -565,7 +560,20 @@ NSUInteger loadTrack;
     [self.logoutViewController dismissModalViewControllerAnimated:YES];
 }
 
+-(void)setNotPlaying{
+    
+    [self.playbackManager setIsPlaying:NO];
+}
+
 -(void)userLogout{
+    
+    if ([SPSession sharedSession].isPlaying){
+        
+        [self.playbackManager fadeOutMusicCh1];
+        // [self.playbackManager setIsPlaying:NO];
+        [self performSelector:@selector(setNotPlaying) withObject:nil afterDelay:.6];
+        
+    }
     
     [[SPSession sharedSession] logout];
     [self removeLogoutView];
@@ -582,25 +590,21 @@ NSUInteger loadTrack;
 		[self.mainViewController.modalViewController performSelector:_cmd withObject:aSession withObject:error];
 }
 
-
-
 -(void)sessionDidLogOut:(SPSession *)aSession {
     NSLog(@"session logged out");
+    
     [self removeGUI];
-    
     [self.playbackManager stopAUGraph];
-    
     for (UIView *view in [self.plViewController.view subviews]){
         
         [view removeFromSuperview];
     }
     [self.plViewController.plMainView removeFromSuperview];
-   
     [Shared sharedInstance].relogin = true;
-    
     [self.mainViewController presentModalViewController:[[[LoginViewController alloc] init] autorelease]
 											   animated:YES];
 }
+
 -(void)session:(SPSession *)aSession didEncounterNetworkError:(NSError *)error; {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network error"
 													message:nil

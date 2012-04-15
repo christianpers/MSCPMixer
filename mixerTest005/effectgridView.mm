@@ -26,8 +26,8 @@
         //     headerLabel.opaque = NO;
         self.param1Lbl.textColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
        // param1.highlightedTextColor = [UIColor whiteColor];
-        self.param1Lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(17.0)];
-        self.param1Lbl.frame = CGRectMake(size.width-200, 340, 200, 30.0);
+        self.param1Lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+        self.param1Lbl.frame = CGRectMake(size.width-260, 240, 200, 30.0);
         [self addSubview:self.param1Lbl];
         
         self.param2Lbl = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -35,8 +35,8 @@
         //     headerLabel.opaque = NO;
         self.param2Lbl.textColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
         // param1.highlightedTextColor = [UIColor whiteColor];
-        self.param2Lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(17.0)];
-        self.param2Lbl.frame = CGRectMake(size.width-200, 380, 200, 30.0);
+        self.param2Lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+        self.param2Lbl.frame = CGRectMake(size.width-260, 280, 200, 30.0);
         [self addSubview:self.param2Lbl];
         
     }
@@ -49,24 +49,23 @@
         if ([Shared sharedInstance].curVariSpeedEffect == 0){
             self.param1Lbl.text = [NSString stringWithFormat:@"Playback rate: %.1lf",self.param1];
         }else{
-            self.param1Lbl.text = [NSString stringWithFormat:@"Playback cents: %.1lf",self.param1];
+            self.param1Lbl.text = [NSString stringWithFormat:@"Rate: %.1lf",self.param1];
         }
-      //  self.param2Lbl.text = [NSString stringWithFormat:@"Resonance: %.1lf",self.param2];
     }
     else if ([self.effectType isEqualToString:@"Lopass"]){
-        self.param1Lbl.text = [NSString stringWithFormat:@"Cutoff freq: %.1lf",self.param1];
-        self.param2Lbl.text = [NSString stringWithFormat:@"Resonance: %.1lf",self.param2];
+        self.param1Lbl.text = [NSString stringWithFormat:@"Freq: %.1lf",self.param1];
+        self.param2Lbl.text = [NSString stringWithFormat:@"Res: %.1lf",self.param2];
     }
     else if ([self.effectType isEqualToString:@"Hipass"]){
-        self.param1Lbl.text = [NSString stringWithFormat:@"Cutoff freq: %.1lf",self.param1];
-        self.param2Lbl.text = [NSString stringWithFormat:@"Resonance: %.1lf",self.param2];
+        self.param1Lbl.text = [NSString stringWithFormat:@"Freq: %.1lf",self.param1];
+        self.param2Lbl.text = [NSString stringWithFormat:@"Res: %.1lf",self.param2];
     }
     else if ([self.effectType isEqualToString:@"Reverb"]){
         self.param1Lbl.text = [NSString stringWithFormat:@"Dry/Wet: %.1lf",self.param2];
         self.param2Lbl.text = [NSString stringWithFormat:@"Gain: %.1lf",self.param1];
     }
     else if ([self.effectType isEqualToString:@"Volume"]){
-        self.param1Lbl.text = [NSString stringWithFormat:@"Volume: %.1lf",self.param1];
+        self.param1Lbl.text = [NSString stringWithFormat:@"Vol: %.1lf",self.param1];
     //    self.param2Lbl.text = [NSString stringWithFormat:@"Gain: %.1lf",self.param2];
     }
        
@@ -84,15 +83,10 @@
     int y = [Shared sharedInstance].effectgridY;
     
     CGContextRef context = UIGraphicsGetCurrentContext();
-    
     CGContextSetLineWidth(context, 4.0);
-    
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    
     CGFloat components[] = {1, 1, 1, 1};
-    
     CGColorRef color = CGColorCreate(colorspace, components);
-    
     CGContextSetStrokeColorWithColor(context, color);
     
     float dashPhase = 0.0;
@@ -100,8 +94,7 @@
     CGContextSetLineDash( context,
                          dashPhase, dashLengths,
                          sizeof( dashLengths ) / sizeof( float ) );
-
-    
+ 
     if (x > 0){
         CGContextMoveToPoint(context, x, 0);
         CGContextAddLineToPoint(context, x,self.frame.size.height);
@@ -125,6 +118,7 @@
     [param1Lbl release];
     [param2Lbl release];
     
+    [super dealloc];
 }
 
 

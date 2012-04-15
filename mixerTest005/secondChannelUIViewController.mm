@@ -126,7 +126,7 @@
             main.plbackViewController.artistLbl.hidden = YES;
             main.plbackViewController.titleLbl.hidden = YES;
             
-            main.plbackViewController.controlView.frame = CGRectMake(controlpos.x, 270, controlsize.width, controlsize.height);
+            main.plbackViewController.controlView.frame = CGRectMake(controlpos.x, 370, controlsize.width, controlsize.height);
             
             
             [UIView commitAnimations];
@@ -213,6 +213,8 @@
                              main.playbackLabel.hidden = NO;
                              main.searchLabel.hidden = NO;
                              main.cueController.view.hidden = NO;
+                             main.airplayIcon.hidden = NO;
+                             main.userTxtBtn.hidden = NO;
                          }];
         
         [UIView beginAnimations : @"Display notif" context:nil];
@@ -267,16 +269,11 @@
     main.playbackLabel.hidden = YES;
     main.searchLabel.hidden = YES;
     main.cueController.view.hidden = YES;
+    main.airplayIcon.hidden = YES;
+    main.userTxtBtn.hidden = YES;
     
     MPMediaQuery *everything = [[MPMediaQuery alloc] init];
     [everything setGroupingType: MPMediaGroupingAlbum];
-    NSArray *collections = [everything collections];
-    NSLog(@"ts");
-    
-    
-    NSMutableArray *mArray = [[NSMutableArray alloc] init];
-    int i = 0;
-    int j=0;
     
     
     MPMediaQuery *allMedia = [MPMediaQuery songsQuery];
@@ -745,23 +742,43 @@ audiofileProblem:
 
 
 - (void)pauseTrack:(id)sender{
+    UIButton *pause = (UIButton *)sender;
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (isPaused){
         isPaused = NO;
         [main.playbackManager canRead];
+        
+        [pause.layer removeAllAnimations];
     }else{
         isPaused = YES;
         [main.playbackManager cantRead];
+        
+        CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
+        fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
+        fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
+        fadeAnimation.duration=.7;
+        fadeAnimation.repeatCount=INFINITY;
+        fadeAnimation.autoreverses=YES;
+        
+        [pause.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
     }
     
 }
 
 -(void)stopTrack:(id)sender{
+    UIButton *stop = (UIButton *)sender;
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    [main.playbackManager cantRead];
+    CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
+    fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
+    fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
+    fadeAnimation.duration=.1;
+    fadeAnimation.repeatCount=0;
+   // fadeAnimation.autoreverses=YES;
+    [stop.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
     
+    [main.playbackManager cantRead];
     
     [self freeAudio];
     
@@ -812,8 +829,6 @@ audiofileProblem:
 	{
 		usleep(5000); //wait for file thread to finish
 	}
-	
-	
 	
 	
 }

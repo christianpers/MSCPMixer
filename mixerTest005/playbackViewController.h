@@ -11,6 +11,7 @@
 #import "effectController.h"
 #import "CocoaLibSpotify.h"
 #import "fftAnalyzerView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface playbackViewController : UIViewController{
     
@@ -27,7 +28,6 @@
     effectController *hipassController;
     effectController *channelOneVolController;
     UIView *effectContainerView;
-    
     //fft analyzing
     fftAnalyzerView *fftView;
 }
@@ -47,6 +47,7 @@
 @property(nonatomic, retain) fftAnalyzerView *fftView;
 
 
+
 - (void)playnextTrack:(id)sender;
 - (void)playprevTrack:(id)sender;
 - (void)setTrackTitleAndArtist:(SPTrack *)track;
@@ -61,6 +62,7 @@
 - (void)trackdurationSwipe:(UISwipeGestureRecognizer *)gesture;
 
 - (void)callmainplaytrack:(SPTrack *)track;
--(void)callfadeInMusicCh1;
+- (void)callfadeInMusicCh1;
+- (void)resetTrackTitleAndArtist;
 
 @end

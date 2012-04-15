@@ -30,10 +30,10 @@
     CGFloat y;
     CGFloat height;
     CGFloat width;
-    int nrOfPl;
-    int rows;
+    double nrOfPl;
+    double rows;
     int rowCount;
-    int columns;
+    double columns;
     int parentWidth;
     int parentHeight;
     

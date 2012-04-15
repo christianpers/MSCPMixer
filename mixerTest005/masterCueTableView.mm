@@ -90,7 +90,7 @@ numberOfSectionsInTableView:(UITableView *)tableView {
         [cell.contentView addSubview:playView];
         [playView release];
         
-        UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.frame.size.width-10, 30)];
+        UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.frame.size.width-100, 30)];
         lbl.text = finalStr;
         lbl.textColor = [UIColor whiteColor];
         
@@ -100,7 +100,7 @@ numberOfSectionsInTableView:(UITableView *)tableView {
         
     }else{
         
-        UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, self.frame.size.width-10, 30)];
+        UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, self.frame.size.width-100, 30)];
         lbl.text = finalStr;
         lbl.textColor = [UIColor whiteColor];
         
@@ -109,6 +109,21 @@ numberOfSectionsInTableView:(UITableView *)tableView {
         [lbl release];
         
     }
+    
+    
+    NSTimeInterval interval = track.duration;
+    long min = (long)interval / 60;    // divide two longs, truncates
+    long sec = (long)interval % 60;    // remainder of long divide
+    NSString* str = [[NSString alloc] initWithFormat:@"%02d:%02d", min, sec];
+    
+    UILabel *trackDuration = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width-50, 5, 50, 30)];
+    trackDuration.text = str;
+    trackDuration.textColor = [UIColor whiteColor];
+    trackDuration.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:trackDuration];
+    
+    [trackDuration release];
+    
         //cell.imageView.image = NULL;
     
     

@@ -138,11 +138,11 @@ CGSize parentSize;
         
         if (piece.tag <= 5){
             if(main.chTwoActive){
-                if (((pos.x >= 100)&&(pos.x<=500))&&((pos.y>=195)&&(pos.y<=260))){
+                if (((pos.x >= 100)&&(pos.x<=500))&&((pos.y>=295)&&(pos.y<=360))){
                     if (piece.tag == 5)
-                        piece.frame = CGRectMake(pos.x, 180, 60, 60);
+                        piece.frame = CGRectMake(pos.x, 280, 60, 60);
                     else 
-                        piece.frame = CGRectMake(pos.x, 180, 40, 40);
+                        piece.frame = CGRectMake(pos.x, 280, 40, 40);
                 } 
                 
             }else {

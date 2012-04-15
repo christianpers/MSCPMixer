@@ -94,6 +94,7 @@
 
 - (void)handlecuetrackSelect:(SPTrack *)track;
 - (void)callfadeInMusicCh1;
+- (void)setNotPlaying;
 
 @end
 

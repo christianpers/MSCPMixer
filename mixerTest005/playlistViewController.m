@@ -9,6 +9,7 @@
 #import "playlistViewController.h"
 #import "Shared.h"
 #import "plTableView.h"
+#import "AppDelegate.h"
 
 @implementation playlistViewController
 
@@ -57,6 +58,7 @@
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     CGSize winSize = window.frame.size;
     self.plMainView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, winSize.width,winSize.height)];
+    self.plMainView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
     self.view = self.plMainView;
     
   
@@ -71,7 +73,6 @@
     
     [self initGridParams];
     if (createStarredBox){
-        
         [self createStarredTracksPlaylist:[[SPSession sharedSession] userPlaylists]];
         
     }
@@ -152,26 +153,31 @@
     plContainer = [[SPSession sharedSession] userPlaylists];
     
     nrOfPl = [[plContainer playlists] count];
-    NSLog(@"nrofPl:%d",nrOfPl);
+    NSLog(@"nrofPl:%f",nrOfPl);
     
-    rows = floor(sqrt(nrOfPl));
+    //adding the starred tracks to get correct numbahs
+    rows = ceil(sqrt(nrOfPl+1));
     rowCount = 0;
-    columns = nrOfPl/rows;
-    NSLog(@"rows:%d",rows);
-    NSLog(@"columns:%d",columns);
+    columns = ceil((nrOfPl+1)/rows);
+    NSLog(@"rows:%f",rows);
+    NSLog(@"columns:%f",columns);
     
-    parentHeight = 3200;
-    parentWidth = 3200;
+    height = 180;
+    width = 180;
     
-    height = parentHeight/rows;
-    width = parentWidth/columns;
+  //  rows++;
+    NSLog(@"rows:%f",rows);
+    
+    
+    parentWidth = columns*width+(margin*columns)+margin;
+    parentHeight = rows*height+(margin*rows)+margin;
     
     y = 0;
     if (createStarredBox){
-        x = width + 11;
+        x = width + (margin*2);
         
     }else{
-        x = 5;
+        x = margin;
         
     }
     
@@ -179,7 +185,8 @@
     
     //  parentWidth = (width * columns)+(margin * columns);
     //  parentHeight = (height * (rows+1))+(margin * rows);
-    self.plMainView.contentSize = CGSizeMake(parentWidth+(margin*columns), parentHeight+(rows*margin)+height);
+    self.plMainView.contentSize = CGSizeMake(parentWidth, parentHeight);
+   // self.plMainView.contentSize = CGSizeMake((columns*width)+(margin*columns), (rows*height)+(rows*margin)+height);
     self.plMainView.scrollEnabled = YES;
     
     // self.loadPlaylist = nil;
@@ -219,13 +226,9 @@
 
 -(void)setMissedPlaylists{
     
-    SPPlaylistItem *item;
     SPTrack *track;
     UIImage *img;
-    int availtrackIndex = 0;
     
-    //   int plNum = [[missedPlArray objectAtIndex:0] intValue];
-    int num = [missedPlArray count];
     
     NSEnumerator * enumerator = [missedPlArray objectEnumerator];
     id element;
@@ -240,7 +243,6 @@
             if (itemloop.itemURLType == SP_LINKTYPE_TRACK){
                 
                 track = [SPTrack trackForTrackURL:itemloop.itemURL inSession:[SPSession sharedSession]];
-                int av = track.availability;
                 
                 if (track.availability == 1){
                     img = track.album.cover.image;
@@ -257,7 +259,6 @@
                     //[btn setTitle:[NSString stringWithFormat:@"%@",playlist.name] forState:UIControlStateNormal];
                     //[btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                     
-                    CGPoint pos = btn.frame.origin;
                     CGSize size = btn.frame.size;
                     
                     //create the label for the playlist
@@ -290,7 +291,7 @@
     }
     
     UIButton *starredButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    starredButton.frame = CGRectMake(5, 0, width, height);// position in the parent view and set the size of the
+    starredButton.frame = CGRectMake(margin, 0, width, height);// position in the parent view and set the size of the
     // myButton.layer.borderWidth = 2;
     starredButton.backgroundColor = [UIColor grayColor];
     
@@ -320,10 +321,20 @@
 }
 -(void)starredClicked{
     
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    main.playbackLabel.hidden = YES;
+    main.playlistLabel.hidden = YES;
+    main.searchLabel.hidden = YES;
+    main.cueController.view.hidden = YES;
+    main.airplayIcon.hidden = YES;
+    main.userTxtBtn.hidden = YES;
+    
+    
     CGSize rect = self.plMainView.window.frame.size;
     CGPoint offsetPnt = self.plMainView.contentOffset;
-    int boxHeight = 600;
-    int boxWidth = 400;
+    int boxHeight = 750;
+    int boxWidth = 500;
     
     UITapGestureRecognizer *bgTouch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeplBg:)];
     bgTouch.numberOfTapsRequired = 1;
@@ -345,18 +356,18 @@
     [self.view addSubview:plbgView];    
     [self.view addSubview:self.plViewController.view];
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, boxWidth, 40) ];
-    headerLabel.textAlignment =  UITextAlignmentCenter;
-    headerLabel.textColor = [UIColor whiteColor];
-    headerLabel.backgroundColor = [UIColor clearColor];
-    headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
-    [self.plViewController.view addSubview:headerLabel];
-    
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 60, rect.width-80, 50) ];
+    headerLabel.backgroundColor = [UIColor whiteColor];
+    headerLabel.textColor = [UIColor blackColor];
+    headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(36.0)];
+    [headerLabel setAdjustsFontSizeToFitWidth:YES];
+    [plbgView addSubview:headerLabel];
+   
     headerLabel.text = @"Starred tracks";
 
     
     
-    plTableView *plSongTable = [[plTableView alloc]initWithFrame:CGRectMake(0, 80, 400, 400) andDataArray:starredTracksArray];
+    plTableView *plSongTable = [[plTableView alloc]initWithFrame:CGRectMake(0, 10, boxWidth, boxHeight) andDataArray:starredTracksArray];
     plSongTable.backgroundColor = [UIColor clearColor];
     [self.plViewController.view addSubview:plSongTable];
     [self.plMainView setScrollEnabled:NO];
@@ -373,9 +384,9 @@
     
     for (int i=0;i<nrOfPl;i++){
         if (x >= parentWidth){
-            x=5;
+            x=margin;
             rowCount++;
-            y=(height*rowCount)+(rowCount*5);
+            y=(height*rowCount)+(rowCount*margin);
         }
         UIButton *myButton = [UIButton buttonWithType:UIButtonTypeCustom];
         myButton.frame = CGRectMake(x, y, width, height);// position in the parent view and set the size of the
@@ -571,7 +582,6 @@
     NSLog(@"subviews: %d",[[btn subviews] count]);
     for (UIView *view in [btn subviews]){
         [view removeFromSuperview];
-        
     }
     
     btn.enabled = YES;
@@ -581,7 +591,6 @@
     //[btn setTitle:[NSString stringWithFormat:@"%@",playlist.name] forState:UIControlStateNormal];
     //[btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     
-    CGPoint pos = btn.frame.origin;
     CGSize size = btn.frame.size;
     
     //create the label for the playlist
@@ -597,7 +606,7 @@
     
     NSLog(@"plCounter: %d",plCounter);
     
-    NSLog(@"nrofpl: %d", nrOfPl);
+    NSLog(@"nrofpl: %f", nrOfPl);
     if (plCounter == nrOfPl){
         
         [self setMissedPlaylists];
@@ -609,12 +618,21 @@
 
 -(void)plClicked:(id)sender{
     
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    main.playbackLabel.hidden = YES;
+    main.playlistLabel.hidden = YES;
+    main.searchLabel.hidden = YES;
+    main.cueController.view.hidden = YES;
+    main.airplayIcon.hidden = YES;
+    main.userTxtBtn.hidden = YES;
+    
     UIButton *btn = (UIButton*)sender;
     NSLog(@"btn tag: %d",btn.tag);
     CGSize rect = self.plMainView.window.frame.size;
     CGPoint offsetPnt = self.plMainView.contentOffset;
-    int boxHeight = 600;
-    int boxWidth = 400;
+    int boxHeight = 750;
+    int boxWidth = 500;
     
     UITapGestureRecognizer *bgTouch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeplBg:)];
     bgTouch.numberOfTapsRequired = 1;
@@ -638,12 +656,12 @@
     
     [Shared sharedInstance].curClickedPl = btn.tag-tagAdd;
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, boxWidth, 40) ];
-    headerLabel.textAlignment =  UITextAlignmentCenter;
-    headerLabel.textColor = [UIColor whiteColor];
-    headerLabel.backgroundColor = [UIColor clearColor];
-    headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
-    [self.plViewController.view addSubview:headerLabel];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 60, rect.width-80, 50) ];
+    headerLabel.backgroundColor = [UIColor whiteColor];
+    headerLabel.textColor = [UIColor blackColor];
+    headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(36.0)];
+    [headerLabel setAdjustsFontSizeToFitWidth:YES];
+    [plbgView addSubview:headerLabel];
     
     SPPlaylist *plToShow = [plContainer.playlists objectAtIndex:btn.tag-tagAdd];
     
@@ -682,7 +700,7 @@
         }
     }
     
-    plTableView *plSongTable = [[plTableView alloc]initWithFrame:CGRectMake(0, 80, 400, 400) andDataArray:plContainerArray];
+    plTableView *plSongTable = [[plTableView alloc]initWithFrame:CGRectMake(0, 10, boxWidth, boxHeight) andDataArray:plContainerArray];
     plSongTable.backgroundColor = [UIColor clearColor];
     
     [self.plViewController.view addSubview:plSongTable];
@@ -709,6 +727,9 @@
 }
 
 -(void)removeplBg:(UITapGestureRecognizer *)tap{
+    
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     UIView *view = [tap view];
     
     for (UIView *subview in [self.plViewController.view subviews]) 
@@ -721,6 +742,12 @@
     
     [self.plMainView setScrollEnabled:YES];
     
+    main.playbackLabel.hidden = NO;
+    main.playlistLabel.hidden = NO;
+    main.searchLabel.hidden = NO;
+    main.cueController.view.hidden = NO;
+    main.airplayIcon.hidden = NO;
+    main.userTxtBtn.hidden = NO;
     
 }
 

@@ -23,8 +23,6 @@
 
 -(void)updateFFT:(float **)buffer :(int)frequencyBin{
     
-    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
     num_bars = 30;
     
     bin_size = floor(frequencyBin/num_bars);

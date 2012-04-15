@@ -17,7 +17,7 @@
 @implementation cueViewController
 @synthesize tableView;
 @synthesize masterCuePan;
-@synthesize editbtn;
+@synthesize editbtn, clearbtn;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -43,12 +43,6 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor=[[UIColor blackColor] colorWithAlphaComponent:.8];
-    
-    UITapGestureRecognizer *doubleTap = 
-    [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deactiveMasterCueEdit)];
-    [doubleTap setNumberOfTapsRequired:2];
-    [self.view addGestureRecognizer:doubleTap];
-    [doubleTap release];
     
     masterCuePan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panPiece:)];
     [masterCuePan setMaximumNumberOfTouches:2];
@@ -92,18 +86,28 @@
     
     UIButton *edit = [[UIButton alloc]initWithFrame:CGRectMake(320, 20, 60, 30)];
     edit.backgroundColor = [UIColor whiteColor];
-    [edit setTitle:[NSString stringWithFormat:@"edit"] forState:UIControlStateNormal];
+    [edit setTitle:[NSString stringWithFormat:@"Edit"] forState:UIControlStateNormal];
     [edit setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [edit addTarget:self 
              action:@selector(editMasterCueList:)
    forControlEvents:UIControlEventTouchDown];
-    
+    edit.layer.cornerRadius = 5;
     self.editbtn = edit;
     [self.view addSubview:self.editbtn];
     self.editbtn.hidden = YES;
     [edit release];
     
+    UIButton *removeBtn = [[UIButton alloc]initWithFrame:CGRectMake(20, 20, 60, 30)];
+    removeBtn.backgroundColor = [UIColor whiteColor];
+    [removeBtn setTitle:[NSString stringWithFormat:@"Clear"] forState:UIControlStateNormal];
+    [removeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [removeBtn addTarget:self action:@selector(removeCueChOne:) forControlEvents:UIControlEventTouchDown];
+    removeBtn.layer.cornerRadius = 5;
+    self.clearbtn = removeBtn;
+    [self.view addSubview:self.clearbtn];
+    self.clearbtn.hidden = YES;
     
+    [removeBtn release];
     
     [songCue release];
     [masterCueLabel release];
@@ -114,8 +118,10 @@
 {
     [super viewDidUnload];
     [masterCuePan release];
+    self.tableView = nil;
     [tableView release];
     [editbtn release];
+    [clearbtn release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -142,6 +148,7 @@
         self.view.bounds = viewbounds;
         
         self.editbtn.hidden = YES;
+        self.clearbtn.hidden = YES;
         
         [UIView commitAnimations];
         
@@ -158,6 +165,7 @@
         self.view.bounds = viewbounds;
         
         self.editbtn.hidden = NO;
+        self.clearbtn.hidden = NO;
         
         [UIView commitAnimations];
         
@@ -190,6 +198,16 @@
 
 - (void)editMasterCueList:(id)sender
 {
+    UIButton *edit = (UIButton *)sender;
+    
+    CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
+    fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
+    fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
+    fadeAnimation.duration=.1;
+    fadeAnimation.repeatCount=0;
+    // fadeAnimation.autoreverses=YES;
+    [edit.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
+    
     if (!self.tableView.isEditing){
         [self.tableView setEditing: YES animated: YES];
         [self.view removeGestureRecognizer:masterCuePan];
@@ -199,6 +217,37 @@
         [self.tableView setEditing: NO animated: YES];
         [self.view addGestureRecognizer:masterCuePan];
     }
+}
+
+- (void)removeCueChOne:(id)sender{
+    UIButton *clear = (UIButton *)sender;
+    
+    CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
+    fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
+    fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
+    fadeAnimation.duration=.1;
+    fadeAnimation.repeatCount=0;
+    // fadeAnimation.autoreverses=YES;
+    [clear.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
+    
+    if ([SPSession sharedSession].isPlaying){
+        NSURL *trackurl = [[Shared sharedInstance].masterCue objectAtIndex:[Shared sharedInstance].currTrackCueNum];
+        
+        [[Shared sharedInstance].masterCue removeAllObjects];
+        
+        [[Shared sharedInstance].masterCue addObject:trackurl];
+        
+        [self.tableView reloadData];
+        
+        [Shared sharedInstance].currTrackCueNum = 0;
+        
+    }else{
+        
+        [[Shared sharedInstance].masterCue removeAllObjects];
+        [self.tableView reloadData];
+        
+    }
+   
 }
 
 

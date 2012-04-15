@@ -208,11 +208,11 @@
     }
     else if([[sectionArr objectAtIndex:0] isKindOfClass:[SPTrack class]]){
         
-        SPTrack *track = [sectionArr objectAtIndex:row];
+        SPTrack *track = [sectionArr objectAtIndex:indexPath.row];
         NSString *artists = [[track.artists valueForKey:@"name"] componentsJoinedByString:@","];
         lbl = [NSString stringWithFormat:@"%@ - %@",artists,track.name];
         
-        UILabel *cue = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-130, 10, 100, 20)];
+        UILabel *cue = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-110, 10, 100, 20)];
         cue.text = @"Cue Song";
         cue.textAlignment = UITextAlignmentCenter;
         cue.textColor = [UIColor blackColor];
@@ -220,6 +220,19 @@
         cue.backgroundColor = [UIColor whiteColor];
         [cell.contentView addSubview:cue];
         [cue release];
+        
+        NSTimeInterval interval = track.duration;
+        long min = (long)interval / 60;    // divide two longs, truncates
+        long sec = (long)interval % 60;    // remainder of long divide
+        NSString* str = [[NSString alloc] initWithFormat:@"%02d:%02d", min, sec];
+        
+        UILabel *trackDuration = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-170, 5, 50, 30)];
+        trackDuration.text = str;
+        trackDuration.textColor = [UIColor whiteColor];
+        trackDuration.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:trackDuration];
+        
+        [trackDuration release];
 
             
     }
@@ -306,7 +319,7 @@
     UITableViewCell* theCell = [tableView cellForRowAtIndexPath:indexPath];
     
     //Then you change the properties (label, text, color etc..) in your case, the background color
-    theCell.contentView.backgroundColor = [UIColor orangeColor];
+    theCell.contentView.backgroundColor = [UIColor whiteColor];
   
     
     //Deselect the cell so you can see the color change

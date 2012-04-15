@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA07588215313BFE005711B1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA07588115313BFE005711B1 /* QuartzCore.framework */; };
 		AA1214621526A83E00F6A693 /* mscp logo special edition.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AA1214611526A83E00F6A693 /* mscp logo special edition.jpg */; };
 		AA29D202152D546300AD4052 /* starbg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AA29D201152D546300AD4052 /* starbg.jpg */; };
 		AA58C0ED14FC839C0074837F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EC14FC839C0074837F /* CoreMedia.framework */; };
@@ -71,6 +72,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA07588115313BFE005711B1 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		AA1214611526A83E00F6A693 /* mscp logo special edition.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "mscp logo special edition.jpg"; sourceTree = "<group>"; };
 		AA29D201152D546300AD4052 /* starbg.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = starbg.jpg; sourceTree = "<group>"; };
 		AA2CEBCE150F032C00EBA96C /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = ../../../../../../Developer/Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA07588215313BFE005711B1 /* QuartzCore.framework in Frameworks */,
 				AA97EEE914F0B06400A2B892 /* UIKit.framework in Frameworks */,
 				AA97EEEB14F0B06400A2B892 /* Foundation.framework in Frameworks */,
 				AA97EEED14F0B06400A2B892 /* CoreGraphics.framework in Frameworks */,
@@ -233,6 +236,7 @@
 		AA97EED914F0B06400A2B892 = {
 			isa = PBXGroup;
 			children = (
+				AA07588115313BFE005711B1 /* QuartzCore.framework */,
 				AA97EF0314F0B0DF00A2B892 /* SystemConfiguration.framework */,
 				AA97EF0914F0B1B400A2B892 /* libspotify.framework */,
 				AA97EEEE14F0B06400A2B892 /* mixerTest005 */,
@@ -584,7 +588,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Christian Persson";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -599,6 +604,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PROVISIONING_PROFILE = "A71C0E1E-9C3E-4523-B39F-FD6AB2A7B333";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -609,7 +616,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Christian Persson";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -618,6 +626,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "A71C0E1E-9C3E-4523-B39F-FD6AB2A7B333";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -687,7 +697,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "6507F51C-E786-4E35-8F4A-DEEB04347D39";
+				PROVISIONING_PROFILE = "A71C0E1E-9C3E-4523-B39F-FD6AB2A7B333";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;

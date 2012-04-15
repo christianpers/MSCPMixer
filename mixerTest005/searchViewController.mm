@@ -8,6 +8,7 @@
 
 #import "searchViewController.h"
 #import "AppDelegate.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation searchViewController
 
@@ -78,6 +79,14 @@
 
 - (void)searchClicked:(UIButton *)btn{
     NSLog(@"clicked");
+    
+    CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
+    fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
+    fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
+    fadeAnimation.duration=.1;
+    fadeAnimation.repeatCount=0;
+    // fadeAnimation.autoreverses=YES;
+    [btn.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
     
     [self.view endEditing:YES];
     
@@ -179,7 +188,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-	return YES;
+	return UIInterfaceOrientationIsPortrait(interfaceOrientation);
 }
 
 -(void)dealloc{
@@ -187,6 +196,8 @@
     [self.searchField release];
     [self.search release];
     [self removeObserver:self forKeyPath:@"search.tracks"];
+    
+    [super dealloc];
 }
 
 @end
