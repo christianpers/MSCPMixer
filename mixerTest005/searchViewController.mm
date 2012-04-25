@@ -47,24 +47,24 @@
     
     self.view.backgroundColor = [UIColor blackColor];
      
-    self.searchField = [[UITextField alloc]initWithFrame:CGRectMake(130, 400, 300, 60)];
-    self.searchField.borderStyle = UITextBorderStyleRoundedRect;
+    self.searchField = [[UITextField alloc]initWithFrame:CGRectMake(130, 400, 340, 50)];
+  //  self.searchField.borderStyle = UITextBorderStyleRoundedRect;
     self.searchField.textColor = [UIColor blackColor]; //text color
-    self.searchField.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(39.0)];
-    self.searchField.placeholder = @"search for music";  //place holder
+    self.searchField.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(30.0)];
+    self.searchField.placeholder = @"Do some crate diggin..";  //place holder
     self.searchField.backgroundColor = [UIColor whiteColor]; //background color
     self.searchField.textAlignment = UITextAlignmentCenter;
     [self.view addSubview:self.searchField];
     [searchField release];
   
     UIButton *searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    searchBtn.frame = CGRectMake(480, 400, 150, 58);// position in the parent view and set the size of the
+    searchBtn.frame = CGRectMake(490, 400, 120, 50);// position in the parent view and set the size of the
     //searchBtn.layer.backgroundColor = [[UIColor whiteColor]CGColor];
     [searchBtn setTitle:[NSString stringWithFormat:@"Search"] forState:UIControlStateNormal];
-    searchBtn.backgroundColor = [UIColor whiteColor];
-    searchBtn.layer.cornerRadius = 10;
-    [searchBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    searchBtn.titleLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(26.0)];
+    searchBtn.backgroundColor = [UIColor redColor];
+    searchBtn.layer.cornerRadius = 1;
+    [searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    searchBtn.titleLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(30.0)];
     [searchBtn addTarget:self 
                   action:@selector(searchClicked:)
         forControlEvents:UIControlEventTouchDown];
@@ -72,13 +72,25 @@
     [self.view addSubview:searchBtn];
     
     [self addObserver:self forKeyPath:@"search.tracks" options:0 context:nil];
+    [self addObserver:self forKeyPath:@"search.searchInProgress" options:0 context:nil];
 
     [super viewDidLoad];
+    
+    NSString* mscpImgStr = [[NSBundle mainBundle] pathForResource:@"msco based" ofType:@"png"];
+    UIImage *mscpImage = [UIImage imageWithContentsOfFile:mscpImgStr];
+    
+    
+    UIImageView *mscpImg = [[UIImageView alloc]initWithImage:mscpImage];
+    mscpImg.frame = CGRectMake(40, 600, 342, 346);
+    [self.view addSubview:mscpImg];
+    [mscpImg release];
                    
 }
 
 - (void)searchClicked:(UIButton *)btn{
     NSLog(@"clicked");
+    
+    searchCount = 0;
     
     CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
     fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
@@ -102,7 +114,8 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"search.tracks"]) {
         SPSearch *searchCallback = self.search;
-        BOOL noResult = YES;
+        noResult = YES;
+        
         if([searchCallback.tracks count] > 0){
             
             [self createSearchList:searchCallback];
@@ -122,6 +135,23 @@
             
         }
         
+        else if (noResult && !self.search.searchInProgress){
+            NSLog(@"no result");
+           // searchCount++;
+        }
+    }
+    else if([keyPath isEqualToString:@"search.searchInProgress"]){
+        SPSearch *searchCallback = self.search;
+        
+        if (noResult && !searchCallback.searchInProgress){
+            NSLog(@"no matches");
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Results"
+                                                            message:nil
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [[alert autorelease] show];
+        }
       
     }
 }
@@ -133,6 +163,7 @@
     main.playlistLabel.hidden = YES;
     main.searchLabel.hidden = YES;
     main.cueController.view.hidden = YES;
+    main.activeView.hidden = YES;
     
     NSMutableArray *albumarr;
     NSMutableArray *trackarr;
@@ -187,8 +218,12 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-	return UIInterfaceOrientationIsPortrait(interfaceOrientation);
+    if (UIInterfaceOrientationIsPortrait(interfaceOrientation)){
+        return YES;
+        
+    }else if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+        return YES;
+    }
 }
 
 -(void)dealloc{

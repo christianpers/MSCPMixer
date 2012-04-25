@@ -80,7 +80,7 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "ad hoc"
       customArchiveName = "MSCP Based"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>

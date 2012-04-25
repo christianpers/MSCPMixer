@@ -1,15 +1,15 @@
 //
-//  macroDetailTableViewController.m
-//  mixerTest003
+//  trackTableViewController.m
+//  mixerTest005
 //
-//  Created by Christian Persson on 2012-02-11.
+//  Created by Christian Persson on 2012-04-20.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "macroDetailTableViewController.h"
+#import "trackTableViewController.h"
 #import "AppDelegate.h"
 
-@implementation macroDetailTableViewController
+@implementation trackTableViewController
 
 @synthesize detailArr;
 
@@ -22,19 +22,8 @@
     return self;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-#pragma mark - View lifecycle
-
 - (void)viewDidLoad
 {
-    
     UIBarButtonItem *cancelButton =
 	[[UIBarButtonItem alloc] initWithTitle: @"Cancel"
                                      style: UIBarButtonItemStylePlain
@@ -42,7 +31,7 @@
                                     action: @selector(cancel:)];
     self.navigationItem.rightBarButtonItem = cancelButton;
     [cancelButton release];
-
+    
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     
     [super viewDidLoad];
@@ -56,11 +45,14 @@
 
 - (void)viewDidUnload
 {
-    
-  
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+	return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -83,11 +75,6 @@
     [super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-	return YES;
-}
 
 #pragma mark - Table view data source
 
@@ -100,7 +87,16 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [[self.detailArr objectAtIndex:section]count];
+    
+    //  return [[detailArr objectAtIndex:section]count];
+    int nrOfObjects = [[detailArr objectAtIndex:section]count];
+    if (nrOfObjects > 20){
+        return 20;
+    }
+    else{
+        return nrOfObjects;     
+    }
+    
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -115,7 +111,7 @@
     //     headerLabel.opaque = NO;
     headerLabel.textColor = [UIColor blackColor];
     headerLabel.highlightedTextColor = [UIColor whiteColor];
-    headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+    headerLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
     headerLabel.frame = CGRectMake(10.0, 0.0, size.width, 50.0);
     
     // If you want to align the header text as centered
@@ -124,20 +120,12 @@
     NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[detailArr objectAtIndex:section]];
     
     NSString *lbl;
-    if([[sectionArr objectAtIndex:0] isKindOfClass:[SPAlbum class]]){
-        lbl = @"Albums";
-        
-    }
-    else if([[sectionArr objectAtIndex:0] isKindOfClass:[SPTrack class]]){
+    if([[sectionArr objectAtIndex:0] isKindOfClass:[SPTrack class]]){
         lbl = @"Tracks";
         
     }
-    else if([[sectionArr objectAtIndex:0] isKindOfClass:[SPArtist class]]){
-        lbl = @"Artists";
-    }
-    
-    
-    customView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.9];
+  
+    customView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
     headerLabel.text = [NSString stringWithFormat:lbl]; // i.e. array element
     [customView addSubview:headerLabel];
     
@@ -151,11 +139,9 @@
     
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
@@ -170,14 +156,8 @@
     
     //    NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[self.detailArr objectAtIndex:indexPath.section]];
     NSArray *sectionArr = [self.detailArr objectAtIndex:indexPath.section];
-    int row = indexPath.row;
-    if([[sectionArr objectAtIndex:0] isKindOfClass:[SPAlbum class]]){
-        SPAlbum *album = [sectionArr objectAtIndex:row];
-        NSString *art = album.artist.name;
-        lbl = [NSString stringWithFormat:@"%@ - %@", art, album.name];
-        
-    }
-    else if([[sectionArr objectAtIndex:0] isKindOfClass:[SPTrack class]]){
+  
+    if([[sectionArr objectAtIndex:0] isKindOfClass:[SPTrack class]]){
         
         SPTrack *track = [sectionArr objectAtIndex:indexPath.row];
         NSString *artists = [[track.artists valueForKey:@"name"] componentsJoinedByString:@","];
@@ -187,6 +167,7 @@
         cue.text = @"Cue Song";
         cue.textAlignment = UITextAlignmentCenter;
         cue.textColor = [UIColor blackColor];
+        cue.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
         
         cue.backgroundColor = [UIColor whiteColor];
         [cell.contentView addSubview:cue];
@@ -202,9 +183,9 @@
         trackDuration.textColor = [UIColor whiteColor];
         trackDuration.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:trackDuration];
-        
+        trackDuration.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
         [trackDuration release];
-
+        
         
     }
     
@@ -212,19 +193,16 @@
         NSLog(@"fuck");
     }
     
-    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.view.frame.size.width-140, 30)];
+    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.view.frame.size.width-220, 30)];
     title.text = lbl;
     title.textColor = [UIColor whiteColor];
-    
+    title.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
     title.backgroundColor = [UIColor clearColor];
     [cell.contentView addSubview:title];
     [title release];
     
-  //  cell.textLabel.text = lbl;
-    // Configure the cell...
-    //cell.textLabel.textColor = [UIColor whiteColor];
+    //  cell.textLabel.text = lbl;
     return cell;
-    
 }
 
 /*

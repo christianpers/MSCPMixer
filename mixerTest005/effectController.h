@@ -26,6 +26,7 @@
 - (void)drawEffectGrid:(int)tag;
 - (void)trackControl;
 
+
 //ch two
 - (void)lopassUnitChTwo;
 - (void)hipassUnitChTwo;

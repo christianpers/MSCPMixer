@@ -93,7 +93,7 @@ numberOfSectionsInTableView:(UITableView *)tableView {
         UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.frame.size.width-100, 30)];
         lbl.text = finalStr;
         lbl.textColor = [UIColor whiteColor];
-        
+        lbl.font = [UIFont fontWithName:@"GothamHTF-Book" size:(14.0)];
         lbl.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:lbl];
         [lbl release];
@@ -103,12 +103,13 @@ numberOfSectionsInTableView:(UITableView *)tableView {
         UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, self.frame.size.width-100, 30)];
         lbl.text = finalStr;
         lbl.textColor = [UIColor whiteColor];
-        
+        lbl.font = [UIFont fontWithName:@"GothamHTF-Book" size:(14.0)];
         lbl.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:lbl];
         [lbl release];
         
     }
+    
     
     
     NSTimeInterval interval = track.duration;
@@ -119,6 +120,7 @@ numberOfSectionsInTableView:(UITableView *)tableView {
     UILabel *trackDuration = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width-50, 5, 50, 30)];
     trackDuration.text = str;
     trackDuration.textColor = [UIColor whiteColor];
+    trackDuration.font = [UIFont fontWithName:@"GothamHTF-Book" size:(14.0)];
     trackDuration.backgroundColor = [UIColor clearColor];
     [cell.contentView addSubview:trackDuration];
     

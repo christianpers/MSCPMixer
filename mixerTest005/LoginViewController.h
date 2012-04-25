@@ -15,7 +15,7 @@
 	UIButton *loginButton;
 	UIActivityIndicatorView *spinner;
     UISwitch *pass;
-    
+  
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *usernameField;
@@ -23,6 +23,7 @@
 @property (nonatomic, retain) IBOutlet UIButton *loginButton;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *spinner;
 @property (nonatomic, retain) IBOutlet UISwitch *pass;
+
 
 
 - (IBAction)performLogin:(id)sender;

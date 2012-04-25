@@ -11,14 +11,17 @@
 
 @interface effectgridView : UIView{
     
-    float param1, param2;
+    float param1, param2, curr_x, curr_y;
     UILabel *param1Lbl;
     UILabel *param2Lbl;
     NSString *effectType;
+    
 }
 
 @property (assign) float param1;
 @property (assign) float param2;
+@property (assign) float curr_x;
+@property (assign) float curr_y;
 @property (nonatomic, retain) UILabel *param1Lbl;
 @property (nonatomic, retain) UILabel *param2Lbl;
 @property (nonatomic, retain) NSString *effectType;

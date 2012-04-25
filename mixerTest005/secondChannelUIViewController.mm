@@ -71,7 +71,7 @@
     self.secChLabel.backgroundColor = [UIColor clearColor];
     self.secChLabel.textColor = [UIColor blackColor];
     self.secChLabel.textAlignment = UITextAlignmentCenter;
-    self.secChLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+    self.secChLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
     self.secChLabel.text = [NSString stringWithFormat:@"Channel 2 (iTunes)"];
     [self.secChLabel addGestureRecognizer:secChTouch];
     self.secChLabel.UserInteractionEnabled = YES;
@@ -114,15 +114,26 @@
             main.cueController.view.frame = CGRectMake(200, bounds.size.height-700, main.cueController.view.bounds.size.width, main.cueController.view.bounds.size.height);
             main.plbackViewController.trackControlBG.frame = CGRectMake(400, bounds.size.height-700, main.plbackViewController.trackControlBG.bounds.size.width, main.plbackViewController.trackControlBG.bounds.size.height);
             
+            CGPoint tpos = main.plbackViewController.timepitchController.frame.origin;
+            CGSize size = main.plbackViewController.view.frame.size;
+            if (tpos.y > size.height/2){
+                main.plbackViewController.timepitchController.frame = CGRectMake(20, bounds.size.height/4, main.plbackViewController.timepitchController.bounds.size.width, main.plbackViewController.timepitchController.bounds.size.height);
             
-            main.plbackViewController.timepitchController.frame = CGRectMake(20, bounds.size.height/4, main.plbackViewController.timepitchController.bounds.size.width, main.plbackViewController.timepitchController.bounds.size.height);
+            }
+            CGPoint lpos = main.plbackViewController.lopassController.frame.origin;
+            if (lpos.y > size.height/2){
+                main.plbackViewController.lopassController.frame = CGRectMake(80, bounds.size.height/4, main.plbackViewController.timepitchController.bounds.size.width, main.plbackViewController.timepitchController.bounds.size.height);  
+            }
             
-            main.plbackViewController.lopassController.frame = CGRectMake(80, 30, main.plbackViewController.timepitchController.bounds.size.width, main.plbackViewController.timepitchController.bounds.size.height);
-            
-            main.plbackViewController.hipassController.frame = CGRectMake(40, 100, main.plbackViewController.timepitchController.bounds.size.width, main.plbackViewController.timepitchController.bounds.size.height);
-            
-            main.plbackViewController.channelOneVolController.frame = CGRectMake(100, 200, main.plbackViewController.channelOneVolController.bounds.size.width, main.plbackViewController.channelOneVolController.bounds.size.height);
-            
+            CGPoint hpos = main.plbackViewController.hipassController.frame.origin;
+            if (hpos.y > size.height/2){
+                main.plbackViewController.hipassController.frame = CGRectMake(40, 100, main.plbackViewController. timepitchController.bounds.size.width, main.plbackViewController.timepitchController.bounds.size.height);   
+            }
+        
+            CGPoint volpos = main.plbackViewController.channelOneVolController.frame.origin;
+            if (volpos.y > size.height /2){
+                main.plbackViewController.channelOneVolController.frame = CGRectMake(100, 200, main.plbackViewController.channelOneVolController.bounds.size.width, main.plbackViewController.channelOneVolController.bounds.size.height);
+            }
             main.plbackViewController.artistLbl.hidden = YES;
             main.plbackViewController.titleLbl.hidden = YES;
             
@@ -215,6 +226,7 @@
                              main.cueController.view.hidden = NO;
                              main.airplayIcon.hidden = NO;
                              main.userTxtBtn.hidden = NO;
+                             main.activeView.hidden = NO;
                          }];
         
         [UIView beginAnimations : @"Display notif" context:nil];
@@ -271,10 +283,10 @@
     main.cueController.view.hidden = YES;
     main.airplayIcon.hidden = YES;
     main.userTxtBtn.hidden = YES;
+    main.activeView.hidden = YES;
     
     MPMediaQuery *everything = [[MPMediaQuery alloc] init];
     [everything setGroupingType: MPMediaGroupingAlbum];
-    
     
     MPMediaQuery *allMedia = [MPMediaQuery songsQuery];
     MPMediaPropertyPredicate *mpp1 = [MPMediaPropertyPredicate predicateWithValue:@"2"     forProperty:MPMediaItemPropertyArtist comparisonType:MPMediaPredicateComparisonEqualTo];
@@ -648,7 +660,7 @@ audiofileProblem:
     lblLopassChTwo.textAlignment =  UITextAlignmentCenter;
     lblLopassChTwo.textColor = [UIColor whiteColor];
     lblLopassChTwo.backgroundColor = [UIColor clearColor];
-    lblLopassChTwo.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+    lblLopassChTwo.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
     lblLopassChTwo.text = @"L";
     [lopassChTwoController addSubview:lblLopassChTwo];
     [lblLopassChTwo release];  
@@ -664,7 +676,7 @@ audiofileProblem:
     lblHipassChTwo.textAlignment =  UITextAlignmentCenter;
     lblHipassChTwo.textColor = [UIColor whiteColor];
     lblHipassChTwo.backgroundColor = [UIColor clearColor];
-    lblHipassChTwo.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+    lblHipassChTwo.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
     lblHipassChTwo.text = @"H";
     [hipassChTwoController addSubview:lblHipassChTwo];
     [lblHipassChTwo release];  
@@ -680,7 +692,7 @@ audiofileProblem:
     lbltimepitchChTwo.textAlignment =  UITextAlignmentCenter;
     lbltimepitchChTwo.textColor = [UIColor whiteColor];
     lbltimepitchChTwo.backgroundColor = [UIColor clearColor];
-    lbltimepitchChTwo.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(28.0)];
+    lbltimepitchChTwo.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
     lbltimepitchChTwo.text = @"T";
     [timepitchChTwoController addSubview:lbltimepitchChTwo];
     [lbltimepitchChTwo release];  
@@ -696,7 +708,7 @@ audiofileProblem:
     lblvol.textAlignment =  UITextAlignmentCenter;
     lblvol.textColor = [UIColor whiteColor];
     lblvol.backgroundColor = [UIColor clearColor];
-    lblvol.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(22.0)];
+    lblvol.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(22.0)];
     lblvol.text = @"Vol";
     [mastervolControllerChTwo addSubview:lblvol];
     [lblvol release];   
@@ -709,18 +721,18 @@ audiofileProblem:
     cView.backgroundColor = [UIColor clearColor];
     self.controlView = cView;
     [self.view addSubview:self.controlView];
-    self.controlView.layer.cornerRadius = 10;
-    self.controlView.layer.borderWidth = 2;
-    self.controlView.layer.borderColor = [[UIColor blackColor]CGColor];
+    //self.controlView.layer.cornerRadius = 10;
+    //self.controlView.layer.borderWidth = 2;
+    //self.controlView.layer.borderColor = [[UIColor blackColor]CGColor];
     [cView release];
     
-    NSString* imagePathStop = [[NSBundle mainBundle] pathForResource:@"stopCh2" ofType:@"png"];
-    NSString* imagePathPause = [[NSBundle mainBundle] pathForResource:@"pauseCh2" ofType:@"png"];
+    NSString* imagePathStop = [[NSBundle mainBundle] pathForResource:@"stop" ofType:@"png"];
+    NSString* imagePathPause = [[NSBundle mainBundle] pathForResource:@"pause" ofType:@"png"];
     
     UIImage *stopImg = [UIImage imageWithContentsOfFile:imagePathStop];
     UIImage *pauseImg = [UIImage imageWithContentsOfFile:imagePathPause];
     
-    UIButton *stopBtn = [[UIButton alloc]initWithFrame:CGRectMake(15, 13, 43, 43)];
+    UIButton *stopBtn = [[UIButton alloc]initWithFrame:CGRectMake(15, 13, 63, 63)];
     [stopBtn setBackgroundImage:stopImg forState:UIControlStateNormal];
     [self.controlView addSubview:stopBtn];
     [stopBtn addTarget:self 
@@ -729,7 +741,7 @@ audiofileProblem:
     
     [stopBtn release];
     
-    UIButton *pauseBtn = [[UIButton alloc]initWithFrame:CGRectMake(90, 13, 43, 43)];
+    UIButton *pauseBtn = [[UIButton alloc]initWithFrame:CGRectMake(90, 13, 63, 63)];
     [pauseBtn setBackgroundImage:pauseImg forState:UIControlStateNormal];
     [self.controlView addSubview:pauseBtn];
     [pauseBtn addTarget:self 

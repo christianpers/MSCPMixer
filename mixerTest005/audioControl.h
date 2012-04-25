@@ -113,6 +113,8 @@
 @property (nonatomic) AudioUnit timePitchUnitChOne;
 @property (nonatomic) AudioUnit timePitchUnitChTwo;
 
+@property (nonatomic) BOOL chTwoPlayingProp;
+
 @property SInt16 *conversionBufferLeft;	
 @property SInt16 *conversionBufferRight;
 

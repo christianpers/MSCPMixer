@@ -18,9 +18,10 @@
 #import "playlistViewController.h"
 #import "cueViewController.h"
 #import "playbackViewController.h"
+#import "mainViewController.h"
 
 @interface AppDelegate : NSObject <UIApplicationDelegate, SPSessionDelegate> {
-    UIViewController *_mainViewController;
+    mainViewController *_mainViewController;
     UIWindow *window;
 	audioControl *_playbackManager;
 	SPTrack *_currentTrack;
@@ -33,19 +34,24 @@
     UIView *loadingView;
     searchTableViewController *searchTViewController;
     BOOL chTwoActive;
-    secondChannelUIViewController *chTwoViewController;
     UIView *airplayIcon;
     cueViewController *cueController;
     UIViewController *logoutViewController;
     playbackViewController *plbackViewController;
     UIButton *userTxtBtn;
+    UIImageView *activeView;
+    int activeViewX;
+    UIView *bgMenu;
+    UIViewController *menuController;
     
 }
 
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet UIViewController *mainViewController;
+@property (nonatomic, retain) IBOutlet mainViewController *mainViewController;
 @property (nonatomic) BOOL chTwoActive; 
+@property (nonatomic, retain) UIView *bgMenu;
+@property (nonatomic, retain) UIViewController *menuController;
 
 @property (nonatomic, retain) UIButton *userTxtBtn;
 
@@ -61,6 +67,7 @@
 @property (nonatomic, retain) UILabel *playlistLabel;
 @property (nonatomic, retain) UILabel *playbackLabel;
 @property (nonatomic, retain) UILabel *searchLabel;
+@property (nonatomic, retain) UIImageView *activeView;
 
 @property (nonatomic, retain) cueViewController *cueController;
 @property (nonatomic, retain) UIView *loadingView;
@@ -68,7 +75,6 @@
 @property (nonatomic, retain) searchTableViewController *searchTViewController;
 
 @property (nonatomic, retain) searchViewController *searchController;
-@property (nonatomic, retain) secondChannelUIViewController *chTwoViewController;
 
 @property (nonatomic, retain) UIView *airplayIcon;
 

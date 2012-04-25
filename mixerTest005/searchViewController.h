@@ -14,6 +14,8 @@
     
     UITextField *searchField;
     SPSearch *search;
+    int searchCount;
+    BOOL noResult;
 }
 
 @property (nonatomic, retain) UITextField *searchField;

@@ -1,23 +1,22 @@
 //
-//  searchTableViewController.h
-//  mixerTest003
+//  reSearchTableViewController.h
+//  mixerTest005
 //
-//  Created by Christian Persson on 2012-02-06.
+//  Created by Christian Persson on 2012-04-20.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "CocoaLibSpotify.h"
 #import "trackTableViewController.h"
-#import "reSearchTableViewController.h"
 
-@interface searchTableViewController : UITableViewController{
+
+@interface reSearchTableViewController : UITableViewController{
     
     NSMutableArray *detailArr;
     SPAlbumBrowse *albBrowse;
     SPArtistBrowse *artBrowse;
     UIView *loadingView;
-    
 }
 
 @property (nonatomic, retain) NSMutableArray *detailArr;
@@ -26,4 +25,5 @@
 @property (nonatomic, retain) UIView *loadingView;
 
 -(void)cancel:(id)sender;
+
 @end

@@ -21,6 +21,8 @@
         self.dataSource = self;
         self.delegate = self;
         self.allowsMultipleSelection = true;
+        self.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.rowHeight = 60;
         
     }
     
@@ -77,7 +79,7 @@
         headerLabel.opaque = NO;
         headerLabel.textColor = [UIColor blackColor];
         headerLabel.highlightedTextColor = [UIColor whiteColor];
-        headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(22.0)];
+        headerLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(22.0)];
         headerLabel.frame = CGRectMake(0.0, 0.0, 400.0, 30.0);
     
         // If you want to align the header text as centered
@@ -132,14 +134,13 @@
     }
     
     NSUInteger section = [indexPath section];
-    NSUInteger row = [indexPath row];
     
     for (UIView *v in cell.contentView.subviews){
         
         [v removeFromSuperview];
     }
     
-    UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, self.frame.size.width-10, 30)];
+    UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(10, 15, self.frame.size.width-10, 30)];
     lbl.backgroundColor = [UIColor clearColor];
     lbl.textColor = [UIColor whiteColor];
     [cell.contentView addSubview:lbl];
@@ -153,10 +154,11 @@
         NSString *title = track.name;
         NSString *finalStr = [NSString stringWithFormat:@"%@ - %@",artists,title];
         lbl.text = finalStr;
+        lbl.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
         
         if (track.availability != 1){
-            lbl.textColor = [UIColor grayColor];
-            lbl.font = [UIFont fontWithName:@"Arial-ItalicMT" size:14];
+            lbl.textColor = [UIColor whiteColor];
+            lbl.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(12.0)];
             
         }
         
@@ -170,10 +172,11 @@
         NSString *title = track.name;
         NSString *finalStr = [NSString stringWithFormat:@"%@ - %@",artists,title];
         lbl.text = finalStr;
+        lbl.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
         
         if (track.availability != 1){
-            lbl.textColor = [UIColor grayColor];
-            lbl.font = [UIFont fontWithName:@"Arial-ItalicMT" size:14];
+            lbl.textColor = [UIColor whiteColor];
+            lbl.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(12.0)];
             
         }
         
@@ -181,10 +184,28 @@
     
     [lbl release];
     
+    
+    
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
+  
     return cell;    
 }
-
+/*
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row % 2)
+    {
+       [cell setBackgroundColor:[UIColor colorWithRed:240/255.f
+                                                 green:250/255.f
+                                                  blue:250/255.f    
+                                                 alpha:.7]];
+         
+    }
+    else [cell setBackgroundColor:[UIColor colorWithRed:255/255.f
+                                                  green:255/255.f
+                                                   blue:254/255.f    
+                                                  alpha:.7]];
+}
+*/
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     NSURL *url;

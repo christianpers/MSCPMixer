@@ -65,4 +65,7 @@
 - (void)callfadeInMusicCh1;
 - (void)resetTrackTitleAndArtist;
 
+- (void)setmixerModeOn;
+- (void)setonechannelmodeOn;
+
 @end

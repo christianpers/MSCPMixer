@@ -58,10 +58,11 @@
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     CGSize winSize = window.frame.size;
     self.plMainView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, winSize.width,winSize.height)];
-    self.plMainView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
+    self.plMainView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
+    self.plMainView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view = self.plMainView;
     
-  
+   
 }
 
 
@@ -266,7 +267,7 @@
                     plTitle.textAlignment =  UITextAlignmentCenter;
                     plTitle.textColor = [UIColor blackColor];
                     plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
-                    plTitle.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(16.0)];
+                    plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
                     plTitle.text = [NSString stringWithFormat: @"%@",playlistDetail.name];
                     [btn addSubview:plTitle];
                     
@@ -311,7 +312,7 @@
     plTitle.textAlignment =  UITextAlignmentCenter;
     plTitle.textColor = [UIColor blackColor];
     plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
-    plTitle.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(16.0)];
+    plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
     plTitle.text = [NSString stringWithFormat: @"Starred tracks"];
     [starredButton addSubview:plTitle];
     
@@ -334,13 +335,13 @@
     CGSize rect = self.plMainView.window.frame.size;
     CGPoint offsetPnt = self.plMainView.contentOffset;
     int boxHeight = 750;
-    int boxWidth = 500;
+    int boxWidth = 600;
     
     UITapGestureRecognizer *bgTouch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeplBg:)];
     bgTouch.numberOfTapsRequired = 1;
     
     UIView *plbgView =[[UIView alloc] initWithFrame: CGRectMake(offsetPnt.x, offsetPnt.y, rect.width, rect.height)];
-    plbgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.86];   
+    plbgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.79];   
     [plbgView addGestureRecognizer:bgTouch]; 
     
     [bgTouch release];    
@@ -356,10 +357,13 @@
     [self.view addSubview:plbgView];    
     [self.view addSubview:self.plViewController.view];
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 60, rect.width-80, 50) ];
-    headerLabel.backgroundColor = [UIColor whiteColor];
-    headerLabel.textColor = [UIColor blackColor];
-    headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(36.0)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 90, rect.width-100, 50) ];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.textColor = [UIColor colorWithRed:245/255.f
+                                            green:247/255.f
+                                             blue:227/255.f    
+                                            alpha:1];
+    headerLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
     [headerLabel setAdjustsFontSizeToFitWidth:YES];
     [plbgView addSubview:headerLabel];
    
@@ -509,7 +513,7 @@
         plTitle.textAlignment =  UITextAlignmentCenter;
         plTitle.textColor = [UIColor blackColor];
         plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
-        plTitle.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(16.0)];
+        plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
         plTitle.text = [NSString stringWithFormat: @"No valid tracks"];
         [btn addSubview:plTitle];
         
@@ -555,7 +559,7 @@
             plTitle.textAlignment =  UITextAlignmentCenter;
             plTitle.textColor = [UIColor blackColor];
             plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
-            plTitle.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(16.0)];
+            plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
             plTitle.text = [NSString stringWithFormat: @"No valid tracks"];
             [btn addSubview:plTitle];
             
@@ -598,7 +602,7 @@
     plTitle.textAlignment =  UITextAlignmentCenter;
     plTitle.textColor = [UIColor blackColor];
     plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
-    plTitle.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(16.0)];
+    plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
     plTitle.text = [NSString stringWithFormat: @"%@",playlist.name];
     [btn addSubview:plTitle];
     
@@ -626,13 +630,14 @@
     main.cueController.view.hidden = YES;
     main.airplayIcon.hidden = YES;
     main.userTxtBtn.hidden = YES;
+    main.activeView.hidden = YES;
     
     UIButton *btn = (UIButton*)sender;
     NSLog(@"btn tag: %d",btn.tag);
     CGSize rect = self.plMainView.window.frame.size;
     CGPoint offsetPnt = self.plMainView.contentOffset;
     int boxHeight = 750;
-    int boxWidth = 500;
+    int boxWidth = 600;
     
     UITapGestureRecognizer *bgTouch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeplBg:)];
     bgTouch.numberOfTapsRequired = 1;
@@ -656,10 +661,13 @@
     
     [Shared sharedInstance].curClickedPl = btn.tag-tagAdd;
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 60, rect.width-80, 50) ];
-    headerLabel.backgroundColor = [UIColor whiteColor];
-    headerLabel.textColor = [UIColor blackColor];
-    headerLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(36.0)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 90, rect.width-100, 50) ];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.textColor = [UIColor colorWithRed:245/255.f
+                                            green:247/255.f
+                                             blue:227/255.f    
+                                            alpha:1];
+    headerLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
     [headerLabel setAdjustsFontSizeToFitWidth:YES];
     [plbgView addSubview:headerLabel];
     
@@ -748,6 +756,7 @@
     main.cueController.view.hidden = NO;
     main.airplayIcon.hidden = NO;
     main.userTxtBtn.hidden = NO;
+    main.activeView.hidden = NO;
     
 }
 

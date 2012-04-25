@@ -42,6 +42,12 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>GothamHTF-BookItalic.otf</string>
+		<string>GothamHTF-Book.otf</string>
+		<string>GothamHTF-Medium.otf</string>
+	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

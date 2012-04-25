@@ -419,6 +419,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 @synthesize fftView;
 @synthesize mixerUnit, mixerUnitChOne, mixerUnitChTwo, timePitchUnitChOne, timePitchUnitChTwo;
 @synthesize conversionBufferLeft, conversionBufferRight;
+@synthesize chTwoPlayingProp;
 
 
 - (void)setFFTView: (fftAnalyzerView *)fftViewer{
@@ -509,7 +510,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 		
 	}
     if (![SPSession sharedSession].playing){
-        [self stopAUGraph];
+   //     [self stopAUGraph];
         
     }
     
@@ -518,6 +519,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 -(void)toggleChannelTwoPlayingStatus:(BOOL)playingStatus{
     
     chTwoPlaying = playingStatus;
+    chTwoPlayingProp = chTwoPlaying;
     
 }
 
@@ -610,8 +612,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         
         result = AUGraphUpdate(graph, NULL);
         if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-        
-     
         
         startedCallback = YES;
         noInterrupt = YES;
@@ -800,10 +800,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         } 
         
     }
-    
-   
-    
-    
 }
 
 -(void)setlopassEffectY:(AudioUnitParameterValue)val:(int)channel{
@@ -851,9 +847,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
             { printf("LopassEffect result %lu %4.4s\n", result, (char*)&result); return; }
         }
     }
-    
-  
-    
 }
 
 -(void)sethipassEffectY:(AudioUnitParameterValue)val:(int)channel{
@@ -876,9 +869,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         }
         
     }
-    
-   
-    
 }
 -(void)sethipassEffectX:(AudioUnitParameterValue)val:(int)channel{
     
@@ -901,9 +891,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         }
         
     }
-    
-   
-    
 }
 
 -(void)setReverbX:(AudioUnitParameterValue)val{
@@ -1929,7 +1916,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
             }
             if (!chTwoPlaying){
                 
-                [self stopAUGraph];
+               // [self stopAUGraph];
             }
         }
     }

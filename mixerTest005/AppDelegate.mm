@@ -29,16 +29,16 @@
 @synthesize searchTViewController = _searchTViewController;
 @synthesize searchController = _searchController;
 @synthesize chTwoActive;
-@synthesize chTwoViewController;
 @synthesize airplayIcon;
 @synthesize plViewController;
 @synthesize cueController;
 @synthesize logoutViewController;
 @synthesize plbackViewController;
 @synthesize userTxtBtn;
+@synthesize activeView, bgMenu;
+@synthesize menuController;
 
-
-int labelWidth = 300;
+int labelWidth = 170;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -46,8 +46,12 @@ int labelWidth = 300;
     // Override point for customization after application launch.
 	[self.window makeKeyAndVisible];
     
+    [self.window setRootViewController:self.mainViewController];
+    
+    self.mainViewController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    
     self.searchController = [[searchViewController alloc]init];
-    self.chTwoViewController = [[secondChannelUIViewController alloc]init];
+    
     
   	[SPSession initializeSharedSessionWithApplicationKey:[NSData dataWithBytes:&g_appkey length:g_appkey_size] 
 											   userAgent:@"MSCP.mixerTest005"
@@ -73,17 +77,16 @@ int labelWidth = 300;
 -(void)createLoadingPlView{
     
     CGSize winSize = self.window.frame.size;
-    
     UIView *newloadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
     
     newloadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
-    [self.window addSubview:newloadingView];
+    [self.mainViewController.view addSubview:newloadingView];
     
     UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(0, 580, winSize.width, 60)];
     // lbl.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.6];
     lbl.backgroundColor = [UIColor clearColor];
     lbl.textColor = [UIColor whiteColor];
-    lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(26.0)];
+    lbl.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(26.0)];
     lbl.text = [NSString stringWithFormat:@"LOADING UR PLAYLISTS"];
     lbl.textAlignment = UITextAlignmentCenter;
     [newloadingView addSubview:lbl];
@@ -134,7 +137,12 @@ int labelWidth = 300;
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
     
-  //  [self.playbackManager stopAUGraph];
+    if (![SPSession sharedSession].playing && !self.playbackManager.chTwoPlayingProp){
+        
+        [self.playbackManager stopAUGraph];
+    }
+    
+  
   //  [[SPSession sharedSession]logout];
 }
 
@@ -232,28 +240,51 @@ int labelWidth = 300;
     [self.playbackLabel removeFromSuperview];
     [self.cueController.view removeFromSuperview];
     [self.playlistLabel removeFromSuperview];
-    [self.chTwoViewController.view removeFromSuperview];
     [self.airplayIcon removeFromSuperview];
     [[Shared sharedInstance].masterCue removeAllObjects];
     [self.userTxtBtn removeFromSuperview];
+    [self.activeView removeFromSuperview];
+    [self.bgMenu removeFromSuperview];
+    
 }
 
 - (void)initLoadGUI{
     
     CGSize winSize = self.window.frame.size;
     
+    self.menuController = [[UIViewController alloc]init];
+    self.menuController.view.frame = CGRectMake(580, 30, labelWidth+30, 185);
+    self.menuController.view.backgroundColor = [UIColor blackColor];
+    self.menuController.view.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+   
+    activeViewX = winSize.width-(labelWidth + 20);
+    
     UITapGestureRecognizer *menuTouchSearch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];
     menuTouchSearch.numberOfTapsRequired = 1;
     
-    self.searchLabel = [[UILabel alloc]initWithFrame:CGRectMake(winSize.width-labelWidth, 160, labelWidth, 40)];
-    self.searchLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
+    self.bgMenu = [[UIView alloc]initWithFrame:CGRectMake(0, 0, labelWidth+30, 185)];
+    bgMenu.backgroundColor = [UIColor blackColor];
+    //[self.menuController.view addSubview:self.bgMenu];
+    
+    
+    NSString* activeViewImgStr = [[NSBundle mainBundle] pathForResource:@"selected dot" ofType:@"png"];
+    UIImage *activeViewImg = [UIImage imageWithContentsOfFile:activeViewImgStr];
+    self.activeView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 87, 11, 11)];
+    activeView.image = activeViewImg;
+    self.activeView.hidden = YES;
+    
+    [self.menuController.view addSubview:self.activeView];
+    
+    
+    self.searchLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 130, labelWidth, 40)];
+    self.searchLabel.backgroundColor = [UIColor clearColor];
     self.searchLabel.textColor = [UIColor whiteColor];
-    self.searchLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(26.0)];
+    self.searchLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(26.0)];
     self.searchLabel.text = [NSString stringWithFormat:@"Search"];
     [self.searchLabel addGestureRecognizer:menuTouchSearch];
     self.searchLabel.UserInteractionEnabled = YES;
     [self.searchLabel setTag:12];
-    [self.window addSubview:self.searchLabel];
+    [self.menuController.view addSubview:self.searchLabel];
     self.searchLabel.hidden = YES;
     
     [menuTouchSearch release];
@@ -261,19 +292,22 @@ int labelWidth = 300;
     //PLAYBACK viewcontroller
     self.plbackViewController = [[playbackViewController alloc]init];
     [self.mainViewController.view addSubview:self.plbackViewController.view];
+    //[self.mainViewController presentViewController:self.plbackViewController animated:NO completion:nil];
     
     UITapGestureRecognizer *menuTouchPlayback = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];
     menuTouchPlayback.numberOfTapsRequired = 1;
     
-    self.playbackLabel = [[UILabel alloc]initWithFrame:CGRectMake(winSize.width-labelWidth, 100, labelWidth, 40)];
-    self.playbackLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
-    self.playbackLabel.textColor = [UIColor blackColor];
-    self.playbackLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(26.0)];
+    self.playbackLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 70, labelWidth, 40)];
+    //self.playbackLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
+    self.playbackLabel.backgroundColor = [UIColor clearColor];
+    self.playbackLabel.textColor = [UIColor whiteColor];
+    self.playbackLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(26.0)];
+   // [self.playbackLabel setFont:[UIFont fontWithName:@"GothamHTF-Medium" size:26]];
     self.playbackLabel.text = [NSString stringWithFormat:@"Playback"];
     [self.playbackLabel addGestureRecognizer:menuTouchPlayback];
     self.playbackLabel.UserInteractionEnabled = YES;
     [self.playbackLabel setTag:11];
-    [self.window addSubview:self.playbackLabel];
+    [self.menuController.view addSubview:self.playbackLabel];
     self.playbackLabel.hidden = YES;
     
     [menuTouchPlayback release];
@@ -281,31 +315,30 @@ int labelWidth = 300;
     
     //CUE controller
     self.cueController = [[cueViewController alloc]init];
-    [self.window addSubview:self.cueController.view];
+    [self.mainViewController.view addSubview:self.cueController.view];
     self.cueController.view.hidden = YES;
+    
     
     UITapGestureRecognizer *menuTouchPlaylist = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];
     menuTouchPlaylist.numberOfTapsRequired = 1;
     
-    self.playlistLabel = [[UILabel alloc]initWithFrame:CGRectMake(winSize.width-labelWidth, 40, labelWidth, 40)];
-    self.playlistLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
+    self.playlistLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, labelWidth, 40)];
+    self.playlistLabel.backgroundColor = [UIColor clearColor];
     self.playlistLabel.textColor = [UIColor whiteColor];
-    self.playlistLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:(26.0)];
+    self.playlistLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(26.0)];
     self.playlistLabel.text = [NSString stringWithFormat:@"My playlists"];
     [self.playlistLabel addGestureRecognizer:menuTouchPlaylist];
     self.playlistLabel.UserInteractionEnabled = YES;
     [self.playlistLabel setTag:10];
-    [self.window addSubview:self.playlistLabel];
+    [self.menuController.view addSubview:self.playlistLabel];
     self.playlistLabel.hidden = YES;
     
     [menuTouchPlaylist release];
     
-    
-    
     //AIRPLAY view
-    UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(20, 60, 50, 50)];
+    UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(60, 30, 50, 50)];
     mpVolumeViewParentView.backgroundColor = [UIColor clearColor];
-    [self.window addSubview:mpVolumeViewParentView];
+    [self.mainViewController.view addSubview:mpVolumeViewParentView];
     MPVolumeView *myVolumeView =
     [[MPVolumeView alloc] initWithFrame: mpVolumeViewParentView.bounds];
     [mpVolumeViewParentView addSubview: myVolumeView];
@@ -314,11 +347,8 @@ int labelWidth = 300;
     self.airplayIcon = mpVolumeViewParentView;
     [myVolumeView release];
     [mpVolumeViewParentView release];
-    
 
-    //CHANNEL 2 viewcontroller
-    self.chTwoViewController = [[secondChannelUIViewController alloc]init];
-    [self.mainViewController.view insertSubview:self.chTwoViewController.view aboveSubview:self.plbackViewController.view];
+    [self.mainViewController.view addSubview:self.menuController.view];
     
   
 }
@@ -374,25 +404,29 @@ NSUInteger loadTrack;
        // [self.loadingView release];
         
         self.plViewController = [[playlistViewController alloc]init];
+        
+      //  [self.mainViewController presentViewController:self.plViewController animated:NO completion:nil];
         [self.mainViewController.view insertSubview:self.plViewController.view belowSubview:self.plbackViewController.view];
-        
-        SPUser *user = [[SPSession sharedSession]user];
-        
-        NSString *userName = user.displayName;
+      
+        NSString* infoImgStr = [[NSBundle mainBundle] pathForResource:@"info" ofType:@"png"];
+        UIImage *infoImg = [UIImage imageWithContentsOfFile:infoImgStr];
         
         self.userTxtBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.userTxtBtn.center = CGPointMake(25, 30);
+        self.userTxtBtn.frame = CGRectMake(10, 25, 36, 36);
         self.userTxtBtn.backgroundColor = [UIColor clearColor];
-        [self.userTxtBtn setTitle:[NSString stringWithFormat:@"Logged in as: %@",userName] forState:UIControlStateNormal];
+       // [self.userTxtBtn setTitle:[NSString stringWithFormat:@"i"] forState:UIControlStateNormal];
+        [self.userTxtBtn setBackgroundImage:infoImg forState:UIControlStateNormal];
         self.userTxtBtn.titleLabel.textAlignment = UITextAlignmentLeft;
         [self.userTxtBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        self.userTxtBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-        [self.userTxtBtn sizeToFit];
+        self.userTxtBtn.titleLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(30.0)];
+       
         [self.userTxtBtn addTarget:self 
                    action:@selector(showlogoutViewController)
          forControlEvents:UIControlEventTouchDown];
         
-        [self.window addSubview:self.userTxtBtn];
+        [self.mainViewController.view addSubview:self.userTxtBtn];
+        
+        self.activeView.hidden = NO;
     }  
 }
 
@@ -462,16 +496,13 @@ NSUInteger loadTrack;
         self.airplayIcon.hidden = NO;
         self.userTxtBtn.hidden = NO;
         [self.mainViewController.view bringSubviewToFront:self.plViewController.view];
+        [self.mainViewController.view bringSubviewToFront:self.menuController.view];
+        
+        
+        self.activeView.frame = CGRectMake(5, 27, 11, 11);
        
-        self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
-        self.playbackLabel.textColor = [UIColor whiteColor];
-        
-        self.searchLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
-        self.searchLabel.textColor = [UIColor whiteColor];
-        
-        self.playlistLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
-        self.playlistLabel.textColor = [UIColor blackColor];
-        
+       // [self.plbackViewController dismissViewControllerAnimated:YES completion:nil];
+       // [self.mainViewController presentViewController:self.plViewController animated:YES completion:nil];
         [self.searchController dismissViewControllerAnimated:YES completion:nil];
         
     }
@@ -479,17 +510,13 @@ NSUInteger loadTrack;
         self.airplayIcon.hidden = NO;
         self.userTxtBtn.hidden = NO;
         [self.mainViewController.view bringSubviewToFront:self.plbackViewController.view];
-        [self.mainViewController.view bringSubviewToFront:self.chTwoViewController.view];
+        [self.mainViewController.view bringSubviewToFront:self.menuController.view];
         
-        self.playbackLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
-        self.playbackLabel.textColor = [UIColor blackColor];
         
-        self.searchLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
-        self.searchLabel.textColor = [UIColor whiteColor];
+        self.activeView.frame = CGRectMake(5, 87, 11, 11);
         
-        self.playlistLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
-        self.playlistLabel.textColor = [UIColor whiteColor];
-        
+     //   [self.plViewController dismissViewControllerAnimated:YES completion:nil];
+     //   [self.mainViewController presentViewController:self.plbackViewController animated:YES completion:nil];
         [self.searchController dismissViewControllerAnimated:YES completion:nil];
         
         
@@ -500,15 +527,10 @@ NSUInteger loadTrack;
         self.airplayIcon.hidden = YES;
         self.userTxtBtn.hidden = YES;
         
-        self.playbackLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
-        self.playbackLabel.textColor = [UIColor whiteColor];
         
-        self.searchLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
-        self.searchLabel.textColor = [UIColor blackColor];
-        
-        self.playlistLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
-        self.playlistLabel.textColor = [UIColor whiteColor];
-        
+        self.activeView.frame = CGRectMake(5, 147, 11, 11);
+     //   [self.plbackViewController dismissViewControllerAnimated:YES completion:nil];
+     //   [self.plViewController dismissViewControllerAnimated:YES completion:nil];
         [self.mainViewController presentViewController:self.searchController animated:YES completion:nil];
         
     }
@@ -522,13 +544,25 @@ NSUInteger loadTrack;
     [self.mainViewController presentModalViewController:self.logoutViewController animated:YES];
     self.logoutViewController.view.superview.frame = CGRectMake(0, 0, 240, 190); //it's important to do this after presentModalViewController
     self.logoutViewController.view.superview.center = self.mainViewController.view.center;
+    
+    SPUser *user = [[SPSession sharedSession]user];
+    NSString *userName = user.displayName;
+    UILabel *loggedInUser = [[UILabel alloc] initWithFrame:CGRectMake(30, 7, 180, 30)];
+    loggedInUser.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
+    loggedInUser.text = [NSString stringWithFormat:@"Logged in as: %@",userName];
+    loggedInUser.textColor = [UIColor blackColor];
+    loggedInUser.backgroundColor = [UIColor clearColor];
+    [self.logoutViewController.view addSubview:loggedInUser];
+    [loggedInUser release];
+    
   
     UIButton *logoutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    logoutBtn.frame = CGRectMake(30, 30, 180, 55);
+    logoutBtn.frame = CGRectMake(30, 50, 180, 55);
     logoutBtn.backgroundColor = [UIColor blackColor];
     logoutBtn.layer.cornerRadius = 5;
     [logoutBtn setTitle:[NSString stringWithFormat:@"Switch user"] forState:UIControlStateNormal];
     logoutBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+    logoutBtn.titleLabel.font =  [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
     [logoutBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
    // logoutBtn.titleLabel.font = [UIFont systemFontOfSize:14];
   //  [logoutBtn sizeToFit];
@@ -539,11 +573,12 @@ NSUInteger loadTrack;
     [self.logoutViewController.view addSubview:logoutBtn];
     
     UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    cancelBtn.frame = CGRectMake(30, 95, 180, 55);
+    cancelBtn.frame = CGRectMake(30, 115, 180, 55);
     cancelBtn.backgroundColor = [UIColor blackColor];
     cancelBtn.layer.cornerRadius = 5;
     [cancelBtn setTitle:[NSString stringWithFormat:@"Cancel"] forState:UIControlStateNormal];
     cancelBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+    cancelBtn.titleLabel.font =  [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
     [cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
   //  cancelBtn.titleLabel.font = [UIFont systemFontOfSize:14];
   //  [cancelBtn sizeToFit];
@@ -633,7 +668,6 @@ NSUInteger loadTrack;
 	[self removeObserver:self forKeyPath:@"currentTrack.album.cover.image"];
 	[self removeObserver:self forKeyPath:@"playbackManager.trackPosition"];
     */
-    [self.chTwoViewController release];
    // [_loadingView release];
     [_playlistLabel release];
     [_playbackLabel release];

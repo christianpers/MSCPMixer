@@ -30,11 +30,13 @@ CGSize parentSize;
         UIPanGestureRecognizer *effectSwipe = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panPiece:)];
         [self addGestureRecognizer:effectSwipe]; 
         [effectSwipe release];
-        self.layer.cornerRadius = 5;
+        self.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         
     }
     return self;
 }
+
+
 
 - (void)panPiece:(UIPanGestureRecognizer *)gestureRecognizer
 {
@@ -55,7 +57,7 @@ CGSize parentSize;
         main.playlistLabel.hidden = YES;
         main.searchLabel.hidden = YES;
         main.cueController.view.hidden = YES;
-        parentView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.26];
+        //parentView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.26];
         //parentView.layer.borderWidth = 4.0f;
         
         if (pos.x <= 0) {
@@ -107,6 +109,8 @@ CGSize parentSize;
            // setY = [piece center].y + translation.y;
             setY = pos.y;
             setX = [piece center].x + translation.x;
+            self.gridView.curr_x = setX;
+            self.gridView.curr_y = setY;
             if(setY < parentSize.height/2){
                 aboveMiddleY = YES;
             }
@@ -248,17 +252,18 @@ CGSize parentSize;
     
 }
 - (void)lopassUnit{
-    paramVal1 = (setY/parentSize.height)*22000;
+    paramVal1 = (setY/parentSize.height)*20000;
     float twoThirds = (parentSize.width/3)*2;
     if (setX < (parentSize.width/3)){
-        paramVal2 = (((parentSize.width/3)-setX)/-(parentSize.width/3))*20;
-        NSLog(@"positive side");
+        paramVal2 = (((setX*2)-(twoThirds))/(twoThirds))*20;
+        NSLog(@"negative side lopass");
+        
     }
     else{
-        paramVal2 = (((setX*2)-(twoThirds))/(twoThirds))*20;
-        NSLog(@"negative side");
+        paramVal2 = (((parentSize.width/3)-setX)/-(parentSize.width/3))*20;
+        NSLog(@"positive side lopass");
+        
     }
-    NSLog(@"freq: %f, resonance: %f",paramVal1, paramVal2);
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [main.playbackManager setlopassEffectY:paramVal1:1];
@@ -320,6 +325,9 @@ CGSize parentSize;
 - (void)masterVolCh1{
     paramVal1 = (setY/parentSize.height);
     paramVal1 = 1 - paramVal1;
+    if (paramVal1 < 0.1){
+        paramVal1 = 0;
+    }
     NSLog(@"vol:%f",paramVal1);
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [main.playbackManager setMasterVolCh1:paramVal1];
@@ -329,6 +337,9 @@ CGSize parentSize;
 - (void)masterVolCh2{
     paramVal1 = (setY/parentSize.height);
     paramVal1 = 1 - paramVal1;
+    if (paramVal1 < 0.1){
+        paramVal1 = 0;
+    }
     NSLog(@"vol:%f",paramVal1);
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [main.playbackManager setMasterVolCh2:paramVal1];
@@ -365,9 +376,9 @@ CGSize parentSize;
     self.gridView = [[effectgridView alloc]initWithFrame:CGRectMake(0, 0, window.width, window.height)];
     self.gridView.backgroundColor = [UIColor clearColor];
     self.gridView.param1 = paramVal1;
-    self.gridView.param2 = paramVal2;
+    self.gridView.param2 = paramVal2 - paramVal2 - paramVal2;
     NSLog(@"paramval1: %f, paramval2: %f",paramVal1, paramVal2);
-    [parentView addSubview:self.gridView];
+    [parentView insertSubview:self.gridView belowSubview:self];
     
     
     switch (tag) {

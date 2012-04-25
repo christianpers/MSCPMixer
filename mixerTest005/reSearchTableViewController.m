@@ -1,14 +1,15 @@
 //
-//  searchTableViewController.m
-//  mixerTest003
+//  reSearchTableViewController.m
+//  mixerTest005
 //
-//  Created by Christian Persson on 2012-02-06.
+//  Created by Christian Persson on 2012-04-20.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "searchTableViewController.h"
+#import "reSearchTableViewController.h"
 #import "AppDelegate.h"
-@implementation searchTableViewController
+
+@implementation reSearchTableViewController
 
 @synthesize detailArr;
 @synthesize albBrowse, artBrowse;
@@ -19,32 +20,14 @@
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
-        
     }
     return self;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-#pragma mark - View lifecycle
-/*
-- (void)loadView{
-  //  self.navigationController.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)]autorelease];
-  //  self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-   
-}
-*/
-
 - (void)viewDidLoad
 {
     
-   // self.tableView.backgroundColor = [UIColor blackColor];
+    // self.tableView.backgroundColor = [UIColor blackColor];
     UIBarButtonItem *cancelButton =
 	[[UIBarButtonItem alloc] initWithTitle: @"Cancel"
                                      style: UIBarButtonItemStylePlain
@@ -56,14 +39,13 @@
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     
     [super viewDidLoad];
-
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
- 
+    
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
-
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"albBrowse.tracks"]) {
         SPAlbumBrowse *albumCallback = self.albBrowse;
@@ -71,9 +53,9 @@
             
             trackTableViewController *trackTableController = [[trackTableViewController alloc]init];
             
-          //  detailTableViewController *detailViewController = [[detailTableViewController alloc]init];
-         //   SPAlbum *album = [arr objectAtIndex:indexPath.row];
-         //   SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
+            //  detailTableViewController *detailViewController = [[detailTableViewController alloc]init];
+            //   SPAlbum *album = [arr objectAtIndex:indexPath.row];
+            //   SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
             NSArray *array = albumCallback.tracks;
             NSMutableArray *detail = [[NSMutableArray alloc]init];
             [detail addObject:array];
@@ -87,11 +69,39 @@
         
     }
     else if ([keyPath isEqualToString:@"artBrowse.albums"]) {
-     //   [self addObserver:self forKeyPath:@"artBrowse.relatedArtists" options:0 context:nil];
+        //   [self addObserver:self forKeyPath:@"artBrowse.relatedArtists" options:0 context:nil];
         SPArtistBrowse *artistCallback = self.artBrowse;
         if([artistCallback.albums count] > 0){
-         /*   
-            detailTableViewController *detailViewController = [[detailTableViewController alloc]init];
+            /*   
+             detailTableViewController *detailViewController = [[detailTableViewController alloc]init];
+             //   SPAlbum *album = [arr objectAtIndex:indexPath.row];
+             //   SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
+             NSArray *albums = artistCallback.albums;
+             NSArray *tracks = artistCallback.tracks;
+             NSArray *related = artistCallback.relatedArtists;
+             NSMutableArray *detail = [[NSMutableArray alloc]init];
+             
+             if (albums)
+             [detail addObject:albums];
+             if (tracks)
+             [detail addObject:tracks];
+             if (related)
+             [detail addObject:related];
+             
+             detailViewController.detailArr = detail;
+             detailViewController.tableView.backgroundColor = [UIColor blackColor];
+             [self.navigationController pushViewController:detailViewController animated:YES];
+             [detailViewController release];
+             [detail release];
+             */
+            [self removeObserver:self forKeyPath:@"artBrowse.albums"];
+        }
+    }
+    else if ([keyPath isEqualToString:@"artBrowse.relatedArtists"]) {
+        SPArtistBrowse *artistCallback = self.artBrowse;
+        if ([artistCallback.relatedArtists count] > 0){
+            
+            reSearchTableViewController *detailViewController = [[reSearchTableViewController alloc]init];
             //   SPAlbum *album = [arr objectAtIndex:indexPath.row];
             //   SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
             NSArray *albums = artistCallback.albums;
@@ -111,36 +121,8 @@
             [self.navigationController pushViewController:detailViewController animated:YES];
             [detailViewController release];
             [detail release];
-            */
-            [self removeObserver:self forKeyPath:@"artBrowse.albums"];
-        }
-    }
-    else if ([keyPath isEqualToString:@"artBrowse.relatedArtists"]) {
-        SPArtistBrowse *artistCallback = self.artBrowse;
-        if ([artistCallback.relatedArtists count] > 0){
-              
-             reSearchTableViewController *detailViewController = [[reSearchTableViewController alloc]init];
-             //   SPAlbum *album = [arr objectAtIndex:indexPath.row];
-             //   SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
-             NSArray *albums = artistCallback.albums;
-             NSArray *tracks = artistCallback.tracks;
-             NSArray *related = artistCallback.relatedArtists;
-             NSMutableArray *detail = [[NSMutableArray alloc]init];
-             
-             if (albums)
-                 [detail addObject:albums];
-             if (tracks)
-                 [detail addObject:tracks];
-             if (related)
-                 [detail addObject:related];
-             
-             detailViewController.detailArr = detail;
-             detailViewController.tableView.backgroundColor = [UIColor blackColor];
-             [self.navigationController pushViewController:detailViewController animated:YES];
-             [detailViewController release];
-             [detail release];
-          //   [self removeObserver:self forKeyPath:@"artBrowse.albums"];
-             [self removeObserver:self forKeyPath:@"artBrowse.relatedArtists"];
+            //   [self removeObserver:self forKeyPath:@"artBrowse.albums"];
+            [self removeObserver:self forKeyPath:@"artBrowse.relatedArtists"];
         }
         
     }
@@ -181,57 +163,59 @@
     
 }
 
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
 	return YES;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-        CGSize size = tableView.frame.size;
-        // create the parent view that will hold header Label
-        UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, size.width, 50.0)];
-        
-        // create the button object
-        UILabel * headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        headerLabel.backgroundColor = [UIColor clearColor];
-   //     headerLabel.opaque = NO;
-        headerLabel.textColor = [UIColor blackColor];
-        headerLabel.highlightedTextColor = [UIColor whiteColor];
-        headerLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
-        headerLabel.frame = CGRectMake(10.0, 0.0, size.width, 50.0);
-        
-        // If you want to align the header text as centered
-        // headerLabel.frame = CGRectMake(150.0, 0.0, 300.0, 44.0);
+    CGSize size = tableView.frame.size;
+    // create the parent view that will hold header Label
+    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, size.width, 50.0)];
     
-        NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[detailArr objectAtIndex:section]];
+    // create the button object
+    UILabel * headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    //     headerLabel.opaque = NO;
+    headerLabel.textColor = [UIColor blackColor];
+    headerLabel.highlightedTextColor = [UIColor whiteColor];
+    headerLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
+    headerLabel.frame = CGRectMake(10.0, 0.0, size.width, 50.0);
     
-        NSString *lbl;
-        if(![sectionArr count] == 0){
-          
-            if([[sectionArr objectAtIndex:0] isKindOfClass:[SPAlbum class]]){
-                lbl = @"Albums";
-                
-            }
-            else if([[sectionArr objectAtIndex:0] isKindOfClass:[SPTrack class]]){
-                lbl = @"Tracks";
-                
-            }
-            else if([[sectionArr objectAtIndex:0] isKindOfClass:[SPArtist class]]){
-                lbl = @"Artists";
-            }
-            
-            
-            customView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.9];
-            headerLabel.text = [NSString stringWithFormat:lbl]; // i.e. array element
-            [customView addSubview:headerLabel];
+    // If you want to align the header text as centered
+    // headerLabel.frame = CGRectMake(150.0, 0.0, 300.0, 44.0);
+    
+    NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[detailArr objectAtIndex:section]];
+    
+    NSString *lbl;
+    if(![sectionArr count] == 0){
         
+        if([[sectionArr objectAtIndex:0] isKindOfClass:[SPAlbum class]]){
+            lbl = @"Albums";
+            
+        }
+        else if([[sectionArr objectAtIndex:0] isKindOfClass:[SPTrack class]]){
+            lbl = @"Tracks";
+            
+        }
+        else if([[sectionArr objectAtIndex:0] isKindOfClass:[SPArtist class]]){
+            lbl = @"Related artists";
         }
         
+        
+        customView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
+        headerLabel.text = [NSString stringWithFormat:lbl]; // i.e. array element
+        [customView addSubview:headerLabel];
+        
+    }
+    
     return customView;
     
 }
+
+#pragma mark - Table view data source
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -259,14 +243,14 @@
         return 20;
     }
     else{
-       return nrOfObjects;     
+        return nrOfObjects;     
     }
     
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  //  self.tableView.backgroundColor = [UIColor blackColor];
+    //  self.tableView.backgroundColor = [UIColor blackColor];
     
     static NSString *CellIdentifier = @"Cell";
     
@@ -279,7 +263,7 @@
     }
     
     NSString *lbl;
-
+    
     
     NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[detailArr objectAtIndex:indexPath.section]];
     
@@ -343,17 +327,17 @@
     [cell.contentView addSubview:title];
     [title release];
     
-   
     
-  
     
-
+    
+    
+    
     //cell.textLabel.text = lbl;
     // Configure the cell...
     
     [sectionArr release];
     //cell.contentView.backgroundColor = [UIColor blackColor];
-   // cell.backgroundColor = [UIColor blackColor];
+    // cell.backgroundColor = [UIColor blackColor];
     
     cell.textLabel.textColor = [UIColor whiteColor];
     return cell;
@@ -370,6 +354,7 @@
     main.activeView.hidden = NO;
     
 }
+
 
 /*
 // Override to support conditional editing of the table view.
@@ -416,13 +401,13 @@
 {
     /*
      Loading view
-    */
+     */
     CGSize winSize = self.tableView.frame.size;
     CGPoint offsetPnt = self.tableView.contentOffset;
     self.loadingView = [[UIView alloc]initWithFrame:CGRectMake(offsetPnt.x, offsetPnt.y, winSize.width, winSize.height)];
     self.loadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
     [self.view addSubview:self.loadingView];
-   
+    
     UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
     av.frame=CGRectMake((winSize.width/2)-(85/2), ((winSize.height/2)-(85/2))-40, 85, 85);
     av.tag  = 1;
@@ -471,7 +456,7 @@
     }
     
     [sectionArr release];
-
+    
     
 }
 
@@ -479,5 +464,6 @@
     [super dealloc];
     
 }
+
 
 @end
