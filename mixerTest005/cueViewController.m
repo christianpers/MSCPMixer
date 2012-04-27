@@ -33,7 +33,7 @@
 {
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     CGSize winSize = window.frame.size;
-    UIView *cueView = [[UIView alloc]initWithFrame:CGRectMake((winSize.width/2-600/2), 300, 127, 36)];
+    UIView *cueView = [[UIView alloc]initWithFrame:CGRectMake((winSize.width/2-600/2), 600, 127, 36)];
     self.view = cueView;
     self.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     [self.view.layer setAnchorPoint:CGPointMake(.5, 1)];

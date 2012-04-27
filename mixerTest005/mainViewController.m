@@ -23,6 +23,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
+      //  [self activateLandscapeMode];
+        
+    }else if (UIDeviceOrientationIsPortrait(self.interfaceOrientation)){
+      //  [self activatePortraitMode];
+    }
+    
 	// Do any additional setup after loading the view.
 }
 
@@ -43,21 +50,11 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)){
-        NSLog(@"activate mixer mode !!!");
-        CGSize size = main.menuController.view.frame.size;
-        main.menuController.view.center = CGPointMake(450, 100);
-       // main.menuController.view.frame = CGRectMake(540, 30, size.width, size.height);
-        [main.plbackViewController setmixerModeOn];
-        
+        [self activateLandscapeMode];
     }else if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
-        NSLog(@"activate one channel mode !!");
-        CGSize size = main.menuController.view.frame.size;
-        [main.plbackViewController setonechannelmodeOn];
-        main.menuController.view.center = CGPointMake(670, 100);
-        
+        [self activatePortraitMode];
       //   main.menuController.view.frame = CGRectMake(580, 30, size.width, size.height);
         
     }
@@ -66,6 +63,24 @@
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
  
+}
+
+- (void)activateLandscapeMode{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    NSLog(@"activate mixer mode !!!");
+    // main.menuController.view.frame = CGRectMake(540, 30, size.width, size.height);
+    [main.plbackViewController setmixerModeOn];
+    
+    
+}
+- (void)activatePortraitMode{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    NSLog(@"activate one channel mode !!");
+    [main.plbackViewController setonechannelmodeOn];
+    
+    
 }
 
 @end

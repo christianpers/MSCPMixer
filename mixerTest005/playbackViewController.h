@@ -7,13 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import <AVFoundation/AVFoundation.h>
+#import <Foundation/Foundation.h>
+#import <AudioToolbox/AudioToolbox.h>
 #import "effectController.h"
 #import "CocoaLibSpotify.h"
 #import "fftAnalyzerView.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface playbackViewController : UIViewController{
+@interface playbackViewController : UIViewController <MPMediaPickerControllerDelegate>{
     
     UILabel *artistLbl;
     UILabel *titleLbl;
@@ -27,9 +30,45 @@
     effectController *lopassController;
     effectController *hipassController;
     effectController *channelOneVolController;
-    UIView *effectContainerView;
     //fft analyzing
     fftAnalyzerView *fftView;
+    
+    //mixermode stuff
+    UIView *effectParentViewCh2;
+    UIView *line;
+    UIView *controlViewCh2;
+    effectController *timepitchControllerCh2;
+    effectController *lopassControllerCh2;
+    effectController *hipassControllerCh2;
+    effectController *channelTwoVolController;
+    UIButton *addtrack;
+    UILabel *artistlblCh2;
+    UILabel *titlelblCh2;
+    
+    
+    NSURL* outURL;
+	NSURL* pcmURL;
+	int datasize_; 
+	float * data_;
+	int writepos_;	
+	int readpos_; 
+    //	AudioDeviceManager *audio; 
+	int initialreadflag_; 
+	int earlyfinish_; 
+	int restartflag_; 
+	int backgroundloadflag_; 
+	int playingflag_; 
+	int importingflag_; 
+	
+	//double secondsread_; 
+	double duration_; 
+    
+    NSURL *glAssetURL;
+    NSString *glArtist;
+    NSString *glTitle;
+    BOOL    isPaused;
+    
+  
 }
 
 @property(nonatomic, retain) UILabel *artistLbl;
@@ -45,6 +84,22 @@
 @property(nonatomic, retain) effectController *hipassController;
 @property(nonatomic, retain) effectController *channelOneVolController;
 @property(nonatomic, retain) fftAnalyzerView *fftView;
+
+
+
+
+//mixermode
+
+@property(nonatomic, retain) UIView *line;
+@property(nonatomic, retain) UIView *effectParentViewCh2;
+@property(nonatomic, retain) effectController *timepitchControllerCh2;
+@property(nonatomic, retain) effectController *lopassControllerCh2;
+@property(nonatomic, retain) effectController *hipassControllerCh2;
+@property(nonatomic, retain) effectController *channelTwoVolController;
+@property(nonatomic, retain) UIView *controlViewCh2;
+@property(nonatomic, retain) UIButton *addtrack;
+@property(nonatomic, retain) UILabel *artistlblCh2;
+@property(nonatomic, retain) UILabel *titlelblCh2;
 
 
 
@@ -67,5 +122,16 @@
 
 - (void)setmixerModeOn;
 - (void)setonechannelmodeOn;
+
+
+//channel two stuff
+- (void)showMediaPicker;
+- (void)initDataVar;
+- (void)exportAssetAtURL:(NSURL*)assetURL withTitle:(NSString*)title withArtist:(NSString*)artist; 
+- (void)loadAudioFile; //:(id)outURL;  
+- (void)playTrack:(id)sender;
+- (void)stopTrack:(id)sender;
+- (void)pauseTrack:(id)sender;
+- (void)freeAudio;
 
 @end

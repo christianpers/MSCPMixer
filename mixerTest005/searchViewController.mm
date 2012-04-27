@@ -44,7 +44,6 @@
     UIView *test = [[UIView alloc]initWithFrame:CGRectMake(0, 400, 700, 300)];
     self.view = test;
    
-    
     self.view.backgroundColor = [UIColor blackColor];
      
     self.searchField = [[UITextField alloc]initWithFrame:CGRectMake(130, 400, 340, 50)];
@@ -54,6 +53,7 @@
     self.searchField.placeholder = @"Do some crate diggin..";  //place holder
     self.searchField.backgroundColor = [UIColor whiteColor]; //background color
     self.searchField.textAlignment = UITextAlignmentCenter;
+    self.searchField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [self.view addSubview:self.searchField];
     [searchField release];
   
@@ -68,6 +68,7 @@
     [searchBtn addTarget:self 
                   action:@selector(searchClicked:)
         forControlEvents:UIControlEventTouchDown];
+    searchBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     
     [self.view addSubview:searchBtn];
     
@@ -78,7 +79,6 @@
     
     NSString* mscpImgStr = [[NSBundle mainBundle] pathForResource:@"msco based" ofType:@"png"];
     UIImage *mscpImage = [UIImage imageWithContentsOfFile:mscpImgStr];
-    
     
     UIImageView *mscpImg = [[UIImageView alloc]initWithImage:mscpImage];
     mscpImg.frame = CGRectMake(40, 600, 342, 346);
@@ -157,13 +157,6 @@
 }
 -(void)createSearchList:(SPSearch *)returnObj{
     
-    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    main.playbackLabel.hidden = YES;
-    main.playlistLabel.hidden = YES;
-    main.searchLabel.hidden = YES;
-    main.cueController.view.hidden = YES;
-    main.activeView.hidden = YES;
     
     NSMutableArray *albumarr;
     NSMutableArray *trackarr;
@@ -201,19 +194,20 @@
 
 
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
 }
-*/
+
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+   
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -226,12 +220,27 @@
     }
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)){
+        
+    }else if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
+        
+        //   main.menuController.view.frame = CGRectMake(580, 30, size.width, size.height);
+        
+    }
+    
+}
+
+
+
 -(void)dealloc{
     
     [self.searchField release];
     [self.search release];
     [self removeObserver:self forKeyPath:@"search.tracks"];
     
+   
     [super dealloc];
 }
 

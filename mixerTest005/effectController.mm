@@ -30,8 +30,7 @@ CGSize parentSize;
         UIPanGestureRecognizer *effectSwipe = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panPiece:)];
         [self addGestureRecognizer:effectSwipe]; 
         [effectSwipe release];
-        self.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-        
+        self.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     }
     return self;
 }
@@ -53,10 +52,7 @@ CGSize parentSize;
         
         [self.gridView removeFromSuperview];
         [self drawEffectGrid:piece.tag];
-        main.playbackLabel.hidden = YES;
-        main.playlistLabel.hidden = YES;
-        main.searchLabel.hidden = YES;
-        main.cueController.view.hidden = YES;
+         main.cueController.view.hidden = YES;
         //parentView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.26];
         //parentView.layer.borderWidth = 4.0f;
         
@@ -133,9 +129,6 @@ CGSize parentSize;
         [self.gridView removeFromSuperview];
         self.gridView = nil;
         
-        main.playbackLabel.hidden = NO;
-        main.playlistLabel.hidden = NO;
-        main.searchLabel.hidden = NO;
         main.cueController.view.hidden = NO;
         parentView.backgroundColor = [UIColor clearColor];
      //   parentView.layer.borderWidth = 0.0f;
@@ -143,28 +136,28 @@ CGSize parentSize;
         if (piece.tag <= 5){
             if(main.chTwoActive){
                 if (((pos.x >= 100)&&(pos.x<=500))&&((pos.y>=295)&&(pos.y<=360))){
-                    if (piece.tag == 5)
-                        piece.frame = CGRectMake(pos.x, 280, 60, 60);
-                    else 
-                        piece.frame = CGRectMake(pos.x, 280, 40, 40);
+                   // if (piece.tag == 5)
+                     //   piece.frame = CGRectMake(pos.x, 280, 60, 60);
+                   // else 
+                     //   piece.frame = CGRectMake(pos.x, 280, 40, 40);
                 } 
                 
             }else {
                 if (((pos.x >= 100)&&(pos.x<=500))&&((pos.y>=355)&&(pos.y<=420))){
-                    if (piece.tag == 5)
-                        piece.frame = CGRectMake(pos.x, 340, 60, 60);
-                    else 
-                        piece.frame = CGRectMake(pos.x, 340, 40, 40);
+                //    if (piece.tag == 5)
+                    //    piece.frame = CGRectMake(pos.x, 340, 60, 60);
+                //    else 
+                     //   piece.frame = CGRectMake(pos.x, 340, 40, 40);
                 }
             }
            
         }
         if (piece.tag > 5){
             if (((pos.x >= 230)&&(pos.x<=400))&&((pos.y>=70)&&(pos.y<=150))){
-                if (piece.tag == 7)
-                    piece.frame = CGRectMake(pos.x, 60, 60, 60);
-                else 
-                    piece.frame = CGRectMake(pos.x, 60, 40, 40);
+              //  if (piece.tag == 7)
+                 //   piece.frame = CGRectMake(pos.x, 60, 60, 60);
+              //  else 
+                 //   piece.frame = CGRectMake(pos.x, 60, 40, 40);
             }
         }
        

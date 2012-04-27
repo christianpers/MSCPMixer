@@ -363,11 +363,7 @@
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    main.playbackLabel.hidden = NO;
-    main.playlistLabel.hidden = NO;
-    main.searchLabel.hidden = NO;
     main.cueController.view.hidden = NO;
-    main.activeView.hidden = NO;
     
 }
 

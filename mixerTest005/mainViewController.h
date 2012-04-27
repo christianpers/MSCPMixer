@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface mainViewController : UIViewController
+@interface mainViewController : UIViewController{
+    
+    
+}
+
+- (void)activatePortraitMode;
+- (void)activateLandscapeMode;
+
 
 @end

@@ -20,6 +20,8 @@
 #import "playbackViewController.h"
 #import "mainViewController.h"
 
+#import "tabbarController.h"
+
 @interface AppDelegate : NSObject <UIApplicationDelegate, SPSessionDelegate> {
     mainViewController *_mainViewController;
     UIWindow *window;
@@ -28,9 +30,6 @@
     UINavigationController *navigationController;
     playlistViewController *plViewController;
     searchViewController *searchController;
-    UILabel *playlistLabel;
-    UILabel *playbackLabel;
-    UILabel *searchLabel;
     UIView *loadingView;
     searchTableViewController *searchTViewController;
     BOOL chTwoActive;
@@ -39,10 +38,8 @@
     UIViewController *logoutViewController;
     playbackViewController *plbackViewController;
     UIButton *userTxtBtn;
-    UIImageView *activeView;
-    int activeViewX;
-    UIView *bgMenu;
-    UIViewController *menuController;
+    tabbarController *tabController;
+    UIViewController *loadviewController;
     
 }
 
@@ -50,8 +47,6 @@
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet mainViewController *mainViewController;
 @property (nonatomic) BOOL chTwoActive; 
-@property (nonatomic, retain) UIView *bgMenu;
-@property (nonatomic, retain) UIViewController *menuController;
 
 @property (nonatomic, retain) UIButton *userTxtBtn;
 
@@ -64,10 +59,6 @@
 @property (nonatomic, retain) playlistViewController *plViewController;
 @property (nonatomic, retain) playbackViewController *plbackViewController;
 
-@property (nonatomic, retain) UILabel *playlistLabel;
-@property (nonatomic, retain) UILabel *playbackLabel;
-@property (nonatomic, retain) UILabel *searchLabel;
-@property (nonatomic, retain) UIImageView *activeView;
 
 @property (nonatomic, retain) cueViewController *cueController;
 @property (nonatomic, retain) UIView *loadingView;
@@ -77,6 +68,8 @@
 @property (nonatomic, retain) searchViewController *searchController;
 
 @property (nonatomic, retain) UIView *airplayIcon;
+
+@property (nonatomic, retain) tabbarController *tabController;
 
 - (void)userLogout;
 - (void)initLoadGUI;

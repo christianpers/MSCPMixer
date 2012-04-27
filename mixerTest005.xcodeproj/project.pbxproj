@@ -16,6 +16,7 @@
 		AA58C0F314FC86090074837F /* secondChannelUIViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA58C0F214FC86090074837F /* secondChannelUIViewController.mm */; };
 		AA5B97DF150E92700061D969 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA5B97DE150E92700061D969 /* Accelerate.framework */; };
 		AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA5B97E6150EAF950061D969 /* fftAnalyzerView.mm */; };
+		AA65633A154A48EE0030711C /* tabbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA656339154A48EE0030711C /* tabbarController.m */; };
 		AA74232B1544C68800FF43AC /* GothamHTF-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA74232A1544C68800FF43AC /* GothamHTF-Book.otf */; };
 		AA74232E1544D4BF00FF43AC /* queue arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = AA74232D1544D4BF00FF43AC /* queue arrow.png */; };
 		AA742330154507EE00FF43AC /* appiconMSCP.png in Resources */ = {isa = PBXBuildFile; fileRef = AA74232F154507EE00FF43AC /* appiconMSCP.png */; };
@@ -79,7 +80,7 @@
 		AAB46C0715466108003634BF /* mixerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB46C0615466108003634BF /* mixerViewController.m */; };
 		AAB46C0A15467860003634BF /* mainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB46C091546785F003634BF /* mainViewController.m */; };
 		AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA25C151E63ED0066AC86 /* cueViewController.m */; };
-		AAEFA263151F84BD0066AC86 /* playbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA262151F84BC0066AC86 /* playbackViewController.m */; };
+		AAEFA263151F84BD0066AC86 /* playbackViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA262151F84BC0066AC86 /* playbackViewController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,6 +99,8 @@
 		AA5B97DE150E92700061D969 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		AA5B97E5150EAF950061D969 /* fftAnalyzerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftAnalyzerView.h; sourceTree = "<group>"; };
 		AA5B97E6150EAF950061D969 /* fftAnalyzerView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = fftAnalyzerView.mm; sourceTree = "<group>"; };
+		AA656338154A48EE0030711C /* tabbarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tabbarController.h; sourceTree = "<group>"; };
+		AA656339154A48EE0030711C /* tabbarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tabbarController.m; sourceTree = "<group>"; };
 		AA74232A1544C68800FF43AC /* GothamHTF-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamHTF-Book.otf"; sourceTree = "<group>"; };
 		AA74232D1544D4BF00FF43AC /* queue arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "queue arrow.png"; sourceTree = "<group>"; };
 		AA74232F154507EE00FF43AC /* appiconMSCP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appiconMSCP.png; sourceTree = "<group>"; };
@@ -203,7 +206,7 @@
 		AAEFA25B151E63ED0066AC86 /* cueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cueViewController.h; sourceTree = "<group>"; };
 		AAEFA25C151E63ED0066AC86 /* cueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cueViewController.m; sourceTree = "<group>"; };
 		AAEFA261151F84BC0066AC86 /* playbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playbackViewController.h; sourceTree = "<group>"; };
-		AAEFA262151F84BC0066AC86 /* playbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = playbackViewController.m; sourceTree = "<group>"; };
+		AAEFA262151F84BC0066AC86 /* playbackViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = playbackViewController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -311,6 +314,8 @@
 				AA97EEF814F0B06500A2B892 /* AppDelegate.mm */,
 				AAB46C081546785F003634BF /* mainViewController.h */,
 				AAB46C091546785F003634BF /* mainViewController.m */,
+				AA656338154A48EE0030711C /* tabbarController.h */,
+				AA656339154A48EE0030711C /* tabbarController.m */,
 				AA97EF1314F0BE0100A2B892 /* cocoaWrapper */,
 				AA97EEEF14F0B06500A2B892 /* Supporting Files */,
 			);
@@ -417,7 +422,7 @@
 				AA97EF7914F0D1DE00A2B892 /* effectgridView.h */,
 				AA97EF7A14F0D1DE00A2B892 /* effectgridView.mm */,
 				AAEFA261151F84BC0066AC86 /* playbackViewController.h */,
-				AAEFA262151F84BC0066AC86 /* playbackViewController.m */,
+				AAEFA262151F84BC0066AC86 /* playbackViewController.mm */,
 			);
 			name = playbackView;
 			sourceTree = "<group>";
@@ -617,11 +622,12 @@
 				AA58C0F314FC86090074837F /* secondChannelUIViewController.mm in Sources */,
 				AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */,
 				AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */,
-				AAEFA263151F84BD0066AC86 /* playbackViewController.m in Sources */,
+				AAEFA263151F84BD0066AC86 /* playbackViewController.mm in Sources */,
 				AA27039D154120990019BC73 /* trackTableViewController.m in Sources */,
 				AA2703A0154120CE0019BC73 /* reSearchTableViewController.m in Sources */,
 				AAB46C0715466108003634BF /* mixerViewController.m in Sources */,
 				AAB46C0A15467860003634BF /* mainViewController.m in Sources */,
+				AA65633A154A48EE0030711C /* tabbarController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

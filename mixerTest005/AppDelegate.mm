@@ -22,9 +22,6 @@
 @synthesize currentTrack = _currentTrack;
 @synthesize navigationController = _navigationController;
 @synthesize loadPlaylist = _loadPlaylist;
-@synthesize playbackLabel = _playbackLabel;
-@synthesize playlistLabel = _playlistLabel;
-@synthesize searchLabel = _searchLabel;
 @synthesize loadingView = _loadingView;
 @synthesize searchTViewController = _searchTViewController;
 @synthesize searchController = _searchController;
@@ -35,10 +32,7 @@
 @synthesize logoutViewController;
 @synthesize plbackViewController;
 @synthesize userTxtBtn;
-@synthesize activeView, bgMenu;
-@synthesize menuController;
-
-int labelWidth = 170;
+@synthesize tabController;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -47,6 +41,7 @@ int labelWidth = 170;
 	[self.window makeKeyAndVisible];
     
     [self.window setRootViewController:self.mainViewController];
+    
     
     self.mainViewController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
@@ -77,10 +72,12 @@ int labelWidth = 170;
 -(void)createLoadingPlView{
     
     CGSize winSize = self.window.frame.size;
+  //  self.loadviewController = [[UIViewController alloc]init];
     UIView *newloadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
-    
+   
     newloadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
-    [self.mainViewController.view addSubview:newloadingView];
+  //  [self.mainViewController.view insertSubview:newloadingView aboveSubview:self.plbackViewController.view];
+  //  [self.tabController presentModalViewController:<#(UIViewController *)#> animated:<#(BOOL)#>]
     
     UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(0, 580, winSize.width, 60)];
     // lbl.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.6];
@@ -235,110 +232,31 @@ int labelWidth = 170;
 }
 
 - (void)removeGUI{
-    [self.searchLabel removeFromSuperview];
     [self.plbackViewController.view removeFromSuperview];
-    [self.playbackLabel removeFromSuperview];
     [self.cueController.view removeFromSuperview];
-    [self.playlistLabel removeFromSuperview];
     [self.airplayIcon removeFromSuperview];
     [[Shared sharedInstance].masterCue removeAllObjects];
     [self.userTxtBtn removeFromSuperview];
-    [self.activeView removeFromSuperview];
-    [self.bgMenu removeFromSuperview];
     
 }
 
 - (void)initLoadGUI{
     
-    CGSize winSize = self.window.frame.size;
-    
-    self.menuController = [[UIViewController alloc]init];
-    self.menuController.view.frame = CGRectMake(580, 30, labelWidth+30, 185);
-    self.menuController.view.backgroundColor = [UIColor blackColor];
-    self.menuController.view.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-   
-    activeViewX = winSize.width-(labelWidth + 20);
-    
-    UITapGestureRecognizer *menuTouchSearch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];
-    menuTouchSearch.numberOfTapsRequired = 1;
-    
-    self.bgMenu = [[UIView alloc]initWithFrame:CGRectMake(0, 0, labelWidth+30, 185)];
-    bgMenu.backgroundColor = [UIColor blackColor];
-    //[self.menuController.view addSubview:self.bgMenu];
-    
-    
-    NSString* activeViewImgStr = [[NSBundle mainBundle] pathForResource:@"selected dot" ofType:@"png"];
-    UIImage *activeViewImg = [UIImage imageWithContentsOfFile:activeViewImgStr];
-    self.activeView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 87, 11, 11)];
-    activeView.image = activeViewImg;
-    self.activeView.hidden = YES;
-    
-    [self.menuController.view addSubview:self.activeView];
-    
-    
-    self.searchLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 130, labelWidth, 40)];
-    self.searchLabel.backgroundColor = [UIColor clearColor];
-    self.searchLabel.textColor = [UIColor whiteColor];
-    self.searchLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(26.0)];
-    self.searchLabel.text = [NSString stringWithFormat:@"Search"];
-    [self.searchLabel addGestureRecognizer:menuTouchSearch];
-    self.searchLabel.UserInteractionEnabled = YES;
-    [self.searchLabel setTag:12];
-    [self.menuController.view addSubview:self.searchLabel];
-    self.searchLabel.hidden = YES;
-    
-    [menuTouchSearch release];
     
     //PLAYBACK viewcontroller
     self.plbackViewController = [[playbackViewController alloc]init];
-    [self.mainViewController.view addSubview:self.plbackViewController.view];
-    //[self.mainViewController presentViewController:self.plbackViewController animated:NO completion:nil];
-    
-    UITapGestureRecognizer *menuTouchPlayback = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];
-    menuTouchPlayback.numberOfTapsRequired = 1;
-    
-    self.playbackLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 70, labelWidth, 40)];
-    //self.playbackLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
-    self.playbackLabel.backgroundColor = [UIColor clearColor];
-    self.playbackLabel.textColor = [UIColor whiteColor];
-    self.playbackLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(26.0)];
-   // [self.playbackLabel setFont:[UIFont fontWithName:@"GothamHTF-Medium" size:26]];
-    self.playbackLabel.text = [NSString stringWithFormat:@"Playback"];
-    [self.playbackLabel addGestureRecognizer:menuTouchPlayback];
-    self.playbackLabel.UserInteractionEnabled = YES;
-    [self.playbackLabel setTag:11];
-    [self.menuController.view addSubview:self.playbackLabel];
-    self.playbackLabel.hidden = YES;
-    
-    [menuTouchPlayback release];
     
     
     //CUE controller
-    self.cueController = [[cueViewController alloc]init];
-    [self.mainViewController.view addSubview:self.cueController.view];
-    self.cueController.view.hidden = YES;
+//    self.cueController = [[cueViewController alloc]init];
+//    [self.mainViewController.view addSubview:self.cueController.view];
+//    self.cueController.view.hidden = YES;
     
-    
-    UITapGestureRecognizer *menuTouchPlaylist = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(mainMenuClick:)];
-    menuTouchPlaylist.numberOfTapsRequired = 1;
-    
-    self.playlistLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, labelWidth, 40)];
-    self.playlistLabel.backgroundColor = [UIColor clearColor];
-    self.playlistLabel.textColor = [UIColor whiteColor];
-    self.playlistLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(26.0)];
-    self.playlistLabel.text = [NSString stringWithFormat:@"My playlists"];
-    [self.playlistLabel addGestureRecognizer:menuTouchPlaylist];
-    self.playlistLabel.UserInteractionEnabled = YES;
-    [self.playlistLabel setTag:10];
-    [self.menuController.view addSubview:self.playlistLabel];
-    self.playlistLabel.hidden = YES;
-    
-    [menuTouchPlaylist release];
-    
+      
     //AIRPLAY view
     UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(60, 30, 50, 50)];
     mpVolumeViewParentView.backgroundColor = [UIColor clearColor];
-    [self.mainViewController.view addSubview:mpVolumeViewParentView];
+//    [self.mainViewController.view addSubview:mpVolumeViewParentView];
     MPVolumeView *myVolumeView =
     [[MPVolumeView alloc] initWithFrame: mpVolumeViewParentView.bounds];
     [mpVolumeViewParentView addSubview: myVolumeView];
@@ -347,8 +265,10 @@ int labelWidth = 170;
     self.airplayIcon = mpVolumeViewParentView;
     [myVolumeView release];
     [mpVolumeViewParentView release];
+    
+    
 
-    [self.mainViewController.view addSubview:self.menuController.view];
+//    [self.mainViewController.view addSubview:self.menuController.view];
     
   
 }
@@ -364,8 +284,9 @@ NSUInteger loadTrack;
     
     if (![Shared sharedInstance].hasLoggedin){
         
-        [self createLoadingPlView];
         [self initLoadGUI];
+        [self createLoadingPlView];
+        
         
         [Shared sharedInstance].hasLoggedin = true;
         
@@ -385,9 +306,6 @@ NSUInteger loadTrack;
         }
         else{
             self.cueController.view.hidden = NO;
-            self.playlistLabel.hidden = NO;
-            self.searchLabel.hidden = NO;
-            self.playbackLabel.hidden = NO;
             
             [self.loadingView removeFromSuperview];
         }
@@ -396,17 +314,13 @@ NSUInteger loadTrack;
         NSLog(@"loaded playlists");
         
         self.cueController.view.hidden = NO;
-        self.playlistLabel.hidden = NO;
-        self.searchLabel.hidden = NO;
-        self.playbackLabel.hidden = NO;
         
-        [self.loadingView removeFromSuperview];
        // [self.loadingView release];
         
         self.plViewController = [[playlistViewController alloc]init];
         
       //  [self.mainViewController presentViewController:self.plViewController animated:NO completion:nil];
-        [self.mainViewController.view insertSubview:self.plViewController.view belowSubview:self.plbackViewController.view];
+      //  [self.mainViewController.view insertSubview:self.plViewController.view belowSubview:self.plbackViewController.view];
       
         NSString* infoImgStr = [[NSBundle mainBundle] pathForResource:@"info" ofType:@"png"];
         UIImage *infoImg = [UIImage imageWithContentsOfFile:infoImgStr];
@@ -424,9 +338,25 @@ NSUInteger loadTrack;
                    action:@selector(showlogoutViewController)
          forControlEvents:UIControlEventTouchDown];
         
-        [self.mainViewController.view addSubview:self.userTxtBtn];
+     //   [self.mainViewController.view addSubview:self.userTxtBtn];
         
-        self.activeView.hidden = NO;
+        
+        [self.loadingView removeFromSuperview];
+        
+        self.tabController = [[tabbarController alloc] init];
+        tabController.view.frame = CGRectMake(0, 0, 768, 1042);
+        tabController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        [tabController setViewControllers:[NSArray arrayWithObjects:self.plbackViewController, self.plViewController,self.searchController, nil]];
+        
+        [self.mainViewController.view addSubview:tabController.view];
+        
+        
+        if (UIDeviceOrientationIsPortrait(self.mainViewController.interfaceOrientation)){
+          //  [self.mainViewController activatePortraitMode];
+        }else {
+         //   [self.mainViewController activateLandscapeMode];
+        }
     }  
 }
 
@@ -490,51 +420,6 @@ NSUInteger loadTrack;
     }
 }
 
-- (void)mainMenuClick:(UITapGestureRecognizer *)gesture{
-    UIView *lbl = [gesture view];
-    if (lbl.tag == 10){
-        self.airplayIcon.hidden = NO;
-        self.userTxtBtn.hidden = NO;
-        [self.mainViewController.view bringSubviewToFront:self.plViewController.view];
-        [self.mainViewController.view bringSubviewToFront:self.menuController.view];
-        
-        
-        self.activeView.frame = CGRectMake(5, 27, 11, 11);
-       
-       // [self.plbackViewController dismissViewControllerAnimated:YES completion:nil];
-       // [self.mainViewController presentViewController:self.plViewController animated:YES completion:nil];
-        [self.searchController dismissViewControllerAnimated:YES completion:nil];
-        
-    }
-    else if (lbl.tag == 11){
-        self.airplayIcon.hidden = NO;
-        self.userTxtBtn.hidden = NO;
-        [self.mainViewController.view bringSubviewToFront:self.plbackViewController.view];
-        [self.mainViewController.view bringSubviewToFront:self.menuController.view];
-        
-        
-        self.activeView.frame = CGRectMake(5, 87, 11, 11);
-        
-     //   [self.plViewController dismissViewControllerAnimated:YES completion:nil];
-     //   [self.mainViewController presentViewController:self.plbackViewController animated:YES completion:nil];
-        [self.searchController dismissViewControllerAnimated:YES completion:nil];
-        
-        
-    }
-    else if (lbl.tag == 12){
-       
-        
-        self.airplayIcon.hidden = YES;
-        self.userTxtBtn.hidden = YES;
-        
-        
-        self.activeView.frame = CGRectMake(5, 147, 11, 11);
-     //   [self.plbackViewController dismissViewControllerAnimated:YES completion:nil];
-     //   [self.plViewController dismissViewControllerAnimated:YES completion:nil];
-        [self.mainViewController presentViewController:self.searchController animated:YES completion:nil];
-        
-    }
-}
 
 - (void)showlogoutViewController{
     
@@ -669,9 +554,6 @@ NSUInteger loadTrack;
 	[self removeObserver:self forKeyPath:@"playbackManager.trackPosition"];
     */
    // [_loadingView release];
-    [_playlistLabel release];
-    [_playbackLabel release];
-    [_searchLabel release];
     [self.plbackViewController release];
     [_loadPlaylist release];
  	[_currentTrack release];

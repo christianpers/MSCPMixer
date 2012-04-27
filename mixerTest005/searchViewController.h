@@ -16,10 +16,13 @@
     SPSearch *search;
     int searchCount;
     BOOL noResult;
+    
 }
 
 @property (nonatomic, retain) UITextField *searchField;
 @property (nonatomic, retain) SPSearch *search;
+
+
 
 -(void)searchClicked:(UIButton *)btn;
 -(void)createSearchList:(SPSearch *)returnObj;

@@ -324,9 +324,6 @@
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    main.playbackLabel.hidden = YES;
-    main.playlistLabel.hidden = YES;
-    main.searchLabel.hidden = YES;
     main.cueController.view.hidden = YES;
     main.airplayIcon.hidden = YES;
     main.userTxtBtn.hidden = YES;
@@ -624,13 +621,9 @@
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    main.playbackLabel.hidden = YES;
-    main.playlistLabel.hidden = YES;
-    main.searchLabel.hidden = YES;
     main.cueController.view.hidden = YES;
     main.airplayIcon.hidden = YES;
     main.userTxtBtn.hidden = YES;
-    main.activeView.hidden = YES;
     
     UIButton *btn = (UIButton*)sender;
     NSLog(@"btn tag: %d",btn.tag);
@@ -750,13 +743,9 @@
     
     [self.plMainView setScrollEnabled:YES];
     
-    main.playbackLabel.hidden = NO;
-    main.playlistLabel.hidden = NO;
-    main.searchLabel.hidden = NO;
     main.cueController.view.hidden = NO;
     main.airplayIcon.hidden = NO;
     main.userTxtBtn.hidden = NO;
-    main.activeView.hidden = NO;
     
 }
 
