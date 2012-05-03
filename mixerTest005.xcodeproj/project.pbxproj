@@ -13,7 +13,6 @@
 		AA29D202152D546300AD4052 /* starbg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AA29D201152D546300AD4052 /* starbg.jpg */; };
 		AA58C0ED14FC839C0074837F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EC14FC839C0074837F /* CoreMedia.framework */; };
 		AA58C0F014FC83CA0074837F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */; };
-		AA58C0F314FC86090074837F /* secondChannelUIViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA58C0F214FC86090074837F /* secondChannelUIViewController.mm */; };
 		AA5B97DF150E92700061D969 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA5B97DE150E92700061D969 /* Accelerate.framework */; };
 		AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA5B97E6150EAF950061D969 /* fftAnalyzerView.mm */; };
 		AA65633A154A48EE0030711C /* tabbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA656339154A48EE0030711C /* tabbarController.m */; };
@@ -75,12 +74,15 @@
 		AA97EF8714F0D20700A2B892 /* SPCircularBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF8414F0D20700A2B892 /* SPCircularBuffer.mm */; };
 		AA97EF8814F0D20700A2B892 /* audioControl.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF8614F0D20700A2B892 /* audioControl.mm */; };
 		AA97EF9414F0D26000A2B892 /* Shared.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA97EF9314F0D25F00A2B892 /* Shared.mm */; };
+		AAA411D91550BCBE006BF7EA /* mediaPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA411D81550BCBE006BF7EA /* mediaPickerController.m */; };
 		AAAD79C114F0EE6B00E337E9 /* mainwindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */; };
 		AAB46C0215465C6D003634BF /* itunes channel.png in Resources */ = {isa = PBXBuildFile; fileRef = AAB46C0115465C6D003634BF /* itunes channel.png */; };
 		AAB46C0715466108003634BF /* mixerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB46C0615466108003634BF /* mixerViewController.m */; };
 		AAB46C0A15467860003634BF /* mainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB46C091546785F003634BF /* mainViewController.m */; };
 		AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA25C151E63ED0066AC86 /* cueViewController.m */; };
 		AAEFA263151F84BD0066AC86 /* playbackViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA262151F84BC0066AC86 /* playbackViewController.mm */; };
+		AAFCB41C154DE733006127E3 /* crossfade base.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCB41A154DE733006127E3 /* crossfade base.png */; };
+		AAFCB41D154DE733006127E3 /* crossfade knob.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCB41B154DE733006127E3 /* crossfade knob.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,8 +96,6 @@
 		AA2CEBCF150F032C00EBA96C /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = ../../../../../../Developer/Extras/CoreAudio/PublicUtility/CAStreamBasicDescription.h; sourceTree = "<group>"; };
 		AA58C0EC14FC839C0074837F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		AA58C0EF14FC83CA0074837F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		AA58C0F114FC86090074837F /* secondChannelUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secondChannelUIViewController.h; sourceTree = "<group>"; };
-		AA58C0F214FC86090074837F /* secondChannelUIViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = secondChannelUIViewController.mm; sourceTree = "<group>"; };
 		AA5B97DE150E92700061D969 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		AA5B97E5150EAF950061D969 /* fftAnalyzerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftAnalyzerView.h; sourceTree = "<group>"; };
 		AA5B97E6150EAF950061D969 /* fftAnalyzerView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = fftAnalyzerView.mm; sourceTree = "<group>"; };
@@ -197,6 +197,8 @@
 		AA97EF9214F0D25E00A2B892 /* Shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shared.h; sourceTree = "<group>"; };
 		AA97EF9314F0D25F00A2B892 /* Shared.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Shared.mm; sourceTree = "<group>"; };
 		AA97EF9714F0D78900A2B892 /* CocoaLibSpotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaLibSpotify.h; sourceTree = "<group>"; };
+		AAA411D71550BCBD006BF7EA /* mediaPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mediaPickerController.h; sourceTree = "<group>"; };
+		AAA411D81550BCBE006BF7EA /* mediaPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mediaPickerController.m; sourceTree = "<group>"; };
 		AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = mainwindow.xib; sourceTree = "<group>"; };
 		AAB46C0115465C6D003634BF /* itunes channel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "itunes channel.png"; sourceTree = "<group>"; };
 		AAB46C0515466108003634BF /* mixerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mixerViewController.h; sourceTree = "<group>"; };
@@ -207,6 +209,8 @@
 		AAEFA25C151E63ED0066AC86 /* cueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = cueViewController.m; sourceTree = "<group>"; };
 		AAEFA261151F84BC0066AC86 /* playbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playbackViewController.h; sourceTree = "<group>"; };
 		AAEFA262151F84BC0066AC86 /* playbackViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = playbackViewController.mm; sourceTree = "<group>"; };
+		AAFCB41A154DE733006127E3 /* crossfade base.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crossfade base.png"; sourceTree = "<group>"; };
+		AAFCB41B154DE733006127E3 /* crossfade knob.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crossfade knob.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,15 +237,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AA2D5CFE14FAE49300F1DAAA /* secondChannel */ = {
-			isa = PBXGroup;
-			children = (
-				AA58C0F114FC86090074837F /* secondChannelUIViewController.h */,
-				AA58C0F214FC86090074837F /* secondChannelUIViewController.mm */,
-			);
-			name = secondChannel;
-			sourceTree = "<group>";
-		};
 		AA5B97D8150E7D790061D969 /* iPublicUtility */ = {
 			isa = PBXGroup;
 			children = (
@@ -416,13 +411,14 @@
 			children = (
 				AAB46C04154660E9003634BF /* mixerView */,
 				AA5B97E4150EAF160061D969 /* fftAnalyzer */,
-				AA2D5CFE14FAE49300F1DAAA /* secondChannel */,
 				AA97EF7714F0D1DE00A2B892 /* effectController.h */,
 				AA97EF7814F0D1DE00A2B892 /* effectController.mm */,
 				AA97EF7914F0D1DE00A2B892 /* effectgridView.h */,
 				AA97EF7A14F0D1DE00A2B892 /* effectgridView.mm */,
 				AAEFA261151F84BC0066AC86 /* playbackViewController.h */,
 				AAEFA262151F84BC0066AC86 /* playbackViewController.mm */,
+				AAA411D71550BCBD006BF7EA /* mediaPickerController.h */,
+				AAA411D81550BCBE006BF7EA /* mediaPickerController.m */,
 			);
 			name = playbackView;
 			sourceTree = "<group>";
@@ -456,6 +452,8 @@
 		AA97EF5114F0D0DA00A2B892 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				AAFCB41A154DE733006127E3 /* crossfade base.png */,
+				AAFCB41B154DE733006127E3 /* crossfade knob.png */,
 				AAB46C0115465C6D003634BF /* itunes channel.png */,
 				AA7423311545083700FF43AC /* msco based.png */,
 				AA74232F154507EE00FF43AC /* appiconMSCP.png */,
@@ -579,6 +577,8 @@
 				AA742330154507EE00FF43AC /* appiconMSCP.png in Resources */,
 				AA7423321545083700FF43AC /* msco based.png in Resources */,
 				AAB46C0215465C6D003634BF /* itunes channel.png in Resources */,
+				AAFCB41C154DE733006127E3 /* crossfade base.png in Resources */,
+				AAFCB41D154DE733006127E3 /* crossfade knob.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -619,7 +619,6 @@
 				AA97EF8814F0D20700A2B892 /* audioControl.mm in Sources */,
 				AA97EF9414F0D26000A2B892 /* Shared.mm in Sources */,
 				AA83DAD914F7327300BF43F0 /* playlistViewController.m in Sources */,
-				AA58C0F314FC86090074837F /* secondChannelUIViewController.mm in Sources */,
 				AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */,
 				AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */,
 				AAEFA263151F84BD0066AC86 /* playbackViewController.mm in Sources */,
@@ -628,6 +627,7 @@
 				AAB46C0715466108003634BF /* mixerViewController.m in Sources */,
 				AAB46C0A15467860003634BF /* mainViewController.m in Sources */,
 				AA65633A154A48EE0030711C /* tabbarController.m in Sources */,
+				AAA411D91550BCBE006BF7EA /* mediaPickerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

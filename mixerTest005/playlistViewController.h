@@ -39,6 +39,8 @@
     
     int tagAdd;
     BOOL createStarredBox;
+    UIView *loadingView;
+    BOOL orientationIsLandscape;
 }
 
 
@@ -68,6 +70,9 @@
 - (void)checkMissedPlaylists:(SPPlaylist *)pl;
 - (void)createStarredTracksPlaylist:(SPPlaylistContainer *)playlistContainer;
 - (void)starredClicked;
+
+- (void)initLoadProcess;
+
 
 
 @end

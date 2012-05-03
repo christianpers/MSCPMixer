@@ -21,7 +21,6 @@
     if (self) {
         // Custom initialization
         
-       
         
     }
     return self;
@@ -41,50 +40,18 @@
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView
 {
-    UIView *test = [[UIView alloc]initWithFrame:CGRectMake(0, 400, 700, 300)];
-    self.view = test;
-   
+    
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    CGSize winSize = window.frame.size;
+    
+    CGRect searchrect = CGRectMake(0, 0, winSize.width, winSize.height);
+    self.view = [[UIView alloc] initWithFrame:searchrect];
     self.view.backgroundColor = [UIColor blackColor];
-     
-    self.searchField = [[UITextField alloc]initWithFrame:CGRectMake(130, 400, 340, 50)];
-  //  self.searchField.borderStyle = UITextBorderStyleRoundedRect;
-    self.searchField.textColor = [UIColor blackColor]; //text color
-    self.searchField.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(30.0)];
-    self.searchField.placeholder = @"Do some crate diggin..";  //place holder
-    self.searchField.backgroundColor = [UIColor whiteColor]; //background color
-    self.searchField.textAlignment = UITextAlignmentCenter;
-    self.searchField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-    [self.view addSubview:self.searchField];
-    [searchField release];
-  
-    UIButton *searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    searchBtn.frame = CGRectMake(490, 400, 120, 50);// position in the parent view and set the size of the
-    //searchBtn.layer.backgroundColor = [[UIColor whiteColor]CGColor];
-    [searchBtn setTitle:[NSString stringWithFormat:@"Search"] forState:UIControlStateNormal];
-    searchBtn.backgroundColor = [UIColor redColor];
-    searchBtn.layer.cornerRadius = 1;
-    [searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    searchBtn.titleLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(30.0)];
-    [searchBtn addTarget:self 
-                  action:@selector(searchClicked:)
-        forControlEvents:UIControlEventTouchDown];
-    searchBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     
-    [self.view addSubview:searchBtn];
-    
-    [self addObserver:self forKeyPath:@"search.tracks" options:0 context:nil];
-    [self addObserver:self forKeyPath:@"search.searchInProgress" options:0 context:nil];
-
-    [super viewDidLoad];
-    
-    NSString* mscpImgStr = [[NSBundle mainBundle] pathForResource:@"msco based" ofType:@"png"];
-    UIImage *mscpImage = [UIImage imageWithContentsOfFile:mscpImgStr];
-    
-    UIImageView *mscpImg = [[UIImageView alloc]initWithImage:mscpImage];
-    mscpImg.frame = CGRectMake(40, 600, 342, 346);
-    [self.view addSubview:mscpImg];
-    [mscpImg release];
-                   
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    appStarted = NO;
+   
+                      
 }
 
 - (void)searchClicked:(UIButton *)btn{
@@ -157,7 +124,6 @@
 }
 -(void)createSearchList:(SPSearch *)returnObj{
     
-    
     NSMutableArray *albumarr;
     NSMutableArray *trackarr;
     NSMutableArray *artistsarr;
@@ -178,34 +144,116 @@
     
     searchTableViewController *rootSearchView = [[searchTableViewController alloc]init];
     
+ //   rootSearchView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    
     rootSearchView.detailArr = arr;
     rootSearchView.tableView.backgroundColor = [UIColor blackColor];
     
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:rootSearchView];
     
    // navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    [self presentViewController:navController animated:YES completion:nil];
+    
+    [main.mainViewController presentViewController:navController animated:YES completion:nil];
   
     [rootSearchView release];
     [navController release];
 }
 
-
-
-
-
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSString* mscpImgStr = [[NSBundle mainBundle] pathForResource:@"msco based" ofType:@"png"];
+    UIImage *mscpImage = [UIImage imageWithContentsOfFile:mscpImgStr];
+    
+    searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    mscpImg = [[UIImageView alloc]initWithImage:mscpImage];
+    
+    self.searchField = [[UITextField alloc]initWithFrame:CGRectMake(130, 400, 340, 50)];
+    searchBtn.frame = CGRectMake(490, 400, 120, 50);// position in the parent view and set the size of the
+    mscpImg.frame = CGRectMake(40, 600, 342, 346);
+
+    
+    self.view.backgroundColor = [UIColor blackColor];
+    
+    //  self.searchField.borderStyle = UITextBorderStyleRoundedRect;
+    self.searchField.textColor = [UIColor blackColor]; //text color
+    self.searchField.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(30.0)];
+    self.searchField.placeholder = @"Do some crate diggin..";  //place holder
+    self.searchField.backgroundColor = [UIColor whiteColor]; //background color
+    self.searchField.textAlignment = UITextAlignmentCenter;
+ //   self.searchField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+    [self.view addSubview:self.searchField];
+    [searchField release];
+    
+    //searchBtn.layer.backgroundColor = [[UIColor whiteColor]CGColor];
+    [searchBtn setTitle:[NSString stringWithFormat:@"Search"] forState:UIControlStateNormal];
+    searchBtn.backgroundColor = [UIColor redColor];
+    searchBtn.layer.cornerRadius = 1;
+    [searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    searchBtn.titleLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(30.0)];
+    [searchBtn addTarget:self 
+                  action:@selector(searchClicked:)
+        forControlEvents:UIControlEventTouchDown];
+ //   searchBtn.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+    
+    [self.view addSubview:searchBtn];
+    
+    [self addObserver:self forKeyPath:@"search.tracks" options:0 context:nil];
+    [self addObserver:self forKeyPath:@"search.searchInProgress" options:0 context:nil];
+    
+    //  [super viewDidLoad];
+    
+    
+ //   mscpImg.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
+    [self.view addSubview:mscpImg];
+    [mscpImg release];
+
 
 }
+
+- (void)setlandscapemode{
+    NSLog(@"landscape ffs !!");
+    
+    self.searchField.frame = CGRectMake(300, 230, 340, 50);
+    searchBtn.frame = CGRectMake(660, 230, 120, 50);// position in the parent view and set the size of the
+    mscpImg.frame = CGRectMake(40, 400, 342, 346);
+    
+    
+    
+}
+- (void)setportraitmode{
+    self.searchField.frame = CGRectMake(130, 400, 340, 50);
+    searchBtn.frame = CGRectMake(490, 400, 120, 50);// position in the parent view and set the size of the
+    mscpImg.frame = CGRectMake(40, 600, 342, 346);
+    
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    
+    if (!appStarted){
+        if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)){
+            
+            [self setlandscapemode];
+        }
+        appStarted = YES;
+    }
+    
+}
+
 
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    
+    [self.searchField removeFromSuperview];
+    [searchBtn removeFromSuperview];
+    [mscpImg removeFromSuperview];
+    self.search = nil;
    
     
 }
@@ -223,10 +271,10 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
     if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)){
+       
         
     }else if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
-        
-        //   main.menuController.view.frame = CGRectMake(580, 30, size.width, size.height);
+       
         
     }
     

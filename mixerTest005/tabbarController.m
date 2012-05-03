@@ -7,11 +7,14 @@
 //
 
 #import "tabbarController.h"
+#import "AppDelegate.h"
 
 
 @implementation tabbarController
 
 @synthesize cueController;
+@synthesize menuBg;
+@synthesize loadplaylistView;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -19,6 +22,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+       
     }
     return self;
 }
@@ -26,13 +30,18 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    
 	[self hideTabBar];
-	[self addCustomElements];
+    if (!appStarted)
+        [self addCustomElements];
+    
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.delegate = self;
+    appStarted = NO;
 	// Do any additional setup after loading the view.
 }
 
@@ -44,11 +53,46 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	return YES;
+    if (UIInterfaceOrientationIsPortrait(interfaceOrientation)){
+      //  NSLog(@"fuck landscape");
+        return YES;
+        
+    }else if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+      //  NSLog(@"fuck portrait");
+        return YES;
+    }
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)){
+        NSLog(@"tabbarcontroller switch orientation landscape");
+        //  menuBg.frame = CGRectMake(530, 30, 200, 185);
+        
+    }else if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
+         //  menuBg.frame = CGRectMake(570, 30, 200, 185);
+         NSLog(@"tabbarcontroller switch orientation portrait");
+        
+    }
+    
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController{
+    
+    NSLog(@"selected view tabbar");
 }
 
 - (void)addCustomElements{
    
+    int menuX;
+    if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)){
+        NSLog(@"tabcontroller landscape playback");
+        menuX = 310;
+        
+    }else {
+        menuX = 570;
+    }
+    
     // Now we repeat the process for the other buttons
 	playlistBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     playlistBtn.frame = CGRectMake(29, 10, 170, 40);
@@ -71,7 +115,6 @@
     [playbackBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 	[playbackBtn setSelected:true]; // Set this button as selected (we will select the others to false as we only want Tab 1 to be selected initially
     
-    
     searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     searchBtn.frame = CGRectMake(0, 130, 170, 40);
     [searchBtn setBackgroundColor:[UIColor clearColor]];
@@ -87,8 +130,7 @@
     activeImg = [[UIImageView alloc]initWithFrame:CGRectMake(11, 87, 11, 11)];
     activeImg.image = activeViewImg;
     
-    
-    menuBg = [[UIView alloc]initWithFrame:CGRectMake(570, 30, 200, 185)];
+    menuBg = [[UIView alloc]initWithFrame:CGRectMake(menuX, 30, 200, 185)];
     menuBg.backgroundColor = [UIColor blackColor];
     [menuBg addSubview:playlistBtn];
     [menuBg addSubview:playbackBtn];
@@ -105,10 +147,14 @@
     [self.view addSubview:self.cueController.view];
   //  self.cueController.view.hidden = YES;
     
+    appStarted = YES;
+    
 }
 
 - (void)selectTab:(int)tabID
 {
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     switch(tabID)
     {
         case 0:
@@ -118,11 +164,20 @@
             activeImg.frame = CGRectMake(11, 87, 11, 11);
             break;
         case 1:
+        
+          //       loadplaylistView = [[UIViewController alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
+            //loadplaylistView = [[UIViewController alloc]init];
+          //  loadplaylistView.frame = CGRectMake(100, 100, 200, 200);
+          //  loadplaylistView.backgroundColor = [UIColor whiteColor];
+          //       [main.mainViewController.view addSubview:loadplaylistView];
+          //  [main.mainViewController presentModalViewController:loadplaylistView animated:YES];
+            activeImg.frame = CGRectMake(11, 27, 11, 11);
+            
             [playbackBtn setSelected:false];
             [playlistBtn setSelected:true];
             [searchBtn setSelected:false];
             
-            activeImg.frame = CGRectMake(11, 27, 11, 11);
+            
             break;
         case 2:
             [playbackBtn setSelected:false];
@@ -157,6 +212,8 @@
    // [self.playbackBtn release];
     //[self.searchBtn release];
     [self.cueController release];
+    [self.menuBg release];
+    [super dealloc];
 }
 
 @end

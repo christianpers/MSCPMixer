@@ -15,6 +15,7 @@
 #import "CocoaLibSpotify.h"
 #import "fftAnalyzerView.h"
 #import <QuartzCore/QuartzCore.h>
+#import "mediaPickerController.h"
 
 @interface playbackViewController : UIViewController <MPMediaPickerControllerDelegate>{
     
@@ -44,7 +45,9 @@
     UIButton *addtrack;
     UILabel *artistlblCh2;
     UILabel *titlelblCh2;
-    
+    UIImageView *crossfadeKnob;
+    UIImageView *crossfadeBg;
+    float crossfadevolch1, crossfadevolch2;
     
     NSURL* outURL;
 	NSURL* pcmURL;
@@ -67,6 +70,8 @@
     NSString *glArtist;
     NSString *glTitle;
     BOOL    isPaused;
+    
+    BOOL appStarted;
     
   
 }
@@ -100,6 +105,9 @@
 @property(nonatomic, retain) UIButton *addtrack;
 @property(nonatomic, retain) UILabel *artistlblCh2;
 @property(nonatomic, retain) UILabel *titlelblCh2;
+
+//@property(nonatomic, retain) UIImageView *crossfadeBg;
+@property(nonatomic, retain) UIImageView *crossfadeKnob;
 
 
 

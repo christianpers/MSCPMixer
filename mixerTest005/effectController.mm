@@ -52,7 +52,7 @@ CGSize parentSize;
         
         [self.gridView removeFromSuperview];
         [self drawEffectGrid:piece.tag];
-         main.cueController.view.hidden = YES;
+      //   main.cueController.view.hidden = YES;
         //parentView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.26];
         //parentView.layer.borderWidth = 4.0f;
         
@@ -91,15 +91,7 @@ CGSize parentSize;
             self.gridView.param1 = paramVal1;
             self.gridView.param2 = paramVal2;
             
-            if (piece.tag <= 5){
-            //    piece.backgroundColor = [UIColor whiteColor];
-                
-            }
-            else{
-            //    piece.backgroundColor = [UIColor blackColor];
-                
-            }
-            
+              
             [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
             [gestureRecognizer setTranslation:CGPointZero inView:[piece superview]];
            // setY = [piece center].y + translation.y;
@@ -129,7 +121,7 @@ CGSize parentSize;
         [self.gridView removeFromSuperview];
         self.gridView = nil;
         
-        main.cueController.view.hidden = NO;
+   //     main.cueController.view.hidden = NO;
         parentView.backgroundColor = [UIColor clearColor];
      //   parentView.layer.borderWidth = 0.0f;
         

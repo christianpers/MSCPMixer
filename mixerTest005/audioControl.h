@@ -174,6 +174,8 @@
 -(Boolean)isaugraphRunning;
 
 
+- (void)setMasterMixerPanning:(AudioUnitParameterValue)ch1 :(AudioUnitParameterValue)ch2;
+
 
 /*
  effect controls
@@ -230,6 +232,7 @@
 @property(nonatomic) BOOL playbackIsPaused;
 
 @property(nonatomic, assign)fftAnalyzerView *fftView;
+
 
 
 

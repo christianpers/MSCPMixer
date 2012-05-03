@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "cueViewController.h"
 
-@interface tabbarController : UITabBarController{
+@interface tabbarController : UITabBarController <UITabBarControllerDelegate>{
     
     UIButton *playlistBtn;
     UIButton *playbackBtn;
@@ -17,9 +17,13 @@
     UIView  *menuBg;
     UIImageView *activeImg;
     cueViewController *cueController;
+    BOOL appStarted;
+    UIView *loadplaylistView;
 }
 
 @property (nonatomic, retain) cueViewController *cueController;
+@property (nonatomic, retain) UIView *menuBg;
+@property (nonatomic, retain) UIView *loadplaylistView;
 
 -(void) hideTabBar;
 -(void) addCustomElements;

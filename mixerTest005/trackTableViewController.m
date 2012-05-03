@@ -52,7 +52,12 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	return YES;
+    if (UIInterfaceOrientationIsPortrait(interfaceOrientation)){
+        return YES;
+        
+    }else if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+        return YES;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

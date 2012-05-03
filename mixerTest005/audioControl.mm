@@ -548,6 +548,24 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	
 }
 
+-(void)setMasterMixerPanning:(AudioUnitParameterValue)ch1 :(AudioUnitParameterValue)ch2{
+    OSStatus result = noErr;
+    
+    NSLog(@"setting mastervol");
+    result = AudioUnitSetParameter(mixerUnit, kMultiChannelMixerParam_Volume, kAudioUnitScope_Input, 0, ch1, 0);
+    if (noErr != result){
+        
+        { printf("mastervol result %lu %4.4s\n", result, (char*)&result); return; }
+    }
+    NSLog(@"setting mastervol");
+    result = AudioUnitSetParameter(mixerUnit, kMultiChannelMixerParam_Volume, kAudioUnitScope_Input, 1, ch2, 0);
+    if (noErr != result){
+        
+        { printf("mastervol result %lu %4.4s\n", result, (char*)&result); return; }
+    }
+    
+}
+
 
 -(void)setMasterVolCh2:(AudioUnitParameterValue)val{
     OSStatus result = noErr;
@@ -661,7 +679,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	BOOL result = [self.playbackSession playTrack:self.currentTrack error:error];
 	if (result){
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [main.plbackViewController setTrackTitleAndArtist:self.currentTrack];
+        [main.mainViewController.plbackViewController setTrackTitleAndArtist:self.currentTrack];
 		self.playbackSession.playing = YES;
         [main.cueController.tableView reloadData];
     }

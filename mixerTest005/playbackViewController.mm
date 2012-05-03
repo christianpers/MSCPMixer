@@ -19,6 +19,7 @@
 @synthesize trackControlBG, trackControlFG, controlView;
 @synthesize timepitchController, lopassController, hipassController, channelOneVolController, effectParentView;
 @synthesize fftView;
+@synthesize crossfadeKnob;
 
 @synthesize line;
 @synthesize timepitchControllerCh2,lopassControllerCh2, hipassControllerCh2,controlViewCh2, channelTwoVolController;
@@ -91,7 +92,6 @@
     UIView *cView = [[UIView alloc]initWithFrame:CGRectMake((parentSize.width/2)-(400/2), 430, 400, 70)];
     cView.backgroundColor = [UIColor clearColor];
     self.controlView = cView;
-    [self.view addSubview:self.controlView];
     [cView release];
     
     NSString* imagePathNext = [[NSBundle mainBundle] pathForResource:@"skip forward" ofType:@"png"];
@@ -171,7 +171,7 @@
     self.timepitchController.backgroundColor = [UIColor colorWithPatternImage:tempoImg];
     
     
-    self.lopassController = [[effectController alloc]initWithFrame:CGRectMake(216, 230, 63, 63)];
+    self.lopassController = [[effectController alloc]initWithFrame:CGRectMake(216, 500, 63, 63)];
     self.lopassController.backgroundColor = [UIColor whiteColor];
     [self.effectParentView addSubview:self.lopassController];
     [self.lopassController setTag:2];
@@ -181,7 +181,7 @@
     
     self.lopassController.backgroundColor = [UIColor colorWithPatternImage:lopassImg];
   
-    self.hipassController = [[effectController alloc]initWithFrame:CGRectMake(300, 0, 63, 63)];
+    self.hipassController = [[effectController alloc]initWithFrame:CGRectMake(300, 10, 63, 63)];
     self.hipassController.backgroundColor = [UIColor whiteColor];
     [self.effectParentView addSubview:self.hipassController];
     [self.hipassController setTag:3];
@@ -231,6 +231,7 @@
     [secchannelBtn release];
     
    
+    [self.view addSubview:self.controlView];
     
     /*
      ------------------
@@ -241,7 +242,6 @@
     UIView *c2View = [[UIView alloc]initWithFrame:CGRectMake(690, 430, 150, 70)];
     c2View.backgroundColor = [UIColor clearColor];
     self.controlViewCh2 = c2View;
-    [self.view addSubview:self.controlViewCh2];
     self.controlViewCh2.hidden = YES;
     [c2View release];
     
@@ -271,7 +271,7 @@
     [self.view addSubview:self.effectParentViewCh2];
     
     
-    self.line = [[UIView alloc]initWithFrame:CGRectMake((1024/2)-1, 10, 2, 700)];
+    self.line = [[UIView alloc]initWithFrame:CGRectMake((1074/2)-1, 10, 2, 570)];
     self.line.backgroundColor = [UIColor whiteColor];
     self.line.hidden = YES;
     [self.view addSubview:self.line];
@@ -281,7 +281,7 @@
     [self.lopassControllerCh2 setTag:6];
     [self.effectParentViewCh2 addSubview:self.lopassControllerCh2];
     
-    self.hipassControllerCh2 = [[effectController alloc]initWithFrame:CGRectMake(300, 10, 63, 63)];
+    self.hipassControllerCh2 = [[effectController alloc]initWithFrame:CGRectMake(50, 0, 63, 63)];
     self.hipassControllerCh2.backgroundColor = [UIColor colorWithPatternImage:hipassImg];
     [self.hipassControllerCh2 setTag:8];
     [self.effectParentViewCh2 addSubview:self.hipassControllerCh2];
@@ -291,7 +291,7 @@
     [self.timepitchControllerCh2 setTag:9];
     [self.effectParentViewCh2 addSubview:self.timepitchControllerCh2];
     
-    self.channelTwoVolController = [[effectController alloc]initWithFrame:CGRectMake(200, 10, 63, 63)];
+    self.channelTwoVolController = [[effectController alloc]initWithFrame:CGRectMake(170, 0, 63, 63)];
     self.channelTwoVolController.backgroundColor = [UIColor colorWithPatternImage:volImg];
     [self.channelTwoVolController setTag:7];
     [self.effectParentViewCh2 addSubview:self.channelTwoVolController];
@@ -331,6 +331,41 @@
     
     [self.view addSubview:self.titlelblCh2];
     
+    [self.view addSubview:self.controlViewCh2];
+    
+    
+    
+    //**crossfade stuff**//
+    
+    NSString* crossfadeBgImgStr = [[NSBundle mainBundle] pathForResource:@"crossfade base" ofType:@"png"];
+    UIImage *crossfadeBgImg = [UIImage imageWithContentsOfFile:crossfadeBgImgStr];
+    
+    crossfadeBg = [[UIImageView alloc]initWithImage:crossfadeBgImg];
+    crossfadeBg.frame = CGRectMake(385, 650, 305, 46);
+    crossfadeBg.hidden = YES;
+    [self.view addSubview:crossfadeBg];
+    [crossfadeBg release];
+    
+    UIPanGestureRecognizer *knobGr = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panCrossfadeKnob:)];
+    
+    NSString* crossfadeKnobImgStr = [[NSBundle mainBundle] pathForResource:@"crossfade knob" ofType:@"png"];
+    UIImage *crossfadeKnobImg = [UIImage imageWithContentsOfFile:crossfadeKnobImgStr];
+    
+    self.crossfadeKnob = [[UIImageView alloc]initWithImage:crossfadeKnobImg];
+    self.crossfadeKnob.frame = CGRectMake(517, 612, 40, 57);
+    self.crossfadeKnob.hidden = YES;
+    self.crossfadeKnob.userInteractionEnabled = YES;
+    [self.view addSubview:crossfadeKnob];
+    [self.crossfadeKnob addGestureRecognizer:knobGr];
+   
+    [knobGr release];
+    [crossfadeKnob release];
+    
+    crossfadevolch1 = .5;
+    crossfadevolch2 = .5;
+    
+    appStarted = NO;
+    
 }
 
 - (void)viewDidUnload
@@ -358,6 +393,32 @@
     [self.effectParentViewCh2 release];
     [self.controlViewCh2 release];
     [self.addtrack release];
+    [self.crossfadeKnob release];
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSLog(@"viewwillappear playback view");
+  
+    if (!appStarted){
+        if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)){
+            NSLog(@"landscape playback");
+            [self setmixerModeOn];
+            
+        }     
+        appStarted = YES;
+    }  
+    
+    // [self.view addSubview:self.plMainView];
+    
+    
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    
+    [super viewDidDisappear:animated];
+    NSLog(@"viewdiddisappear playback view");
     
 }
 
@@ -371,6 +432,45 @@
     }else if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
         return YES;
     }        
+}
+
+-(void)panCrossfadeKnob:(UIPanGestureRecognizer *)recognizer{
+    NSLog(@"pan piece");
+    UIView *piece = [recognizer view];
+    
+    CGPoint pos = piece.frame.origin;
+    CGPoint translation = [recognizer translationInView:[piece superview]];
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        if (pos.x <= 660) {
+            [piece setCenter:CGPointMake([piece center].x + translation.x, 640)];
+        }else if (pos.x >= 375){
+            [piece setCenter:CGPointMake([piece center].x + translation.x, 640)];
+        }
+    }
+    else {
+        
+        if((pos.x+translation.x >= 375 && pos.x+translation.x <= 660)){
+            
+            [piece setCenter:CGPointMake([piece center].x + translation.x, 640)];
+            [recognizer setTranslation:CGPointZero inView:[piece superview]];
+            [self setcrossfadeCurrVol:[piece center].x];
+        }
+        
+    }
+}
+
+- (void)setcrossfadeCurrVol:(float)currXval{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    float totDistance = 660 - 340;
+    float currdiff = currXval - 375;
+    float volch2 = currdiff/totDistance;
+    float volch1 = 1 - volch2;
+    [main.playbackManager setMasterMixerPanning:volch1 :volch2];
+    NSLog(@"ch1: %f ch2: %f",volch1, volch2);
+    
+    
 }
 
 - (void)trackdurationSwipe:(UIPanGestureRecognizer *)gesture{
@@ -663,7 +763,11 @@
     self.artistlblCh2.hidden = NO;
     self.titlelblCh2.hidden = NO;
     
+    crossfadeBg.hidden = NO;
+    crossfadeKnob.hidden = NO;
+    
     self.effectParentView.frame = CGRectMake(20, 20, 440, 600);
+    NSLog(@"mixer mode done");
     
 }
 
@@ -680,6 +784,8 @@
     self.artistlblCh2.hidden = YES;
     self.titlelblCh2.hidden = YES;
     
+    crossfadeBg.hidden = YES;
+    crossfadeKnob.hidden = YES;
     
     self.effectParentView.frame = CGRectMake(50, 40, 650, 930);
     
@@ -708,9 +814,11 @@
 		//NSString *artisttest = [item valueForProperty:MPMediaItemPropertyArtist];
         
 		glTitle = [item valueForProperty:MPMediaItemPropertyTitle];
-		glTitle = [item valueForProperty:MPMediaItemPropertyArtist];
+		glArtist = [item valueForProperty:MPMediaItemPropertyArtist];
 		NSNumber* dur = [item valueForProperty:MPMediaItemPropertyPlaybackDuration]; 
 		//NSTimeInterval is a double
+        self.titlelblCh2.text = glTitle;
+        self.artistlblCh2.text = glArtist;
 		duration_ = [dur doubleValue]; 
 		
 		//MPMediaItemPropertyArtist
@@ -723,23 +831,7 @@
 			return;
 		}
         NSLog(@"title: %@",glTitle);
-        [UIView animateWithDuration:1
-                         animations:^{
-                             //     self.tableView.alpha = 1;
-                             //     self.tableView.hidden = YES;
-                             main.cueController.view.hidden = NO;
-                             main.airplayIcon.hidden = NO;
-                             main.userTxtBtn.hidden = NO;
-                         }];
-        
-        [UIView beginAnimations : @"Display notif" context:nil];
-        [UIView setAnimationDuration:1];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        
-        self.view.frame = CGRectMake(0, self.view.bounds.size.height/2, self.view.bounds.size.width, self.view.bounds.size.height/2);
-        
-        [UIView commitAnimations];
-        
+               
     	[self exportAssetAtURL:glAssetURL withTitle:glTitle withArtist:glArtist];
 	}
 }
@@ -749,20 +841,7 @@
     
 	[mediaPicker dismissModalViewControllerAnimated:YES];
     
-    [UIView animateWithDuration:1
-                     animations:^{
-                         //     self.tableView.alpha = 1;
-                         //     self.tableView.hidden = YES;
-                         main.cueController.view.hidden = NO;
-                     }];
-    
-    [UIView beginAnimations : @"Display notif" context:nil];
-    [UIView setAnimationDuration:1];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    
-    self.view.frame = CGRectMake(0, self.view.bounds.size.height/2, self.view.bounds.size.width, self.view.bounds.size.height/2);
-    
-    [UIView commitAnimations];
+  
     importingflag_=0; 
 	
 }
@@ -772,10 +851,10 @@
 - (void)showMediaPicker {
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-	MPMediaPickerController* mediaPicker = [[[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeMusic] autorelease];
+	mediaPickerController* mediaPicker = [[[mediaPickerController alloc] initWithMediaTypes:MPMediaTypeMusic] autorelease];
 	mediaPicker.delegate = self;
     mediaPicker.view.frame = CGRectMake(0, 0, 1024, 768);
-    mediaPicker.view.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+   // mediaPicker.view.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 	[main.mainViewController presentModalViewController:mediaPicker animated:YES];
     
     
@@ -1155,6 +1234,10 @@ audiofileProblem:
 -(void)stopTrackCh2:(id)sender{
     UIButton *stop = (UIButton *)sender;
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    //update track and artist ui
+    self.titlelblCh2.text = @"Title";
+    self.artistlblCh2.text = @"Artist";
     
     CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
     fadeAnimation.fromValue=[NSNumber numberWithFloat:1];

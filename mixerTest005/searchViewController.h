@@ -16,7 +16,9 @@
     SPSearch *search;
     int searchCount;
     BOOL noResult;
-    
+    UIButton *searchBtn;
+    UIImageView *mscpImg;
+    BOOL appStarted;
 }
 
 @property (nonatomic, retain) UITextField *searchField;
@@ -28,6 +30,9 @@
 -(void)createSearchList:(SPSearch *)returnObj;
 -(void)closeResultView;
 -(void)createDetailView:(NSMutableArray *)resultArr;
+
+- (void)setlandscapemode;
+- (void)setportraitmode;
 
 
 @end

@@ -81,7 +81,7 @@
 - (void)drawRect:(CGRect)rect
 {
     [self updateparamVal];
-    int nrofverticallines = self.frame.size.width/20;
+  /*  int nrofverticallines = self.frame.size.width/20;
     for (int i=0;i<nrofverticallines;i++){
         int x = nrofverticallines * i;
         
@@ -135,7 +135,7 @@
         CGColorRelease(color);
         
     }
-    
+    */
    /* [self updateparamVal];
     int x = [Shared sharedInstance].effectgridX;
     int y = [Shared sharedInstance].effectgridY;

@@ -20,19 +20,15 @@
 @synthesize mainViewController = _mainViewController;
 @synthesize playbackManager = _playbackManager;
 @synthesize currentTrack = _currentTrack;
-@synthesize navigationController = _navigationController;
-@synthesize loadPlaylist = _loadPlaylist;
+@synthesize loadPlaylist = loadPlaylist;
 @synthesize loadingView = _loadingView;
-@synthesize searchTViewController = _searchTViewController;
-@synthesize searchController = _searchController;
 @synthesize chTwoActive;
 @synthesize airplayIcon;
-@synthesize plViewController;
 @synthesize cueController;
 @synthesize logoutViewController;
-@synthesize plbackViewController;
 @synthesize userTxtBtn;
 @synthesize tabController;
+@synthesize trackimg;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -42,13 +38,9 @@
     
     [self.window setRootViewController:self.mainViewController];
     
-    
     self.mainViewController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
-    self.searchController = [[searchViewController alloc]init];
-    
-    
-  	[SPSession initializeSharedSessionWithApplicationKey:[NSData dataWithBytes:&g_appkey length:g_appkey_size] 
+   	[SPSession initializeSharedSessionWithApplicationKey:[NSData dataWithBytes:&g_appkey length:g_appkey_size] 
 											   userAgent:@"MSCP.mixerTest005"
 												   error:nil];
     
@@ -56,6 +48,7 @@
     
 	[self addObserver:self forKeyPath:@"currentTrack.duration" options:0 context:nil];
 	[self addObserver:self forKeyPath:@"playbackManager.trackPosition" options:0 context:nil];
+    
     
     [[SPSession sharedSession] setDelegate:self];
     
@@ -69,54 +62,45 @@
 											   animated:NO];
 }
 
--(void)createLoadingPlView{
-    
-    CGSize winSize = self.window.frame.size;
-  //  self.loadviewController = [[UIViewController alloc]init];
-    UIView *newloadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, winSize.width, winSize.height)];
-   
-    newloadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
-  //  [self.mainViewController.view insertSubview:newloadingView aboveSubview:self.plbackViewController.view];
-  //  [self.tabController presentModalViewController:<#(UIViewController *)#> animated:<#(BOOL)#>]
-    
-    UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(0, 580, winSize.width, 60)];
-    // lbl.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.6];
-    lbl.backgroundColor = [UIColor clearColor];
-    lbl.textColor = [UIColor whiteColor];
-    lbl.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(26.0)];
-    lbl.text = [NSString stringWithFormat:@"LOADING UR PLAYLISTS"];
-    lbl.textAlignment = UITextAlignmentCenter;
-    [newloadingView addSubview:lbl];
-    [lbl release];
-    
-    UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
-    av.frame=CGRectMake((winSize.width/2)-(85/2), ((winSize.height/2)-(85/2))-40, 85, 85);
-    av.tag  = 1;
-    [newloadingView addSubview:av];
-    [av startAnimating];
-    
-    self.loadingView = newloadingView;
-    
-    [newloadingView release];
-    
-}
-
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"currentTrack.duration"]) {
 	//	self.positionSlider.maximumValue = self.currentTrack.duration;
-        [self.plbackViewController setPlayduration:self.currentTrack.duration];
+        [self.mainViewController.plbackViewController setPlayduration:self.currentTrack.duration];
         NSLog(@"duration set");
 	} else if ([keyPath isEqualToString:@"playbackManager.trackPosition"]) {
 		// Only update the slider if the user isn't currently dragging it.
 	//	if (!self.positionSlider.highlighted)
 	//		self.positionSlider.value = self.playbackManager.trackPosition;
      //   NSLog(@"trackposition: %f",self.playbackManager.trackPosition);
-        [self.plbackViewController updatePlayduration:self.playbackManager.trackPosition];
+        [self.mainViewController.plbackViewController updatePlayduration:self.playbackManager.trackPosition];
+    }
+    
+    else if ([keyPath isEqualToString:@"self.trackimg.album.cover.image"]) {
+        tempImg = trackimg.album.cover.image;
+        
+        if (trackimg.album.cover.isLoaded){
+            NSLog(@"loaded image nr: %d",plCounter);
+            
+ //           [self createnewplBox:tempImg];
+            if (plCounter < nrOfPl){
+                plCounter++;
+                [self checkPlLoad:plContainer];    
+            }
+        }
+	}
+    else if ([keyPath isEqualToString:@"self.loadPlaylist.items"]){
+        //  self.plCallback = self.loadPlaylist.items;
+        plCallb = self.loadPlaylist;
+        if(self.loadPlaylist.isLoaded){
+            
+            [self setLoadedTrack:self.loadPlaylist];
+        }
     }
     else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -155,7 +139,8 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
-    [self.cueController.tableView reloadData];
+   // [self.cueController.tableView reloadData];
+    [self.tabController.cueController.tableView reloadData];
     
 }
 
@@ -215,7 +200,7 @@
         else {
             self.currentTrack = track;
             
-            [self.cueController.tableView reloadData];
+         //   [self.cueController.tableView reloadData];
             
         }
         
@@ -232,19 +217,19 @@
 }
 
 - (void)removeGUI{
-    [self.plbackViewController.view removeFromSuperview];
-    [self.cueController.view removeFromSuperview];
-    [self.airplayIcon removeFromSuperview];
+  //  [self.plbackViewController.view removeFromSuperview];
+   // [self.cueController.view removeFromSuperview];
+ //   [self.airplayIcon removeFromSuperview];
     [[Shared sharedInstance].masterCue removeAllObjects];
-    [self.userTxtBtn removeFromSuperview];
+ //   [self.userTxtBtn removeFromSuperview];
     
 }
 
 - (void)initLoadGUI{
     
-    
+    NSLog(@"initloadgui");
     //PLAYBACK viewcontroller
-    self.plbackViewController = [[playbackViewController alloc]init];
+ //   self.plbackViewController = [[playbackViewController alloc]init];
     
     
     //CUE controller
@@ -266,12 +251,146 @@
     [myVolumeView release];
     [mpVolumeViewParentView release];
     
-    
-
-//    [self.mainViewController.view addSubview:self.menuController.view];
-    
-  
 }
+
+-(void)checkPlLoad:(SPPlaylistContainer *)plCon{
+    
+    SPPlaylist *playlistDetail = [plCon.playlists objectAtIndex:plCounter];
+    
+    if (![playlistDetail isKindOfClass:[SPPlaylistFolder class]]){
+        
+        if (!playlistDetail.isLoaded){
+            
+            //self.loadPlaylist = playlistDetail;
+            //[self loadplaylist:playlistDetail];
+            //      plCounter++;
+            //     [self performSelector:@selector(checkPlLoad:) withObject:plContainer afterDelay:0.1];
+            //     return;
+        }
+        else{
+            [self setLoadedTrack:playlistDetail];
+        }
+    }
+    else {
+        SPPlaylistFolder *plFolder = (SPPlaylistFolder *)playlistDetail;
+        SPPlaylist *pl = [plFolder.playlists objectAtIndex:0];
+        self.loadPlaylist = pl;
+    }
+}
+
+-(void)setLoadedTrack:(SPPlaylist *)pl{
+    
+    SPPlaylist *playlistDetail = pl;
+    SPPlaylistFolder *playlistFolder;
+    SPPlaylistItem *playlistItem;
+    Boolean foundValidTrack = NO;
+    
+    NSURL *trackURL;
+    
+    //check if folderSPPlaylistFolder
+    if ([playlistDetail isKindOfClass:[SPPlaylistFolder class]]){
+        playlistFolder = [plContainer.playlists objectAtIndex:plCounter];
+        playlistDetail = [playlistFolder.playlists objectAtIndex:0];
+        
+    }
+    
+    NSLog(@"fucking shit: %@",playlistDetail.name);
+    for (SPPlaylistItem *trackTest in playlistDetail.items){
+        if (!foundValidTrack){
+            if(trackTest.itemURLType == SP_LINKTYPE_TRACK){
+                SPTrack *trackAvailTest = [[SPSession sharedSession] trackForURL:trackTest.itemURL];
+                if (trackAvailTest.availability == 1){
+                    foundValidTrack = YES;
+                    playlistItem = trackTest;
+                    
+                }
+                
+            }
+        }
+    }
+    if (!foundValidTrack){
+  /*      UIButton *btn = (UIButton *)[self.plMainView viewWithTag:plCounter+tagAdd];
+        for (UIView *view in [btn subviews]){
+            [view removeFromSuperview];
+            
+        }
+        
+        CGSize size = btn.frame.size;
+        
+        UILabel *plTitle = [[ [UILabel alloc ] initWithFrame:CGRectMake(0, (size.height/2)-(30/2), size.width, 30)]autorelease];
+        plTitle.textAlignment =  UITextAlignmentCenter;
+        plTitle.textColor = [UIColor blackColor];
+        plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
+        plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
+        plTitle.text = [NSString stringWithFormat: @"No valid tracks"];
+        [btn addSubview:plTitle];
+   */     
+        NSNumber *missedplNum = [NSNumber numberWithInt:plCounter];
+        [missedPlArray addObject:missedplNum];
+        plCounter++;
+        
+        [self checkPlLoad:plContainer];
+        
+    }
+    else{
+        trackURL = playlistItem.itemURL;
+        SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
+        if (track.availability == 1){
+            if (!track.album.cover.isLoaded) {
+                CGImageRef cgref = [track.album.cover.image CGImage];
+                CIImage *cim = [track.album.cover.image CIImage];
+                
+                if (cim == nil && cgref == NULL)
+                {
+                    NSLog(@"no underlying data");
+                    self.trackimg = track;
+                    // [self loadImage:track.album];
+                }
+                else{
+                    NSLog(@"weird place");
+                    //      [self createnewplBox:track.album.cover.image];
+                    if (plCounter < nrOfPl){
+                        [self checkPlLoad:plContainer];    
+                    }
+                    
+                }
+
+            }else {
+                plCounter++;
+                [self checkPlLoad:plContainer];
+            }
+            
+                       
+        }
+        else
+        {
+   /*         UIButton *btn = (UIButton *)[self.plMainView viewWithTag:plCounter+tagAdd];
+            for (UIView *view in [btn subviews]){
+                [view removeFromSuperview];
+                
+            }
+            
+            CGSize size = btn.frame.size;
+            UILabel *plTitle = [[ [UILabel alloc ] initWithFrame:CGRectMake(0, (size.height/2)-(30/2), size.width, 30)]autorelease];
+            plTitle.textAlignment =  UITextAlignmentCenter;
+            plTitle.textColor = [UIColor blackColor];
+            plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
+            plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
+            plTitle.text = [NSString stringWithFormat: @"No valid tracks"];
+            [btn addSubview:plTitle];
+            
+     */       
+            
+            NSNumber *missedplNum = [NSNumber numberWithInt:plCounter];
+            [missedPlArray addObject:missedplNum];
+            plCounter++;
+            [self checkPlLoad:plContainer];
+            
+        }   
+        
+    }
+}
+
 
 NSUInteger playlistsAttempts;
 NSUInteger loadplAttempts;
@@ -285,8 +404,7 @@ NSUInteger loadTrack;
     if (![Shared sharedInstance].hasLoggedin){
         
         [self initLoadGUI];
-        [self createLoadingPlView];
-        
+       // [self createLoadingPlView];
         
         [Shared sharedInstance].hasLoggedin = true;
         
@@ -305,23 +423,33 @@ NSUInteger loadTrack;
             return;
         }
         else{
-            self.cueController.view.hidden = NO;
+          //  self.cueController.view.hidden = NO;
             
-            [self.loadingView removeFromSuperview];
+            [self.mainViewController.loadingView removeFromSuperview];
         }
     }
     else{
         NSLog(@"loaded playlists");
         
-        self.cueController.view.hidden = NO;
+        [self addObserver:self forKeyPath:@"self.loadPlaylist.items" options:NSKeyValueObservingOptionNew context:NULL];
+        [self addObserver:self forKeyPath:@"self.trackimg.album.cover.image" options:NSKeyValueObservingOptionNew context:NULL];
+        
+        plCounter = 0;
+        plContainer = [[SPSession sharedSession] userPlaylists];
+        nrOfPl = [[plContainer playlists] count];
+        
+        [self checkPlLoad:plContainer];
+        
+     //   [self.mainViewController.plViewController initLoadProcess];
+        
+      //  self.cueController.view.hidden = NO;
         
        // [self.loadingView release];
         
-        self.plViewController = [[playlistViewController alloc]init];
+     //   self.plViewController = [[playlistViewController alloc]init];
+     //   self.searchController = [[searchViewController alloc]init];
         
-      //  [self.mainViewController presentViewController:self.plViewController animated:NO completion:nil];
-      //  [self.mainViewController.view insertSubview:self.plViewController.view belowSubview:self.plbackViewController.view];
-      
+        
         NSString* infoImgStr = [[NSBundle mainBundle] pathForResource:@"info" ofType:@"png"];
         UIImage *infoImg = [UIImage imageWithContentsOfFile:infoImgStr];
         
@@ -341,24 +469,13 @@ NSUInteger loadTrack;
      //   [self.mainViewController.view addSubview:self.userTxtBtn];
         
         
-        [self.loadingView removeFromSuperview];
-        
-        self.tabController = [[tabbarController alloc] init];
-        tabController.view.frame = CGRectMake(0, 0, 768, 1042);
-        tabController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
-        [tabController setViewControllers:[NSArray arrayWithObjects:self.plbackViewController, self.plViewController,self.searchController, nil]];
-        
-        [self.mainViewController.view addSubview:tabController.view];
-        
-        
-        if (UIDeviceOrientationIsPortrait(self.mainViewController.interfaceOrientation)){
-          //  [self.mainViewController activatePortraitMode];
-        }else {
-         //   [self.mainViewController activateLandscapeMode];
-        }
-    }  
+        [self.mainViewController.loadingView removeFromSuperview];
+       
+             
+  }  
 }
+
+/*----playlist pictures loader functions-----*/
 
 -(void)sessionLostPlayToken:(SPSession *)session;
 {
@@ -395,7 +512,7 @@ NSUInteger loadTrack;
         
     }
     
-    [self.cueController.tableView reloadData];
+  //  [self.cueController.tableView reloadData];
 }
 
 
@@ -515,11 +632,11 @@ NSUInteger loadTrack;
     
     [self removeGUI];
     [self.playbackManager stopAUGraph];
-    for (UIView *view in [self.plViewController.view subviews]){
+    for (UIView *view in [self.mainViewController.plViewController.view subviews]){
         
         [view removeFromSuperview];
     }
-    [self.plViewController.plMainView removeFromSuperview];
+ //   [self.mainViewController.plViewController.plMainView removeFromSuperview];
     [Shared sharedInstance].relogin = true;
     [self.mainViewController presentModalViewController:[[[LoginViewController alloc] init] autorelease]
 											   animated:YES];
@@ -554,14 +671,12 @@ NSUInteger loadTrack;
 	[self removeObserver:self forKeyPath:@"playbackManager.trackPosition"];
     */
    // [_loadingView release];
-    [self.plbackViewController release];
-    [_loadPlaylist release];
+    [loadPlaylist release];
  	[_currentTrack release];
 	[_playbackManager release];
 	[_window release];
 	[_mainViewController release];
-	[_navigationController release];
-    [super dealloc];
+	[super dealloc];
 }
 @end
 

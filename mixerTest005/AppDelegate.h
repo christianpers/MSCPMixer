@@ -10,11 +10,7 @@
 #import "CocoaLibSpotify.h"
 #import "audioControl.h"
 #import "plTableView.h"
-#import "masterCueTableView.h"
-#import "searchTableViewController.h"
 #import "searchViewController.h"
-#import "playlistViewController.h"
-#import "secondChannelUIViewController.h"
 #import "playlistViewController.h"
 #import "cueViewController.h"
 #import "playbackViewController.h"
@@ -27,11 +23,8 @@
     UIWindow *window;
 	audioControl *_playbackManager;
 	SPTrack *_currentTrack;
-    UINavigationController *navigationController;
     playlistViewController *plViewController;
-    searchViewController *searchController;
     UIView *loadingView;
-    searchTableViewController *searchTViewController;
     BOOL chTwoActive;
     UIView *airplayIcon;
     cueViewController *cueController;
@@ -40,6 +33,18 @@
     UIButton *userTxtBtn;
     tabbarController *tabController;
     UIViewController *loadviewController;
+    
+    SPTrack *trackimg;
+    UIImage *tempImg;
+    int plCounter;
+    int nrOfPl;
+    SPPlaylist *plCallb;
+    NSMutableArray *imageContainer;
+    SPPlaylistContainer *plContainer;
+    NSMutableArray *missedPlArray;
+    SPPlaylist *loadPlaylist;
+    
+    
     
 }
 
@@ -52,23 +57,15 @@
 
 @property (nonatomic, retain) SPTrack *currentTrack;
 @property (nonatomic, retain) audioControl *playbackManager;
-@property (nonatomic, retain) UINavigationController *navigationController;
 @property (nonatomic, retain) SPPlaylist *loadPlaylist;
+@property (nonatomic, retain) SPTrack *trackimg;
 @property (nonatomic, retain) UIViewController *logoutViewController;
-
-@property (nonatomic, retain) playlistViewController *plViewController;
-@property (nonatomic, retain) playbackViewController *plbackViewController;
-
 
 @property (nonatomic, retain) cueViewController *cueController;
 @property (nonatomic, retain) UIView *loadingView;
 
-@property (nonatomic, retain) searchTableViewController *searchTViewController;
-
 @property (nonatomic, retain) searchViewController *searchController;
-
 @property (nonatomic, retain) UIView *airplayIcon;
-
 @property (nonatomic, retain) tabbarController *tabController;
 
 - (void)userLogout;

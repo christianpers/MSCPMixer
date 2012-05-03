@@ -52,6 +52,10 @@
 - (void)loadView
 {
     self.plViewController = [[UIViewController alloc]init];
+    
+    NSLog(@"loadview playlistview");
+    
+    
     missedPlArray = [[NSMutableArray alloc] init];
     starredTracksArray = [[NSMutableArray alloc] init];
     
@@ -72,17 +76,53 @@
     
     [super viewDidLoad];
     
+    NSLog(@"viewdidload playlistview");
     [self initGridParams];
+    
+    
+    
+    [self addObserver:self forKeyPath:@"self.loadPlaylist.items" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"self.trackimg.album.cover.image" options:NSKeyValueObservingOptionNew context:NULL];
+    
+    [self loadPlaylistView:[[SPSession sharedSession] userPlaylists]]; //loading all ui boxes
+    [self checkPlLoad:[[SPSession sharedSession] userPlaylists]];
+    
+    [self doLoadingOnNewThread];
+    
+   
+    
+}
+
+- (void)initLoadProcess{
+    
+    [self initGridParams];
+    
+    [self addObserver:self forKeyPath:@"self.loadPlaylist.items" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"self.trackimg.album.cover.image" options:NSKeyValueObservingOptionNew context:NULL];
+    
+    [self loadPlaylistView:[[SPSession sharedSession] userPlaylists]];
+    [self checkPlLoad:[[SPSession sharedSession] userPlaylists]];
+	
+    
+    [self doLoadingOnNewThread];
+    
+}
+
+- (void) doLoadingOnNewThread {
+	[NSThread detachNewThreadSelector:@selector(startTheProcess) toTarget:self withObject:nil];
+}
+- (void) startTheProcess {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
     if (createStarredBox){
         [self createStarredTracksPlaylist:[[SPSession sharedSession] userPlaylists]];
         
     }
-    [self addObserver:self forKeyPath:@"self.loadPlaylist.items" options:0 context:nil];
-    [self addObserver:self forKeyPath:@"self.trackimg.album.cover.image" options:0 context:nil];
-    [self loadPlaylistView:[[SPSession sharedSession] userPlaylists]];
-    [self checkPlLoad:[[SPSession sharedSession] userPlaylists]];
-    
-    
+    [self performSelectorOnMainThread:@selector(loadingDone) withObject:nil waitUntilDone:NO];
+	[pool release];
+}
+
+- (void) loadingDone {
 }
 
 
@@ -108,20 +148,30 @@
     // Return YES for supported orientations
 	return YES;
 }
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)){
+        [main.mainViewController activateLandscapeMode];
+    }else if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
+        [main.mainViewController activatePortraitMode];
+        
+    }
+    
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    NSLog(@"viewwillappear");
-       
-    // [self.view addSubview:self.plMainView];
+    NSLog(@"viewwillappear playlist view");
+    orientationIsLandscape = UIInterfaceOrientationIsLandscape(self.interfaceOrientation);
    
-    
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     
     [super viewDidDisappear:animated];
-    NSLog(@"viewdiddisappear");
+    NSLog(@"viewdiddisappear playlist view");
     
 }
 
@@ -146,7 +196,6 @@
     parentHeight = 3200;
     
     tagAdd = 10;
-    
     
     int nrofViewChilds = [[self.plMainView subviews]count];
     NSLog(@"bitch: %d",nrofViewChilds);
@@ -214,7 +263,6 @@
         //  self.plCallback = self.loadPlaylist.items;
         self.plCallb = self.loadPlaylist;
         if(self.loadPlaylist.isLoaded)
-            
             [self setLoadedTrack:self.loadPlaylist];
     }
 }
@@ -275,7 +323,6 @@
             }
         }
         
-        // [self checkMissedPlaylists:playlistDetail];
         i++;
     }
 }
@@ -324,27 +371,49 @@
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    UIView *plbgView;
+    int bgwidth, bgheight;
+    int boxHeight, boxWidth;
+    int labelX, labelY;
+    
+    if (orientationIsLandscape){
+        bgwidth = 1024;
+        bgheight = 768;
+        boxWidth = 750;
+        boxHeight = 600;
+        labelX = 140;
+        labelY = 40;
+        
+    }else {
+        bgwidth = 768;
+        bgheight = 1024;
+        boxHeight = 750;
+        boxWidth = 600;
+        labelX = 90;
+        labelY = 90;
+    }
+    
     main.cueController.view.hidden = YES;
     main.airplayIcon.hidden = YES;
     main.userTxtBtn.hidden = YES;
     
     
-    CGSize rect = self.plMainView.window.frame.size;
     CGPoint offsetPnt = self.plMainView.contentOffset;
-    int boxHeight = 750;
-    int boxWidth = 600;
+    
     
     UITapGestureRecognizer *bgTouch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeplBg:)];
     bgTouch.numberOfTapsRequired = 1;
     
-    UIView *plbgView =[[UIView alloc] initWithFrame: CGRectMake(offsetPnt.x, offsetPnt.y, rect.width, rect.height)];
-    plbgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.79];   
+    plbgView =[[UIView alloc] initWithFrame: CGRectMake(offsetPnt.x, offsetPnt.y, bgwidth, bgheight)];
+    
+    
+     plbgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.79];   
     [plbgView addGestureRecognizer:bgTouch]; 
     
     [bgTouch release];    
     
-    UIView *plView=[[UIView alloc] initWithFrame: CGRectMake((rect.width/2)-(boxWidth/2)+offsetPnt.x,
-                                                             (rect.height/2)-(boxHeight/2)+offsetPnt.y,
+    UIView *plView=[[UIView alloc] initWithFrame: CGRectMake((bgwidth/2)-(boxWidth/2)+offsetPnt.x,
+                                                             (bgheight/2)-(boxHeight/2)+offsetPnt.y,
                                                              boxWidth,boxHeight)];
     
     plView.backgroundColor = [UIColor clearColor];
@@ -354,7 +423,7 @@
     [self.view addSubview:plbgView];    
     [self.view addSubview:self.plViewController.view];
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 90, rect.width-100, 50) ];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(labelX, labelY, bgwidth-100, 50) ];
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.textColor = [UIColor colorWithRed:245/255.f
                                             green:247/255.f
@@ -424,7 +493,8 @@
     if (![playlistDetail isKindOfClass:[SPPlaylistFolder class]]){
         
         if (!playlistDetail.isLoaded){
-            self.loadPlaylist = playlistDetail;
+            //self.loadPlaylist = playlistDetail;
+            [self loadplaylist:playlistDetail];
             //      plCounter++;
             //     [self performSelector:@selector(checkPlLoad:) withObject:plContainer afterDelay:0.1];
             //     return;
@@ -444,14 +514,14 @@
 
 -(void)checkPlLoad:(SPPlaylistContainer *)plCon{
     
-    
     SPPlaylist *playlistDetail = [plCon.playlists objectAtIndex:plCounter];
     
     if (![playlistDetail isKindOfClass:[SPPlaylistFolder class]]){
         
         if (!playlistDetail.isLoaded){
             
-            self.loadPlaylist = playlistDetail;
+           // self.loadPlaylist = playlistDetail;
+            //[self loadplaylist:playlistDetail];
             //      plCounter++;
             //     [self performSelector:@selector(checkPlLoad:) withObject:plContainer afterDelay:0.1];
             //     return;
@@ -532,6 +602,7 @@
             {
                 NSLog(@"no underlying data");
                 self.trackimg = track;
+               // [self loadImage:track.album];
             }
             else{
                 
@@ -571,6 +642,23 @@
         
     }
 }
+
+-(void)loadplaylist:(SPPlaylist *)playlist{
+    
+    if (!playlist.isLoaded){
+        [self performSelector:_cmd
+                   withObject:nil
+                   afterDelay:.25];
+        
+    }else{
+        
+        [self setLoadedTrack:playlist];
+    }
+    
+}
+
+
+
 
 -(void)createnewplBox:(UIImage *)img{
     
@@ -621,6 +709,27 @@
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    int bgwidth, bgheight;
+    int boxHeight, boxWidth;
+    int labelX, labelY;
+    
+    if (orientationIsLandscape){
+        bgwidth = 1024;
+        bgheight = 768;
+        boxWidth = 750;
+        boxHeight = 600;
+        labelX = 140;
+        labelY = 40;
+    }else {
+        bgwidth = 768;
+        bgheight = 1024;
+        boxHeight = 750;
+        boxWidth = 600;
+        labelX = 90;
+        labelY = 90;
+    }
+
+    
     main.cueController.view.hidden = YES;
     main.airplayIcon.hidden = YES;
     main.userTxtBtn.hidden = YES;
@@ -629,20 +738,18 @@
     NSLog(@"btn tag: %d",btn.tag);
     CGSize rect = self.plMainView.window.frame.size;
     CGPoint offsetPnt = self.plMainView.contentOffset;
-    int boxHeight = 750;
-    int boxWidth = 600;
     
     UITapGestureRecognizer *bgTouch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeplBg:)];
     bgTouch.numberOfTapsRequired = 1;
     
-    UIView *plbgView =[[UIView alloc] initWithFrame: CGRectMake(offsetPnt.x, offsetPnt.y, rect.width, rect.height)];
+    UIView *plbgView =[[UIView alloc] initWithFrame: CGRectMake(offsetPnt.x, offsetPnt.y, bgwidth, bgheight)];
     plbgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.86];   
     [plbgView addGestureRecognizer:bgTouch]; 
     
     [bgTouch release];    
     
-    UIView *plView=[[UIView alloc] initWithFrame: CGRectMake((rect.width/2)-(boxWidth/2)+offsetPnt.x,
-                                                             (rect.height/2)-(boxHeight/2)+offsetPnt.y,
+    UIView *plView=[[UIView alloc] initWithFrame: CGRectMake((bgwidth/2)-(boxWidth/2)+offsetPnt.x,
+                                                             (bgheight/2)-(boxHeight/2)+offsetPnt.y,
                                                              boxWidth,boxHeight)];
     
     plView.backgroundColor = [UIColor clearColor];
@@ -654,7 +761,7 @@
     
     [Shared sharedInstance].curClickedPl = btn.tag-tagAdd;
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 90, rect.width-100, 50) ];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(labelX, labelY, bgwidth-100, 50) ];
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.textColor = [UIColor colorWithRed:245/255.f
                                             green:247/255.f

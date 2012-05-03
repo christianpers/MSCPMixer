@@ -166,7 +166,12 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	return YES;
+    if (UIInterfaceOrientationIsPortrait(interfaceOrientation)){
+        return YES;
+        
+    }else if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+        return YES;
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section

@@ -37,14 +37,17 @@
 - (void)loadView{
   //  self.navigationController.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)]autorelease];
   //  self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-   
+    searchTableViewController* tv = [[[searchTableViewController alloc]initWithFrame: CGRectZero style: UITableViewStylePlain]autorelease];
+    tv.dataSource = self;
+    tv.delegate = self;
+    self.view = tv;
+    self.tableView = tv;
+    
 }
 */
-
-- (void)viewDidLoad
-{
-    
-   // self.tableView.backgroundColor = [UIColor blackColor];
+- (void)viewDidAppear:(BOOL)animated{
+    NSLog(@"viewdidappear");
+ //   self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     UIBarButtonItem *cancelButton =
 	[[UIBarButtonItem alloc] initWithTitle: @"Cancel"
                                      style: UIBarButtonItemStylePlain
@@ -56,7 +59,13 @@
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     
     [super viewDidLoad];
+    
+}
 
+
+- (void)viewDidLoad
+{
+   // self.tableView.backgroundColor = [UIColor blackColor];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -163,10 +172,7 @@
     [super viewWillAppear:animated];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
+
 
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -183,8 +189,12 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-	return YES;
+    if (UIInterfaceOrientationIsPortrait(interfaceOrientation)){
+        return YES;
+        
+    }else if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+        return YES;
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -343,10 +353,6 @@
     [cell.contentView addSubview:title];
     [title release];
     
-   
-    
-  
-    
 
     //cell.textLabel.text = lbl;
     // Configure the cell...
@@ -360,10 +366,8 @@
 }
 - (void)cancel:(id)sender{
     
-    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    main.cueController.view.hidden = NO;
+    [self dismissViewControllerAnimated:YES completion:nil];
+ //   main.cueController.view.hidden = NO;
     
 }
 
