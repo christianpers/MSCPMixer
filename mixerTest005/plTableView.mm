@@ -190,22 +190,7 @@
   
     return cell;    
 }
-/*
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row % 2)
-    {
-       [cell setBackgroundColor:[UIColor colorWithRed:240/255.f
-                                                 green:250/255.f
-                                                  blue:250/255.f    
-                                                 alpha:.7]];
-         
-    }
-    else [cell setBackgroundColor:[UIColor colorWithRed:255/255.f
-                                                  green:255/255.f
-                                                   blue:254/255.f    
-                                                  alpha:.7]];
-}
-*/
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     NSURL *url;

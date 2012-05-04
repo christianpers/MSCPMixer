@@ -234,12 +234,18 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     
-    if (!appStarted){
-        if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)){
+//  if (!appStarted){
+//        if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)){
             
-            [self setlandscapemode];
-        }
-        appStarted = YES;
+//            [self setlandscapemode];
+//        }
+//        appStarted = YES;
+//    }
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    if (main.mainViewController.landscapeMode){
+        [self setlandscapemode];
+        
     }
     
 }

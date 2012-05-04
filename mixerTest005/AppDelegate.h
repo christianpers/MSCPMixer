@@ -68,6 +68,9 @@
 @property (nonatomic, retain) UIView *airplayIcon;
 @property (nonatomic, retain) tabbarController *tabController;
 
+@property (nonatomic, retain) NSMutableArray *imageContainer;
+@property (nonatomic, retain) NSMutableArray *missedPlArray;
+
 - (void)userLogout;
 - (void)initLoadGUI;
 - (void)ativateSearchView;

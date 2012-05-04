@@ -73,6 +73,10 @@
     
     BOOL appStarted;
     
+    UIImageView *bgLogo;
+    
+    UIImageView *bgLogoRight;
+    
   
 }
 

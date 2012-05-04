@@ -29,6 +29,7 @@
 @synthesize userTxtBtn;
 @synthesize tabController;
 @synthesize trackimg;
+@synthesize imageContainer;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -81,6 +82,23 @@
         
         if (trackimg.album.cover.isLoaded){
             NSLog(@"loaded image nr: %d",plCounter);
+            
+            SPPlaylist *playlistDetail = [plContainer.playlists objectAtIndex:plCounter];
+            SPPlaylistFolder *playlistFolder;
+            
+            if ([playlistDetail isKindOfClass:[SPPlaylistFolder class]]){
+                playlistFolder = [plContainer.playlists objectAtIndex:plCounter];
+                playlistDetail = [playlistFolder.playlists objectAtIndex:0];
+                
+            }
+      
+            NSMutableArray *innerDataContainer = [[NSMutableArray alloc]init];
+            NSNumber *currplNum = [NSNumber numberWithInt:plCounter];
+            [innerDataContainer addObject:currplNum];
+            [innerDataContainer addObject:playlistDetail.name];
+            [innerDataContainer addObject:tempImg];
+            [imageContainer addObject:innerDataContainer];
+            [innerDataContainer release];
             
  //           [self createnewplBox:tempImg];
             if (plCounter < nrOfPl){
@@ -260,12 +278,7 @@
     if (![playlistDetail isKindOfClass:[SPPlaylistFolder class]]){
         
         if (!playlistDetail.isLoaded){
-            
-            //self.loadPlaylist = playlistDetail;
-            //[self loadplaylist:playlistDetail];
-            //      plCounter++;
-            //     [self performSelector:@selector(checkPlLoad:) withObject:plContainer afterDelay:0.1];
-            //     return;
+   
         }
         else{
             [self setLoadedTrack:playlistDetail];
@@ -309,24 +322,6 @@
         }
     }
     if (!foundValidTrack){
-  /*      UIButton *btn = (UIButton *)[self.plMainView viewWithTag:plCounter+tagAdd];
-        for (UIView *view in [btn subviews]){
-            [view removeFromSuperview];
-            
-        }
-        
-        CGSize size = btn.frame.size;
-        
-        UILabel *plTitle = [[ [UILabel alloc ] initWithFrame:CGRectMake(0, (size.height/2)-(30/2), size.width, 30)]autorelease];
-        plTitle.textAlignment =  UITextAlignmentCenter;
-        plTitle.textColor = [UIColor blackColor];
-        plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
-        plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
-        plTitle.text = [NSString stringWithFormat: @"No valid tracks"];
-        [btn addSubview:plTitle];
-   */     
-        NSNumber *missedplNum = [NSNumber numberWithInt:plCounter];
-        [missedPlArray addObject:missedplNum];
         plCounter++;
         
         [self checkPlLoad:plContainer];
@@ -356,6 +351,14 @@
                 }
 
             }else {
+                NSMutableArray *innerDataContainer = [[NSMutableArray alloc]init];
+                NSNumber *currplNum = [NSNumber numberWithInt:plCounter];
+                [innerDataContainer addObject:currplNum];
+                [innerDataContainer addObject:playlistDetail.name];
+                [innerDataContainer addObject:track.album.cover.image];
+                [imageContainer addObject:innerDataContainer];
+                [innerDataContainer release];
+                
                 plCounter++;
                 [self checkPlLoad:plContainer];
             }
@@ -364,26 +367,7 @@
         }
         else
         {
-   /*         UIButton *btn = (UIButton *)[self.plMainView viewWithTag:plCounter+tagAdd];
-            for (UIView *view in [btn subviews]){
-                [view removeFromSuperview];
-                
-            }
-            
-            CGSize size = btn.frame.size;
-            UILabel *plTitle = [[ [UILabel alloc ] initWithFrame:CGRectMake(0, (size.height/2)-(30/2), size.width, 30)]autorelease];
-            plTitle.textAlignment =  UITextAlignmentCenter;
-            plTitle.textColor = [UIColor blackColor];
-            plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
-            plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
-            plTitle.text = [NSString stringWithFormat: @"No valid tracks"];
-            [btn addSubview:plTitle];
-            
-     */       
-            
-            NSNumber *missedplNum = [NSNumber numberWithInt:plCounter];
-            [missedPlArray addObject:missedplNum];
-            plCounter++;
+              plCounter++;
             [self checkPlLoad:plContainer];
             
         }   
@@ -431,6 +415,8 @@ NSUInteger loadTrack;
     else{
         NSLog(@"loaded playlists");
         
+        imageContainer = [[NSMutableArray alloc]init];
+        
         [self addObserver:self forKeyPath:@"self.loadPlaylist.items" options:NSKeyValueObservingOptionNew context:NULL];
         [self addObserver:self forKeyPath:@"self.trackimg.album.cover.image" options:NSKeyValueObservingOptionNew context:NULL];
         
@@ -440,16 +426,8 @@ NSUInteger loadTrack;
         
         [self checkPlLoad:plContainer];
         
-     //   [self.mainViewController.plViewController initLoadProcess];
         
-      //  self.cueController.view.hidden = NO;
-        
-       // [self.loadingView release];
-        
-     //   self.plViewController = [[playlistViewController alloc]init];
-     //   self.searchController = [[searchViewController alloc]init];
-        
-        
+    
         NSString* infoImgStr = [[NSBundle mainBundle] pathForResource:@"info" ofType:@"png"];
         UIImage *infoImg = [UIImage imageWithContentsOfFile:infoImgStr];
         
@@ -671,6 +649,7 @@ NSUInteger loadTrack;
 	[self removeObserver:self forKeyPath:@"playbackManager.trackPosition"];
     */
    // [_loadingView release];
+    [imageContainer release];
     [loadPlaylist release];
  	[_currentTrack release];
 	[_playbackManager release];

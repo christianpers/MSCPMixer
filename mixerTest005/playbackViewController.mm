@@ -62,6 +62,24 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     CGSize parentSize = self.view.frame.size;
+    
+    NSString* bgImgStr = [[NSBundle mainBundle] pathForResource:@"mscp logo medium" ofType:@"png"];
+    UIImage *bgImg = [UIImage imageWithContentsOfFile:bgImgStr];
+    
+    bgLogo = [[UIImageView alloc]initWithImage:bgImg];
+    bgLogo.frame = CGRectMake(200, 140, 393, 319);
+    [self.view addSubview:bgLogo];
+    
+    [bgLogo release];
+    
+    bgLogoRight = [[UIImageView alloc]initWithImage:bgImg];
+    bgLogoRight.frame = CGRectMake(590, 140, 393, 319);
+    bgLogoRight.hidden = YES;
+    [self.view addSubview:bgLogoRight];
+    
+    [bgLogoRight release];
+    
+    
  
     //fft shieed
     self.fftView = [[fftAnalyzerView alloc]initWithFrame:CGRectMake(100, 100, 200, 100)];
@@ -271,7 +289,7 @@
     [self.view addSubview:self.effectParentViewCh2];
     
     
-    self.line = [[UIView alloc]initWithFrame:CGRectMake((1074/2)-1, 10, 2, 570)];
+    self.line = [[UIView alloc]initWithFrame:CGRectMake((1024/2)-1, 10, 2, 570)];
     self.line.backgroundColor = [UIColor whiteColor];
     self.line.hidden = YES;
     [self.view addSubview:self.line];
@@ -341,7 +359,7 @@
     UIImage *crossfadeBgImg = [UIImage imageWithContentsOfFile:crossfadeBgImgStr];
     
     crossfadeBg = [[UIImageView alloc]initWithImage:crossfadeBgImg];
-    crossfadeBg.frame = CGRectMake(385, 650, 305, 46);
+    crossfadeBg.frame = CGRectMake(360, 650, 305, 46);
     crossfadeBg.hidden = YES;
     [self.view addSubview:crossfadeBg];
     [crossfadeBg release];
@@ -352,7 +370,7 @@
     UIImage *crossfadeKnobImg = [UIImage imageWithContentsOfFile:crossfadeKnobImgStr];
     
     self.crossfadeKnob = [[UIImageView alloc]initWithImage:crossfadeKnobImg];
-    self.crossfadeKnob.frame = CGRectMake(517, 612, 40, 57);
+    self.crossfadeKnob.frame = CGRectMake(493, 612, 40, 57);
     self.crossfadeKnob.hidden = YES;
     self.crossfadeKnob.userInteractionEnabled = YES;
     [self.view addSubview:crossfadeKnob];
@@ -365,6 +383,9 @@
     crossfadevolch2 = .5;
     
     appStarted = NO;
+    
+    
+    
     
 }
 
@@ -401,14 +422,20 @@
 {
     NSLog(@"viewwillappear playback view");
   
-    if (!appStarted){
+  /*  if (!appStarted){
         if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)){
             NSLog(@"landscape playback");
             [self setmixerModeOn];
             
         }     
         appStarted = YES;
-    }  
+    } */
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    if (main.mainViewController.landscapeMode){
+        [self setmixerModeOn];
+        
+    }
     
     // [self.view addSubview:self.plMainView];
     
@@ -442,15 +469,15 @@
     CGPoint translation = [recognizer translationInView:[piece superview]];
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        if (pos.x <= 660) {
+        if (pos.x <= 635) {
             [piece setCenter:CGPointMake([piece center].x + translation.x, 640)];
-        }else if (pos.x >= 375){
+        }else if (pos.x >= 350){
             [piece setCenter:CGPointMake([piece center].x + translation.x, 640)];
         }
     }
     else {
         
-        if((pos.x+translation.x >= 375 && pos.x+translation.x <= 660)){
+        if((pos.x+translation.x >= 350 && pos.x+translation.x <= 635)){
             
             [piece setCenter:CGPointMake([piece center].x + translation.x, 640)];
             [recognizer setTranslation:CGPointZero inView:[piece superview]];
@@ -463,8 +490,8 @@
 - (void)setcrossfadeCurrVol:(float)currXval{
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    float totDistance = 660 - 340;
-    float currdiff = currXval - 375;
+    float totDistance = 635 - 350;
+    float currdiff = currXval - 350;
     float volch2 = currdiff/totDistance;
     float volch1 = 1 - volch2;
     [main.playbackManager setMasterMixerPanning:volch1 :volch2];
@@ -769,6 +796,8 @@
     self.effectParentView.frame = CGRectMake(20, 20, 440, 600);
     NSLog(@"mixer mode done");
     
+    bgLogo.frame = CGRectMake(70, 140, 393, 319);
+    bgLogoRight.hidden = NO;
 }
 
 - (void)setonechannelmodeOn{
@@ -789,7 +818,8 @@
     
     self.effectParentView.frame = CGRectMake(50, 40, 650, 930);
     
-    
+    bgLogo.frame = CGRectMake(200, 200, 393, 319);
+    bgLogoRight.hidden = YES;
 }
 
 

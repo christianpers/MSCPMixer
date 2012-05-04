@@ -84,13 +84,15 @@
 
 - (void)addCustomElements{
    
-    int menuX;
+    int menuX, menuY;
     if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)){
         NSLog(@"tabcontroller landscape playback");
         menuX = 310;
+        menuY = 0;
         
     }else {
         menuX = 570;
+        menuY = 20;
     }
     
     // Now we repeat the process for the other buttons
@@ -130,7 +132,7 @@
     activeImg = [[UIImageView alloc]initWithFrame:CGRectMake(11, 87, 11, 11)];
     activeImg.image = activeViewImg;
     
-    menuBg = [[UIView alloc]initWithFrame:CGRectMake(menuX, 30, 200, 185)];
+    menuBg = [[UIView alloc]initWithFrame:CGRectMake(menuX, menuY, 200, 185)];
     menuBg.backgroundColor = [UIColor blackColor];
     [menuBg addSubview:playlistBtn];
     [menuBg addSubview:playbackBtn];
@@ -151,10 +153,10 @@
     
 }
 
+
+
 - (void)selectTab:(int)tabID
 {
-    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
     switch(tabID)
     {
         case 0:

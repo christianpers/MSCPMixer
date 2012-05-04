@@ -13,6 +13,7 @@
 
 @synthesize loadingView;
 @synthesize plbackViewController, plViewController, searchController, tabController;
+@synthesize landscapeMode;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -28,30 +29,30 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-  
-    
       
 	// Do any additional setup after loading the view.
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"viewwillappear mainviewcontroller");
     if (!appStarted){
         int width, height;
         
         if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)){
             width = 1024;
             height = 768;
+            landscapeMode = YES;
             //    NSLog(@"landscape");
         }else {
             width = 768;
             height = 1024;
+            landscapeMode = NO;
             //     NSLog(@"portrait");
         }
         
         self.plbackViewController = [[playbackViewController alloc]init];
         self.plViewController = [[playlistViewController alloc]init];
-      ///  [self.plViewController initLoadProcess];
         self.searchController = [[searchViewController alloc]init];
         
         self.tabController = [[tabbarController alloc] init];
@@ -96,6 +97,8 @@
         
         [newloadingView release];
         
+        
+        
         appStarted = YES;
 
         
@@ -123,9 +126,12 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
     if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)){
+        landscapeMode = YES;
         [self activateLandscapeMode];
+        
         NSLog(@"mainviewcontroller landscape action");
     }else if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
+        landscapeMode = NO;
         [self activatePortraitMode];
         
         NSLog(@"mainviewcontroller portrait action");
@@ -141,7 +147,7 @@
 - (void)activateLandscapeMode{
     
     NSLog(@"activate mixer mode !!!");
-    self.tabController.menuBg.frame = CGRectMake(310, 30, 200, 185);
+    self.tabController.menuBg.frame = CGRectMake(310, 0, 200, 185);
     [self.plbackViewController setmixerModeOn];
     [self.searchController setlandscapemode];
     
@@ -150,10 +156,21 @@
 - (void)activatePortraitMode{
     
     NSLog(@"activate one channel mode !!");
-    self.tabController.menuBg.frame = CGRectMake(570, 30, 200, 185);
+    self.tabController.menuBg.frame = CGRectMake(570, 20, 200, 185);
     [self.plbackViewController setonechannelmodeOn];
     [self.searchController setportraitmode];
     
+}
+
+- (void)toggleGUIhidden:(BOOL)sethidden{
+    if (sethidden){
+        self.tabController.cueController.view.hidden = YES;
+        self.tabController.menuBg.hidden = YES;
+    }
+    else{
+        self.tabController.cueController.view.hidden = NO;
+        self.tabController.menuBg.hidden = NO;
+    }
 }
 
 -(void)dealloc{

@@ -21,7 +21,7 @@
     playbackViewController *plbackViewController;
     tabbarController *tabController;
     
-    
+    BOOL landscapeMode;
     
 }
 
@@ -31,9 +31,11 @@
 @property (nonatomic, retain) playbackViewController *plbackViewController;
 @property (nonatomic, retain) searchViewController *searchController;
 @property (nonatomic, retain) tabbarController *tabController;
+@property (nonatomic) BOOL landscapeMode;
 
 - (void)activatePortraitMode;
 - (void)activateLandscapeMode;
+- (void)toggleGUIhidden:(BOOL)sethidden;
 
 
 @end

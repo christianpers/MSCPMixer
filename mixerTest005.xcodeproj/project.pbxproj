@@ -83,6 +83,7 @@
 		AAEFA263151F84BD0066AC86 /* playbackViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA262151F84BC0066AC86 /* playbackViewController.mm */; };
 		AAFCB41C154DE733006127E3 /* crossfade base.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCB41A154DE733006127E3 /* crossfade base.png */; };
 		AAFCB41D154DE733006127E3 /* crossfade knob.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCB41B154DE733006127E3 /* crossfade knob.png */; };
+		AAFE667615539BB500936ECA /* mscp logo medium.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFE667515539BB500936ECA /* mscp logo medium.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -211,6 +212,7 @@
 		AAEFA262151F84BC0066AC86 /* playbackViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = playbackViewController.mm; sourceTree = "<group>"; };
 		AAFCB41A154DE733006127E3 /* crossfade base.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crossfade base.png"; sourceTree = "<group>"; };
 		AAFCB41B154DE733006127E3 /* crossfade knob.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crossfade knob.png"; sourceTree = "<group>"; };
+		AAFE667515539BB500936ECA /* mscp logo medium.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mscp logo medium.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -452,6 +454,7 @@
 		AA97EF5114F0D0DA00A2B892 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				AAFE667515539BB500936ECA /* mscp logo medium.png */,
 				AAFCB41A154DE733006127E3 /* crossfade base.png */,
 				AAFCB41B154DE733006127E3 /* crossfade knob.png */,
 				AAB46C0115465C6D003634BF /* itunes channel.png */,
@@ -579,6 +582,7 @@
 				AAB46C0215465C6D003634BF /* itunes channel.png in Resources */,
 				AAFCB41C154DE733006127E3 /* crossfade base.png in Resources */,
 				AAFCB41D154DE733006127E3 /* crossfade knob.png in Resources */,
+				AAFE667615539BB500936ECA /* mscp logo medium.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
