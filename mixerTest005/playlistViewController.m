@@ -65,10 +65,11 @@
     [super viewDidLoad];
     
     NSLog(@"viewdidload playlistview");
+    playlistsLoaded = NO;
     [self createloadingview];
-    [self initGridParams];
     
-    [self doLoadingOnNewThread];
+    
+    
     
    
     
@@ -102,9 +103,10 @@
 - (void)loadplaylists{
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
  
+    NSLog(@"imagecontainer length: %d",[main.imageContainer count]);
     NSMutableArray *dataContainer = [[NSMutableArray alloc]initWithArray:main.imageContainer];
     for (NSMutableArray *data in dataContainer){
- 
+        
         NSInteger plNumber = [(NSNumber *)[data objectAtIndex:0] integerValue];
         NSString *plName = (NSString *)[data objectAtIndex:1];
         UIImage *plImage = (UIImage *)[data objectAtIndex:2];
@@ -118,7 +120,7 @@
         myButton.frame = CGRectMake(x, y, width, height);// position in the parent view and set the size of the
         [myButton setTag:plNumber];
         [myButton setBackgroundImage:plImage forState:UIControlStateNormal];
-    
+        
         [myButton addTarget:self 
                      action:@selector(plClicked:)
            forControlEvents:UIControlEventTouchDown];
@@ -137,12 +139,9 @@
         [self.plMainView addSubview:myButton];
         
         x = x+width+margin;
-
         
     }
 }
-
-
 
 - (void) doLoadingOnNewThread {
 	[NSThread detachNewThreadSelector:@selector(startTheProcess) toTarget:self withObject:nil];
@@ -155,7 +154,6 @@
         
     }
     [self loadplaylists];
-    
     [loadingView removeFromSuperview];
     
 	[pool release];
@@ -191,9 +189,23 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     NSLog(@"viewwillappear playlist view");
     orientationIsLandscape = UIInterfaceOrientationIsLandscape(self.interfaceOrientation);
-   
+    if ([main.imageContainer count] > 0){
+        if(!playlistsLoaded){
+            [self initGridParams];
+            [self doLoadingOnNewThread];
+            playlistsLoaded = YES;
+        }
+    }
+ 
+}
+
+- (void)setplaylistsloaded:(BOOL)val{
+    
+    playlistsLoaded = val;
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -206,6 +218,7 @@
 
 
 - (void)initGridParams{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if ([[[[SPSession sharedSession] starredPlaylist] items] count] > 0){
         createStarredBox = YES;
@@ -229,7 +242,8 @@
     
     plContainer = [[SPSession sharedSession] userPlaylists];
     
-    nrOfPl = [[plContainer playlists] count];
+    //nrOfPl = [[plContainer playlists] count];
+    nrOfPl = [main.imageContainer count];
     NSLog(@"nrofPl:%f",nrOfPl);
     
     //adding the starred tracks to get correct numbahs
@@ -369,8 +383,6 @@
     [plbgView addSubview:headerLabel];
    
     headerLabel.text = @"Starred tracks";
-
-    
     
     plTableView *plSongTable = [[plTableView alloc]initWithFrame:CGRectMake(0, 10, boxWidth, boxHeight) andDataArray:starredTracksArray];
     plSongTable.backgroundColor = [UIColor clearColor];
@@ -414,12 +426,9 @@
 
     
     [main.mainViewController toggleGUIhidden:YES];
-//    main.airplayIcon.hidden = YES;
-//    main.userTxtBtn.hidden = YES;
     
     UIButton *btn = (UIButton*)sender;
     NSLog(@"btn tag: %d",btn.tag);
-    CGSize rect = self.plMainView.window.frame.size;
     CGPoint offsetPnt = self.plMainView.contentOffset;
     
     UITapGestureRecognizer *bgTouch = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeplBg:)];
@@ -534,8 +543,6 @@
     [self.plMainView setScrollEnabled:YES];
     
     [main.mainViewController toggleGUIhidden:NO];
-//    main.airplayIcon.hidden = NO;
-//    main.userTxtBtn.hidden = NO;
     
 }
 

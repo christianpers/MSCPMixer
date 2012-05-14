@@ -30,11 +30,11 @@ CGSize parentSize;
         UIPanGestureRecognizer *effectSwipe = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panPiece:)];
         [self addGestureRecognizer:effectSwipe]; 
         [effectSwipe release];
+        
         self.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     }
     return self;
 }
-
 
 
 - (void)panPiece:(UIPanGestureRecognizer *)gestureRecognizer
@@ -47,14 +47,12 @@ CGSize parentSize;
     
     CGPoint pos = piece.frame.origin;
     CGPoint translation = [gestureRecognizer translationInView:[piece superview]];
+    CGPoint velocity = [gestureRecognizer velocityInView:[piece superview]];
     
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan){
         
         [self.gridView removeFromSuperview];
         [self drawEffectGrid:piece.tag];
-      //   main.cueController.view.hidden = YES;
-        //parentView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.26];
-        //parentView.layer.borderWidth = 4.0f;
         
         if (pos.x <= 0) {
             [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
@@ -84,6 +82,9 @@ CGSize parentSize;
         
         NSLog(@"pos.y: %f, pos.x: %f",pos.y,pos.x);
         
+        NSLog(@"trans.yL %f",translation.y);
+        
+        NSLog(@"vel.y: %f, vel.x: %f",velocity.y, velocity.x);
         
         if((pos.x+translation.x >= 0 && pos.x+translation.x <= (parentView.bounds.size.width-43))&&(pos.y+translation.y >= 0 && pos.y+translation.y <= (parentView.bounds.size.height-43))){
             
@@ -95,7 +96,12 @@ CGSize parentSize;
             [piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
             [gestureRecognizer setTranslation:CGPointZero inView:[piece superview]];
            // setY = [piece center].y + translation.y;
-            setY = pos.y;
+            if (pos.y+translation.y < 0){
+                setY = 0;
+            }else {
+                setY = pos.y+translation.y;
+                
+            }
             setX = [piece center].x + translation.x;
             self.gridView.curr_x = setX;
             self.gridView.curr_y = setY;
@@ -257,7 +263,9 @@ CGSize parentSize;
 }
 
 - (void)hipassUnit{
-    paramVal1 = (setY/parentSize.height)*7000;
+    paramVal1 = (setY/parentSize.height)*6000;
+    if (paramVal1 < 60)
+        paramVal1 = 0;
     float twoThirds = (parentSize.width/3)*2;
     if (setX < (parentSize.width/3)){
         paramVal2 = (((parentSize.width/3)-setX)/-(parentSize.width/3))*20;
@@ -275,7 +283,9 @@ CGSize parentSize;
 }
 
 - (void)hipassUnitChTwo{
-    paramVal1 = (setY/parentSize.height)*7000;
+    paramVal1 = (setY/parentSize.height)*6000;
+    if (paramVal1 < 60)
+        paramVal1 = 0;
     float twoThirds = (parentSize.width/3)*2;
     if (setX < (parentSize.width/3)){
         paramVal2 = (((parentSize.width/3)-setX)/-(parentSize.width/3))*20;
@@ -359,7 +369,7 @@ CGSize parentSize;
     CGSize window = parentView.frame.size;
     
     self.gridView = [[effectgridView alloc]initWithFrame:CGRectMake(0, 0, window.width, window.height)];
-    self.gridView.backgroundColor = [UIColor clearColor];
+    self.gridView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.3];
     self.gridView.param1 = paramVal1;
     self.gridView.param2 = paramVal2 - paramVal2 - paramVal2;
     NSLog(@"paramval1: %f, paramval2: %f",paramVal1, paramVal2);

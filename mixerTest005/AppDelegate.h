@@ -23,16 +23,7 @@
     UIWindow *window;
 	audioControl *_playbackManager;
 	SPTrack *_currentTrack;
-    playlistViewController *plViewController;
-    UIView *loadingView;
     BOOL chTwoActive;
-    UIView *airplayIcon;
-    cueViewController *cueController;
-    UIViewController *logoutViewController;
-    playbackViewController *plbackViewController;
-    UIButton *userTxtBtn;
-    tabbarController *tabController;
-    UIViewController *loadviewController;
     
     SPTrack *trackimg;
     UIImage *tempImg;
@@ -53,32 +44,19 @@
 @property (nonatomic, retain) IBOutlet mainViewController *mainViewController;
 @property (nonatomic) BOOL chTwoActive; 
 
-@property (nonatomic, retain) UIButton *userTxtBtn;
-
 @property (nonatomic, retain) SPTrack *currentTrack;
 @property (nonatomic, retain) audioControl *playbackManager;
 @property (nonatomic, retain) SPPlaylist *loadPlaylist;
 @property (nonatomic, retain) SPTrack *trackimg;
-@property (nonatomic, retain) UIViewController *logoutViewController;
-
-@property (nonatomic, retain) cueViewController *cueController;
-@property (nonatomic, retain) UIView *loadingView;
 
 @property (nonatomic, retain) searchViewController *searchController;
-@property (nonatomic, retain) UIView *airplayIcon;
-@property (nonatomic, retain) tabbarController *tabController;
 
-@property (nonatomic, retain) NSMutableArray *imageContainer;
-@property (nonatomic, retain) NSMutableArray *missedPlArray;
+@property (retain) NSMutableArray *imageContainer;
+@property (retain) NSMutableArray *missedPlArray;
 
 - (void)userLogout;
-- (void)initLoadGUI;
 - (void)ativateSearchView;
 - (void)showLogin;
-- (void)showlogoutViewController;
-- (void)removeLogoutView;
-
-- (void)createLoadingPlView;
 
 - (void)playnewTrack:(SPTrack *)track;
 

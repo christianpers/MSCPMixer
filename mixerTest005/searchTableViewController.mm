@@ -250,6 +250,7 @@
 }
 
 
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -289,79 +290,103 @@
     }
     
     NSString *lbl;
+    
+    //check if last line. Create a showmore btn if true
+    if (indexPath.row == 19){
+      
+        UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.view.frame.size.width, 30)];
+        title.text = @"Show more results  +";
+        title.textColor = [UIColor whiteColor];
+        title.textAlignment = UITextAlignmentCenter;
+        title.font = [UIFont fontWithName:@"GothamHTF-Book" size:(18.0)];
+        title.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:title];
+        [title release];
+        
+        
+    }else {
+        
+        
+        
+        NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[detailArr objectAtIndex:indexPath.section]];
+        
+        if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPAlbum class]]){
+            SPAlbum *album = [sectionArr objectAtIndex:indexPath.row];
+            
+            lbl = [NSString stringWithFormat:@"%@ - %@",album.artist.name,album.name];
+            
+            UILabel *yearlbl = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-60, 5, 50, 30)];
+            yearlbl.backgroundColor = [UIColor clearColor];
+            yearlbl.textColor = [UIColor whiteColor];
+            yearlbl.textAlignment = UITextAlignmentCenter;
+            yearlbl.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
+            if (album.year > 0)
+                yearlbl.text = [NSString stringWithFormat:@"%d",album.year];
+            else
+                yearlbl.text = @"-";
+            [cell.contentView addSubview:yearlbl];
+            [yearlbl release];
+            
+        }
+        else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPTrack class]]){
+            SPTrack *track = [sectionArr objectAtIndex:indexPath.row];
+            NSString *artists = [[track.artists valueForKey:@"name"] componentsJoinedByString:@","];
+            lbl = [NSString stringWithFormat:@"%@ - %@",artists,track.name];
+            
+            UILabel *cue = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-110, 10, 60, 20)];
+            cue.text = @"Cue Song";
+            cue.textAlignment = UITextAlignmentCenter;
+            cue.textColor = [UIColor blackColor];
+            cue.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(12.0)];
+            cue.backgroundColor = [UIColor whiteColor];
+            [cell.contentView addSubview:cue];
+            [cue release];
+            
+            NSTimeInterval interval = track.duration;
+            long min = (long)interval / 60;    // divide two longs, truncates
+            long sec = (long)interval % 60;    // remainder of long divide
+            NSString* str = [[NSString alloc] initWithFormat:@"%02d:%02d", min, sec];
+            
+            UILabel *trackDuration = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-200, 5, 50, 30)];
+            trackDuration.text = str;
+            trackDuration.textColor = [UIColor whiteColor];
+            trackDuration.backgroundColor = [UIColor clearColor];
+            [cell.contentView addSubview:trackDuration];
+            trackDuration.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
+            [trackDuration release];
+            
+            
+        }
+        else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPArtist class]]){
+            SPArtist *artist = [sectionArr objectAtIndex:indexPath.row];
+            lbl = [NSString stringWithFormat:@"%@",artist.name];
+            
+        }
+        
+        UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.view.frame.size.width-220, 30)];
+        title.text = lbl;
+        title.textColor = [UIColor whiteColor];
+        title.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
+        title.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:title];
+        [title release];
+        
+        
+        
+        
+        //cell.textLabel.text = lbl;
+        // Configure the cell...
+        
+        [sectionArr release];
+   
+    
 
-    
-    NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[detailArr objectAtIndex:indexPath.section]];
-    
-    if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPAlbum class]]){
-        SPAlbum *album = [sectionArr objectAtIndex:indexPath.row];
-        lbl = [NSString stringWithFormat:@"%@ - %@",album.artist.name,album.name];
         
-        UILabel *yearlbl = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-60, 5, 50, 30)];
-        yearlbl.backgroundColor = [UIColor clearColor];
-        yearlbl.textColor = [UIColor whiteColor];
-        yearlbl.textAlignment = UITextAlignmentCenter;
-        yearlbl.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
-        if (album.year > 0)
-            yearlbl.text = [NSString stringWithFormat:@"%d",album.year];
-        else
-            yearlbl.text = @"-";
-        [cell.contentView addSubview:yearlbl];
-        [yearlbl release];
-        
-    }
-    else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPTrack class]]){
-        SPTrack *track = [sectionArr objectAtIndex:indexPath.row];
-        NSString *artists = [[track.artists valueForKey:@"name"] componentsJoinedByString:@","];
-        lbl = [NSString stringWithFormat:@"%@ - %@",artists,track.name];
-        
-        UILabel *cue = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-110, 10, 100, 20)];
-        cue.text = @"Cue Song";
-        cue.textAlignment = UITextAlignmentCenter;
-        cue.textColor = [UIColor blackColor];
-        cue.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
-        cue.backgroundColor = [UIColor whiteColor];
-        [cell.contentView addSubview:cue];
-        [cue release];
-        
-        NSTimeInterval interval = track.duration;
-        long min = (long)interval / 60;    // divide two longs, truncates
-        long sec = (long)interval % 60;    // remainder of long divide
-        NSString* str = [[NSString alloc] initWithFormat:@"%02d:%02d", min, sec];
-        
-        UILabel *trackDuration = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-170, 5, 50, 30)];
-        trackDuration.text = str;
-        trackDuration.textColor = [UIColor whiteColor];
-        trackDuration.backgroundColor = [UIColor clearColor];
-        [cell.contentView addSubview:trackDuration];
-        trackDuration.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
-        [trackDuration release];
-        
-        
-    }
-    else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPArtist class]]){
-        SPArtist *artist = [sectionArr objectAtIndex:indexPath.row];
-        lbl = [NSString stringWithFormat:@"%@",artist.name];
-        
-    }
-    
-    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.view.frame.size.width-220, 30)];
-    title.text = lbl;
-    title.textColor = [UIColor whiteColor];
-    title.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
-    title.backgroundColor = [UIColor clearColor];
-    [cell.contentView addSubview:title];
-    [title release];
-    
-
-    //cell.textLabel.text = lbl;
-    // Configure the cell...
-    
-    [sectionArr release];
+     }
     //cell.contentView.backgroundColor = [UIColor blackColor];
    // cell.backgroundColor = [UIColor blackColor];
     
-    cell.textLabel.textColor = [UIColor whiteColor];
+ //   cell.textLabel.textColor = [UIColor whiteColor];
     return cell;
 }
 - (void)cancel:(id)sender{
@@ -414,21 +439,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*
-     Loading view
-    */
-    CGSize winSize = self.tableView.frame.size;
-    CGPoint offsetPnt = self.tableView.contentOffset;
-    self.loadingView = [[UIView alloc]initWithFrame:CGRectMake(offsetPnt.x, offsetPnt.y, winSize.width, winSize.height)];
-    self.loadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
-    [self.view addSubview:self.loadingView];
-   
-    UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
-    av.frame=CGRectMake((winSize.width/2)-(85/2), ((winSize.height/2)-(85/2))-40, 85, 85);
-    av.tag  = 1;
-    [self.loadingView addSubview:av];
-    [av startAnimating];
-    
     UITableViewCell* theCell = [tableView cellForRowAtIndexPath:indexPath];
     
     //Then you change the properties (label, text, color etc..) in your case, the background color
@@ -438,41 +448,70 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[detailArr objectAtIndex:indexPath.section]];
+    if (indexPath.row == 19){
+        NSLog(@"showmore btn was clicked");
+        
+        //the maximum number of cells needs to be changed before this. Global variable I guess would do it. TODO
+        [self.tableView setNeedsDisplay];
+    }else {
+        /*
+         Loading view
+         */
+        CGSize winSize = self.tableView.frame.size;
+        CGPoint offsetPnt = self.tableView.contentOffset;
+        self.loadingView = [[UIView alloc]initWithFrame:CGRectMake(offsetPnt.x, offsetPnt.y, winSize.width, winSize.height)];
+        self.loadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
+        [self.view addSubview:self.loadingView];
+        
+        UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+        av.frame=CGRectMake((winSize.width/2)-(85/2), ((winSize.height/2)-(85/2))-40, 85, 85);
+        av.tag  = 1;
+        [self.loadingView addSubview:av];
+        [av startAnimating];
+        
+        NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[detailArr objectAtIndex:indexPath.section]];
+        
+        if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPAlbum class]]){
+            [self addObserver:self forKeyPath:@"albBrowse.tracks" options:0 context:nil];
+            
+            SPAlbum *album = [sectionArr objectAtIndex:indexPath.row];
+            SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
+            self.albBrowse = albumBrowse;
+            
+        }
+        else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPTrack class]]){
+            AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            
+            SPTrack *track = [sectionArr objectAtIndex:indexPath.row];
+            [main addSongFromSearch:track.spotifyURL];
+            
+            [self.loadingView removeFromSuperview];
+            self.loadingView = nil;
+            
+            
+        }
+        else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPArtist class]]){
+            [self addObserver:self forKeyPath:@"artBrowse.albums" options:0 context:nil];
+            [self addObserver:self forKeyPath:@"artBrowse.relatedArtists" options:0 context:nil];
+            
+            
+            SPArtist *artist = [sectionArr objectAtIndex:indexPath.row];
+            SPArtistBrowse *artistBrowse = [SPArtistBrowse browseArtist:artist inSession:[SPSession sharedSession] type:SP_ARTISTBROWSE_FULL];
+            self.artBrowse = artistBrowse;
+            
+        }
+        
+        [sectionArr release];
     
-    if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPAlbum class]]){
-        [self addObserver:self forKeyPath:@"albBrowse.tracks" options:0 context:nil];
-        
-        SPAlbum *album = [sectionArr objectAtIndex:indexPath.row];
-        SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
-        self.albBrowse = albumBrowse;
-        
-    }
-    else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPTrack class]]){
-        AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        
-        SPTrack *track = [sectionArr objectAtIndex:indexPath.row];
-        [main addSongFromSearch:track.spotifyURL];
-        
-        [self.loadingView removeFromSuperview];
-        self.loadingView = nil;
-        
-        
-    }
-    else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPArtist class]]){
-        [self addObserver:self forKeyPath:@"artBrowse.albums" options:0 context:nil];
-        [self addObserver:self forKeyPath:@"artBrowse.relatedArtists" options:0 context:nil];
-        
-        
-        SPArtist *artist = [sectionArr objectAtIndex:indexPath.row];
-        SPArtistBrowse *artistBrowse = [SPArtistBrowse browseArtist:artist inSession:[SPSession sharedSession] type:SP_ARTISTBROWSE_FULL];
-        self.artBrowse = artistBrowse;
-        
-    }
     
-    [sectionArr release];
+    }
 
     
+}
+
+- (void)loadmoreresults{
+    
+   // [];
 }
 
 -(void)dealloc{

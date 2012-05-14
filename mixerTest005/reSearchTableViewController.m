@@ -352,7 +352,7 @@
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    main.cueController.view.hidden = NO;
+    main.mainViewController.tabController.cueController.view.hidden = NO;
     
 }
 

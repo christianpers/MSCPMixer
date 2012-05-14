@@ -94,7 +94,8 @@
         self.usernameField = [[UITextField alloc]initWithFrame:CGRectMake(118, 220, 556, 46)];
         self.usernameField.font = [UIFont fontWithName:@"GothamHTF-Book" size:(28.0)];
         self.usernameField.textColor = [UIColor blackColor];
-        self.usernameField.text = @"Username";
+        self.usernameField.placeholder = @"Username";
+        self.usernameField.autocorrectionType = UITextAutocorrectionTypeNo;
         self.usernameField.backgroundColor = [UIColor whiteColor];
         self.usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         [self.view addSubview:self.usernameField];
@@ -104,7 +105,8 @@
         self.passwordField.textColor = [UIColor blackColor];
         self.passwordField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         self.passwordField.secureTextEntry = YES;
-        self.passwordField.text = @"Password";
+        self.passwordField.placeholder = @"Password";
+        self.usernameField.autocorrectionType = UITextAutocorrectionTypeNo;
         self.passwordField.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:self.passwordField];
         

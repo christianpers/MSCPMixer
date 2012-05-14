@@ -14,7 +14,6 @@
 
 @synthesize cueController;
 @synthesize menuBg;
-@synthesize loadplaylistView;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -149,6 +148,35 @@
     [self.view addSubview:self.cueController.view];
   //  self.cueController.view.hidden = YES;
     
+    
+    //AIRPLAY view
+    UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(60, 22, 50, 50)];
+    mpVolumeViewParentView.backgroundColor = [UIColor clearColor];
+    
+    MPVolumeView *myVolumeView =
+    [[MPVolumeView alloc] initWithFrame: mpVolumeViewParentView.bounds];
+    [mpVolumeViewParentView addSubview: myVolumeView];
+    myVolumeView.showsRouteButton = YES;
+    myVolumeView.showsVolumeSlider = NO;
+    airplayIcon = mpVolumeViewParentView;
+    [self.view addSubview:airplayIcon];
+    
+    [myVolumeView release];
+    [mpVolumeViewParentView release];
+    
+    NSString* infoImgStr = [[NSBundle mainBundle] pathForResource:@"info" ofType:@"png"];
+    UIImage *infoImg = [UIImage imageWithContentsOfFile:infoImgStr];
+    
+    userTxtBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    userTxtBtn.frame = CGRectMake(10, 15, 36, 36);
+    userTxtBtn.backgroundColor = [UIColor clearColor];
+    [userTxtBtn setBackgroundImage:infoImg forState:UIControlStateNormal];
+    
+    [userTxtBtn addTarget:self 
+                        action:@selector(showlogoutViewController)
+              forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:userTxtBtn];
+    
     appStarted = YES;
     
 }
@@ -167,12 +195,6 @@
             break;
         case 1:
         
-          //       loadplaylistView = [[UIViewController alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
-            //loadplaylistView = [[UIViewController alloc]init];
-          //  loadplaylistView.frame = CGRectMake(100, 100, 200, 200);
-          //  loadplaylistView.backgroundColor = [UIColor whiteColor];
-          //       [main.mainViewController.view addSubview:loadplaylistView];
-          //  [main.mainViewController presentModalViewController:loadplaylistView animated:YES];
             activeImg.frame = CGRectMake(11, 27, 11, 11);
             
             [playbackBtn setSelected:false];
@@ -208,6 +230,77 @@
 	[self selectTab:tagNum];
 }
 
+- (void)showlogoutViewController{
+    
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    
+    logoutVController = [[logoutViewController alloc] init];
+    logoutVController.modalPresentationStyle = UIModalPresentationFormSheet;
+    logoutVController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [main.mainViewController presentModalViewController:logoutVController animated:YES];
+  //  logoutVController.view.superview.frame = CGRectMake(0, 0, 240, 190); //it's important to do this after presentModalViewController
+    logoutVController.view.superview.center = self.view.center;
+    
+    SPUser *user = [[SPSession sharedSession]user];
+    NSString *userName = user.displayName;
+    UILabel *loggedInUser = [[UILabel alloc] initWithFrame:CGRectMake(30,logoutVController.view.frame.size.height-50, 400, 30)];
+    loggedInUser.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
+    loggedInUser.text = [NSString stringWithFormat:@"Logged in as: %@",userName];
+    loggedInUser.textAlignment = UITextAlignmentLeft;
+    loggedInUser.textColor = [UIColor blackColor];
+    loggedInUser.backgroundColor = [UIColor clearColor];
+    [logoutVController.view addSubview:loggedInUser];
+    [loggedInUser release];
+    
+    
+    UIButton *logoutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    logoutBtn.frame = CGRectMake(180, 250, 180, 55);
+    logoutBtn.backgroundColor = [UIColor blackColor];
+    logoutBtn.layer.cornerRadius = 5;
+    [logoutBtn setTitle:[NSString stringWithFormat:@"Switch user"] forState:UIControlStateNormal];
+    logoutBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+    logoutBtn.titleLabel.font =  [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
+    [logoutBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    // logoutBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    //  [logoutBtn sizeToFit];
+    [logoutBtn addTarget:self 
+                  action:@selector(userLogout)
+        forControlEvents:UIControlEventTouchDown];
+    
+    [logoutVController.view addSubview:logoutBtn];
+    
+    UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    cancelBtn.frame = CGRectMake(180, 325, 180, 55);
+    cancelBtn.backgroundColor = [UIColor blackColor];
+    cancelBtn.layer.cornerRadius = 5;
+    [cancelBtn setTitle:[NSString stringWithFormat:@"Cancel"] forState:UIControlStateNormal];
+    cancelBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+    cancelBtn.titleLabel.font =  [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
+    [cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    //  cancelBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    //  [cancelBtn sizeToFit];
+    [cancelBtn addTarget:self 
+                  action:@selector(removeLogoutView)
+        forControlEvents:UIControlEventTouchDown];
+    
+    [logoutVController.view addSubview:cancelBtn];
+    [logoutVController release];
+}
+
+- (void)userLogout{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    [main userLogout];
+}
+
+-(void)removeLogoutView{
+    
+    [logoutVController dismissModalViewControllerAnimated:YES];
+}
+
+
+
 - (void)dealloc{
     
    // [self.playlistBtn release];
@@ -215,6 +308,8 @@
     //[self.searchBtn release];
     [self.cueController release];
     [self.menuBg release];
+    [airplayIcon removeFromSuperview];
+    [userTxtBtn removeFromSuperview];
     [super dealloc];
 }
 

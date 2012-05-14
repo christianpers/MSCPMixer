@@ -36,6 +36,6 @@
 - (void)activatePortraitMode;
 - (void)activateLandscapeMode;
 - (void)toggleGUIhidden:(BOOL)sethidden;
-
+- (void)removeGUI;
 
 @end

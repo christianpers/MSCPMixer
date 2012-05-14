@@ -195,130 +195,6 @@ static OSStatus outputCallback(void *inRefCon,
 }
 
 
-static OSStatus playbackCallback(void *inRefCon, 
-								 AudioUnitRenderActionFlags *ioActionFlags, 
-								 const AudioTimeStamp *inTimeStamp, 
-								 UInt32 inBusNumber, 
-								 UInt32 inNumberFrames, 
-								 AudioBufferList *ioData) {  
-	
-	int i, j; 
-	
-    
-	
-	if(startedCallback && noInterrupt) {
-		
-		//get a copy of the objectiveC class "self" we need this to get the next sample to fill the buffer
-		audioControl *manager = (audioControl *)inRefCon;
-        
-		float * tempbuf = manager->tempbuf; 
-        //	float * monobuf =  manager->monobuf; 
-        
-       
-		//loop through all the buffers that need to be filled
-		for (i = 0 ; i < ioData->mNumberBuffers; i++){
-			//get the buffer to be filled
-			AudioBuffer buffer = ioData->mBuffers[i];
-			//printf("which buf %d numberOfSamples %d channels %d countertest %d \n", i, buffer.mDataByteSize, buffer.mNumberChannels, g_countertest);
-			
-			//if needed we can get the number of bytes that will fill the buffer using
-			// int numberOfSamples = ioData->mBuffers[i].mDataByteSize;
-			
-			//get the buffer and point to it as an UInt32 (as we will be filling it with 32 bit samples)
-			//if we wanted we could grab it as a 16 bit and put in the samples for left and right seperately
-			//but the loop below would be for(j = 0; j < inNumberFrames * 2; j++) as each frame is a 32 bit number
-			//UInt32 *frameBuffer = buffer.mData;
-			
-			short signed int *frameBuffer = (short signed int *)buffer.mData;
-			
-			//safety first
-			inNumberFrames= inNumberFrames<4000?inNumberFrames:4000; 
-            
-			//float * tempbuf= manager->readbuffer_;
-			
-			int flag = manager->readflag_; 
-			
-			if (flag==1) {
-                
-				
-				int pos = (*manager->readpos_); 
-				int size= manager->buffersize_; 
-				float * source =  manager->readbuffer_; 
-                
-				float mult = 32000.0; //just alllow a little leeway for limiter errors 32767.0; 
-				int j; 
-				
-                //loop through the buffer and fill the frames
-                for (j = 0; j < 2*inNumberFrames; j++){
-                    // get NextPacket returns a 32 bit value, one frame.
-                    //frameBuffer[j] = [[remoteIOplayer inMemoryAudioFile] getNextPacket];
-                    //float value= 32767.0*sin((400*2*3.14159)*(j/44100.0)); 
-                    //float value= mult*tempbuf[j]; //sin((400*2*3.14159)*(g_countertest/44100.0)); 
-					
-                    tempbuf[j] = source[pos]; //mult*(source[pos]); 
-                    
-                    pos = (pos+1)%size; 
-                    //frameBuffer[2*j] = 0.0; //value; 
-                    //frameBuffer[2*j+1] = 0.0; //value; 
-                    
-                    //++g_countertest; 
-                }
-				
-				
-                //(*(manager->readpos_)) += inNumberFrames;  
-                
-				(*(manager->readpos_)) = pos; 
-				
-				//converts to int
-				for (int j = 0; j < 2*inNumberFrames; j++)
-					frameBuffer[j] = mult*(tempbuf[j]);
-                
-				
-				
-			} else {
-				
-				for (int j = 0; j < inNumberFrames; j++){
-					// get NextPacket returns a 32 bit value, one frame.
-					//frameBuffer[j] = [[remoteIOplayer inMemoryAudioFile] getNextPacket];
-					float value= 0.0; //32767.0*sin((400*2*3.14159)*(j/44100.0)); 
-					//float value= mult*tempbuf[j]; //sin((400*2*3.14159)*(g_countertest/44100.0)); 
-					
-					frameBuffer[2*j] = value; 
-					frameBuffer[2*j+1] = value; 
-					
-					//++g_countertest; 
-				}
-				
-			}
-			
-		}
-        
-		
-	} else {
-		
-		for (i = 0 ; i < ioData->mNumberBuffers; i++){
-			AudioBuffer buffer = ioData->mBuffers[i];
-            
-			short signed int *frameBuffer = (short signed int *)buffer.mData;
-            
-			//loop through the buffer and fill the frames
-			for (j = 0; j < inNumberFrames; j++){
-                
-				short signed int value= 0; //32767.0*0.0; 
-				frameBuffer[2*j] = value;	
-				frameBuffer[2*j+1] = value; 
-				
-				//++g_countertest; 
-			}
-			
-		}
-		
-	}
-	
-	
-    return noErr;
-}
-
 
 @interface audioControl ()
 
@@ -326,13 +202,13 @@ static OSStatus playbackCallback(void *inRefCon,
 @property (nonatomic, readwrite, retain) SPTrack *currentTrack;
 @property (nonatomic, readwrite, retain) SPSession *playbackSession;
 @property (nonatomic, readwrite, retain) SPCircularBuffer *audioBufferCh1;
-@property (nonatomic, readwrite, retain) SPCircularBuffer *audioBufferCh2;
 @property (readwrite) NSTimeInterval trackPosition;
+@property (readwrite) NSTimeInterval trackPositionCh2;
 
 -(void)informDelegateOfAudioPlaybackStarting;
 
 -(void)teardownCoreAudio;
--(BOOL)setupAudioGraphWithAudioFormat:(const sp_audioformat *)audioFormat error:(NSError **)err;
+
 
 static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
                                                 AudioUnitRenderActionFlags *ioActionFlags,
@@ -340,6 +216,14 @@ static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
                                                 UInt32 inBusNumber,
                                                 UInt32 inNumberFrames,
                                                 AudioBufferList *ioData);
+
+
+static OSStatus playbackCallback(void *inRefCon, 
+								 AudioUnitRenderActionFlags *ioActionFlags, 
+								 const AudioTimeStamp *inTimeStamp, 
+								 UInt32 inBusNumber, 
+								 UInt32 inNumberFrames, 
+								 AudioBufferList *ioData);
 
 @end
 
@@ -358,7 +242,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
             self.playbackSession.playbackDelegate = self;
             self.volume = 0.7;
             self.audioBufferCh1 = [[SPCircularBuffer alloc] initWithMaximumLength:kMaximumBytesInBuffer];
-            self.audioBufferCh2 = [[SPCircularBuffer alloc] initWithMaximumLength:kMaximumBytesInBuffer];
             
             [self addObserver:self
                    forKeyPath:@"playbackSession.playing"
@@ -393,8 +276,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     [self.audioBufferCh1 clear];
     self.audioBufferCh1 = nil;
-    [self.audioBufferCh2 clear];
-    self.audioBufferCh2 = nil;
     
                                     
      incrementTrackPositionInvocation.target = nil;
@@ -407,19 +288,19 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 }
 
 @synthesize playbackSession;
-@synthesize trackPosition;
+@synthesize trackPosition, trackPositionCh2;
 @synthesize volume;
 @synthesize delegate;
 @synthesize currentTrack;
 @synthesize timer;
 @synthesize audioBufferCh1;
-@synthesize audioBufferCh2;
 @synthesize asbdChTwo, asbdChOne;
 @synthesize playbackIsPaused;
 @synthesize fftView;
 @synthesize mixerUnit, mixerUnitChOne, mixerUnitChTwo, timePitchUnitChOne, timePitchUnitChTwo;
 @synthesize conversionBufferLeft, conversionBufferRight;
 @synthesize chTwoPlayingProp;
+@synthesize graph;
 
 
 - (void)setFFTView: (fftAnalyzerView *)fftViewer{
@@ -453,6 +334,9 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 }
 
 -(void)connectFirstChannelMasterMixer{
+    
+    ioRenderCallback.inputProc = outputCallback;
+    ioRenderCallback.inputProcRefCon = self;
     
     OSStatus result;
     
@@ -673,6 +557,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 		return NO;
 	}
     
+    
+    
 	self.currentTrack = trackToPlay;
    // self.volume = 0;
 	self.trackPosition = 0.0;
@@ -681,7 +567,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [main.mainViewController.plbackViewController setTrackTitleAndArtist:self.currentTrack];
 		self.playbackSession.playing = YES;
-        [main.cueController.tableView reloadData];
+        [main.mainViewController.tabController.cueController.tableView reloadData];
+        [main.mainViewController.plbackViewController toggleplayandpause:YES];
     }
 	else{
 		self.currentTrack = nil;
@@ -706,7 +593,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 
 -(void)fadeOutMusicCh1{
     OSStatus result = noErr;
-    result = AudioUnitSetParameter(mixerUnitChOne, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
+ /*   result = AudioUnitSetParameter(mixerUnitChOne, kMultiChannelMixerParam_Volume, kAudioUnitScope_Input, 0, self.volume, 0);
     self.volume-=.03; 
     NSLog(@"volume: %f",self.volume);
     if (self.volume > 0.01){
@@ -714,7 +601,8 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         return;
         
     }
- 
+ */
+    [self removeFirstChannelCallback];
    
 }
 -(void)fadeOutMusicCh2{
@@ -729,14 +617,16 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     }
 }
 -(void)fadeInMusicCh1{
-    OSStatus result = noErr;
-    result = AudioUnitSetParameter(mixerUnitChOne, kMultiChannelMixerParam_Volume, kAudioUnitScope_Output, 0, self.volume, 0);
+    [self connectFirstChannelCallback];
+/*    OSStatus result = noErr;
+    result = AudioUnitSetParameter(mixerUnitChOne, kMultiChannelMixerParam_Volume, kAudioUnitScope_Input, 0, self.volume, 0);
     self.volume+=.003; 
     NSLog(@"volume: %f",self.volume);
     if (self.volume < 1){
         [self performSelector:@selector(fadeInMusicCh1) withObject:nil afterDelay:0.001];
         return;
     }
+ */
 }
 -(void)fadeInMusicCh2{
     OSStatus result = noErr;
@@ -871,7 +761,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     OSStatus result = noErr;
     if(channel == 1){
-        NSLog(@"setting the hipassfreq: %f",val);
+      //  NSLog(@"setting the hipassfreq: %f",val);
         result = AudioUnitSetParameter(hipassUnitChOne,kHipassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
         if (noErr != result){
             
@@ -879,7 +769,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         }
         
     }else{
-        NSLog(@"setting the hipassfreq: %f",val);
+    //    NSLog(@"setting the hipassfreq: %f",val);
         result = AudioUnitSetParameter(hipassUnitChTwo,kHipassParam_CutoffFrequency , kAudioUnitScope_Global, 0, val, 0);
         if (noErr != result){
             
@@ -893,7 +783,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     OSStatus result = noErr;
     
     if (channel == 1){
-        NSLog(@"setting the hipassresonance: %f",val);
+     //   NSLog(@"setting the hipassresonance: %f",val);
         result = AudioUnitSetParameter(hipassUnitChOne,kHipassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
         if (noErr != result){
             
@@ -901,7 +791,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         }
         
     }else{
-        NSLog(@"setting the hipassresonance: %f",val);
+  //      NSLog(@"setting the hipassresonance: %f",val);
         result = AudioUnitSetParameter(hipassUnitChTwo,kHipassParam_Resonance , kAudioUnitScope_Global, 0, val, 0);
         if (noErr != result){
             
@@ -965,58 +855,23 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
 	//printf("%d", (int)s);
 }
 
--(void)checkavailableOutputRoutes{
+
+-(void)setupInvocationCh2{
     
-    CFStringRef testing = kAudioSession_AudioRouteKey_Outputs;
-    
-    /*this shit does not work !!*/
-    
-   // CFDictionaryRef asCFType = (CFDictionaryRef)testing;
-   // UInt32 dataSize = sizeof(asCFType);
-   // AudioSessionGetProperty(kAudioSessionProperty_AudioRouteDescription, &dataSize, &asCFType);
-    NSDictionary *easyPeasy = (NSDictionary *)testing;
- //   NSDictionary *firstOutput = (NSDictionary *)[[easyPeasy valueForKey:@"RouteDetailedDescription_Outputs"] objectAtIndex:0];
-    NSString *portType = (NSString *)[easyPeasy valueForKey:@"kAudioSession_AudioRouteKey_Type"];
-    NSLog(@"first output port type is: %@!", portType);
-    
-    UInt32 size = sizeof(CFArrayRef);
-    
-    CFArrayRef test = (CFArrayRef)kAudioSession_AudioRouteKey_Outputs;
-    
-    
-    
-    OSStatus err;// = AudioSessionGetProperty(kAudioSession_AudioRouteKey_Outputs, &size, &test);
-    
-    if (err == noErr){
-        CFIndex i, c = CFArrayGetCount(audioOutputRoutes);
-        CFDictionaryRef audioOutput;
-        
-        for (i=0; i<c; i++) {
-            audioOutput = (CFDictionaryRef)CFArrayGetValueAtIndex(audioOutputRoutes, i);
-            
-            CFNumberRef routeId = (CFNumberRef)CFDictionaryGetValue(audioOutput, kAudioSession_OutputDestinationKey_ID);
-            CFStringRef routeDescription = (CFStringRef)CFDictionaryGetValue(audioOutput, kAudioSession_OutputDestinationKey_Description);
-            
-            [self printCfNumber:routeId];
-            const char *bytes;
-            
-            NSLog(@"route descr: %@",routeDescription);
-            
-            //haven't worked out how to print out the CFString yet.
-            bytes = CFStringGetCStringPtr(routeDescription, kCFStringEncodingMacRoman);
-            
-            //printf(bytes);
-            
-        }
-        
-        
-    }
+    // We pre-allocate the NSInvocation for setting the current playback time for performance reasons.
+    // See SPPlaybackManagerAudioUnitRenderDelegateCallback() for more.
+    SEL incrementTrackPositionSelectorCh2 = @selector(incrementTrackPositionWithFrameCountCh2:);
+    incrementTrackPositionMethodSignatureCh2 = [[audioControl instanceMethodSignatureForSelector:incrementTrackPositionSelectorCh2] retain];
+    incrementTrackPositionInvocationCh2 = [[NSInvocation invocationWithMethodSignature:incrementTrackPositionMethodSignatureCh2] retain];
+    [incrementTrackPositionInvocationCh2 setSelector:incrementTrackPositionSelectorCh2];
+    [incrementTrackPositionInvocationCh2 setTarget:self];
 }
 
 
                                  
--(BOOL)setupAudioGraphWithAudioFormat:(const sp_audioformat *)audioFormat error:(NSError **)err {
+-(BOOL)setupAudioGraphWithAudioFormat:(NSError **)err {
     
+    [self setupInvocationCh2];
     
     NSError *error = nil;
 	BOOL success = YES;
@@ -1224,16 +1079,14 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     
     /**
      set callback on ioUnit node 1
-     */
-    ioRenderCallback.inputProc = outputCallback;
-    ioRenderCallback.inputProcRefCon = self;
+     
     
     //channel 1
     result = AUGraphSetNodeInputCallback(graph, mixerNode, 0, &ioRenderCallback);
     if (result) { printf("AUGraphSetNodeInputCallback result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
     
     [self connectFirstChannelCallback];
-  
+     */
 
     CAShow(graph);
     // open the graph AudioUnits are open but not initialized (no resource allocation occurs here)
@@ -1425,7 +1278,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
    
     
-    
+   /* 
     asbdChOne.mSampleRate = (float)audioFormat->sample_rate;
     asbdChOne.mFormatID = kAudioFormatLinearPCM;
     asbdChOne.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked | kAudioFormatFlagsNativeEndian;
@@ -1435,11 +1288,20 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     asbdChOne.mChannelsPerFrame = audioFormat->channels;
     asbdChOne.mBitsPerChannel = 16;
     asbdChOne.mReserved = 0;
-    
+    */
+    asbdChOne.mSampleRate = 44100;
+    asbdChOne.mFormatID = kAudioFormatLinearPCM;
+    asbdChOne.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked | kAudioFormatFlagsNativeEndian;
+    asbdChOne.mBytesPerPacket = 4;
+    asbdChOne.mFramesPerPacket = 1;
+    asbdChOne.mBytesPerFrame = asbdChOne.mBytesPerPacket;
+    asbdChOne.mChannelsPerFrame = 2;
+    asbdChOne.mBitsPerChannel = 16;
+    asbdChOne.mReserved = 0;
     
     asbdChTwo.mSampleRate                   = 44100.00;
 	asbdChTwo.mFormatID                     = kAudioFormatLinearPCM;
-	asbdChTwo.mFormatFlags                  = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+	asbdChTwo.mFormatFlags                  = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked | kAudioFormatFlagsNativeEndian;
 	asbdChTwo.mFramesPerPacket              = 1;
 	asbdChTwo.mChannelsPerFrame             = 2;
 	asbdChTwo.mBitsPerChannel               = 16;
@@ -1560,7 +1422,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
     // set the input stream format, this is the format of the audio for mixer input
     result = AudioUnitSetProperty(mixerUnitChTwo, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &asbdChTwo, sizeof(asbdChTwo));
     if (result) { printf("AudioUnitSetProperty result %ld %08X %4.4s\n", result, (unsigned int)result, (char*)&result); return; }
-    
     
     // set the output stream format of the mixer
 	result = AudioUnitSetProperty(mixerUnitChTwo, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &asbdChTwo, sizeof(asbdChTwo));
@@ -1692,7 +1553,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
   //  self.firstInputSampleTime = -1;
   //  player.firstOutputSampleTime = -1;
   //  player.inToOutSampleTimeOffset = -1;
-    currentCoreAudioSampleRate = audioFormat->sample_rate;
+    currentCoreAudioSampleRate = 44100;
     return YES;
 }
 
@@ -1724,10 +1585,12 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
         if (graph == NULL) {
             // Setup Core Audio if it hasn't been set up yet.
             NSError *error = nil;
-            if (![self setupAudioGraphWithAudioFormat:audioFormat error:&error]) {
+            if (![self setupAudioGraphWithAudioFormat:&error]) {
                 NSLog(@"[%@ %@]: %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), error);
                 return 0;
                 }
+            [self connectFirstChannelCallback];
+            [self connectFirstChannelMasterMixer];
         }
                                     
         if (self.audioBufferCh1.length == 0){
@@ -1911,7 +1774,6 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
                                      
     if ([keyPath isEqualToString:@"playbackSession.playing"] && context == kSPPlaybackManagerKVOContext) {
        if (self.playbackSession.isPlaying) {
-           //[main.cueView.tableView reloadData];
            
            [self startAUGraph];
            if (self.volume < 0.1){
@@ -1925,7 +1787,7 @@ static NSUInteger const kUpdateTrackPositionHz = 5;
             OSStatus result;
             UInt32 numInteractions;
             
-            [main.cueController.tableView reloadData];
+            [main.mainViewController.tabController.cueController.tableView reloadData];
             
             result = AUGraphCountNodeInteractions(graph, mixerNodeChOne, &numInteractions);
             if (numInteractions == 2){
@@ -2053,15 +1915,173 @@ static OSStatus AudioUnitRenderDelegateCallback(void *inRefCon,
 		framesSinceLastTimeUpdate = 0;
 	}
     
-    
-     
+   
     return noErr;
 }
 
 -(void)incrementTrackPositionWithFrameCount:(UInt32)framesToAppend {
-	if (currentCoreAudioSampleRate > 0)
+    
+   if (currentCoreAudioSampleRate > 0)
 		self.trackPosition = self.trackPosition + (double)framesToAppend/currentCoreAudioSampleRate;
+   
+  //  NSLog(@"duration %f",main.currentTrack.duration - self.trackPosition);
 }
+
+
+
+//render for channel 2!
+
+static UInt32 framesSinceLastTimeUpdateCh2 = 0;
+
+
+static OSStatus playbackCallback(void *inRefCon, 
+								 AudioUnitRenderActionFlags *ioActionFlags, 
+								 const AudioTimeStamp *inTimeStamp, 
+								 UInt32 inBusNumber, 
+								 UInt32 inNumberFrames, 
+								 AudioBufferList *ioData) {  
+	
+	int i, j; 
+	
+    
+	
+	if(startedCallback && noInterrupt) {
+		
+		//get a copy of the objectiveC class "self" we need this to get the next sample to fill the buffer
+		audioControl *manager = (audioControl *)inRefCon;
+        
+		float * tempbuf = manager->tempbuf; 
+        //	float * monobuf =  manager->monobuf; 
+        int sampleRate = manager->currentCoreAudioSampleRate;
+        
+        //loop through all the buffers that need to be filled
+		for (i = 0 ; i < ioData->mNumberBuffers; i++){
+			//get the buffer to be filled
+			AudioBuffer buffer = ioData->mBuffers[i];
+			//printf("which buf %d numberOfSamples %d channels %d countertest %d \n", i, buffer.mDataByteSize, buffer.mNumberChannels, g_countertest);
+			
+			//if needed we can get the number of bytes that will fill the buffer using
+			// int numberOfSamples = ioData->mBuffers[i].mDataByteSize;
+			
+			//get the buffer and point to it as an UInt32 (as we will be filling it with 32 bit samples)
+			//if we wanted we could grab it as a 16 bit and put in the samples for left and right seperately
+			//but the loop below would be for(j = 0; j < inNumberFrames * 2; j++) as each frame is a 32 bit number
+			//UInt32 *frameBuffer = buffer.mData;
+			
+			short signed int *frameBuffer = (short signed int *)buffer.mData;
+			
+			//safety first
+			inNumberFrames= inNumberFrames<4000?inNumberFrames:4000; 
+            
+			//float * tempbuf= manager->readbuffer_;
+			
+			int flag = manager->readflag_; 
+			
+			if (flag==1) {
+                
+                framesSinceLastTimeUpdateCh2 += inNumberFrames;
+                
+				int pos = (*manager->readpos_); 
+				int size= manager->buffersize_; 
+				float * source =  manager->readbuffer_; 
+                
+				float mult = 32000.0; //just alllow a little leeway for limiter errors 32767.0; 
+				int j; 
+				
+                //loop through the buffer and fill the frames
+                for (j = 0; j < 2*inNumberFrames; j++){
+                    // get NextPacket returns a 32 bit value, one frame.
+                    //frameBuffer[j] = [[remoteIOplayer inMemoryAudioFile] getNextPacket];
+                    //float value= 32767.0*sin((400*2*3.14159)*(j/44100.0)); 
+                    //float value= mult*tempbuf[j]; //sin((400*2*3.14159)*(g_countertest/44100.0)); 
+					
+                    tempbuf[j] = source[pos]; //mult*(source[pos]); 
+                    
+                    pos = (pos+1)%size; 
+                    //frameBuffer[2*j] = 0.0; //value; 
+                    //frameBuffer[2*j+1] = 0.0; //value; 
+                    
+                    //++g_countertest; 
+                    
+                    if (sampleRate > 0 && framesSinceLastTimeUpdateCh2 >= sampleRate/kUpdateTrackPositionHz) {
+                        // Only update 5 times per second.
+                        // Since this render callback from Core Audio is so time-sensitive, we avoid allocating objects
+                        // and having to use an autorelease pool by pre-allocating the NSInvocation, setting its argument here
+                        // and setting it off on the main thread without waiting here. The -trackPosition property is atomic, so the
+                        // worst race condition that can happen is the property gets set out of order. Since we update at 5Hz, the 
+                        // chances of this happening are slim.
+                        [manager->incrementTrackPositionInvocationCh2 setArgument:&framesSinceLastTimeUpdateCh2 atIndex:2];
+                        [manager->incrementTrackPositionInvocationCh2 performSelectorOnMainThread:@selector(invoke)
+                                                                                    withObject:nil
+                                                                                 waitUntilDone:NO];
+                        framesSinceLastTimeUpdateCh2 = 0;
+                    }
+                }
+				
+				
+                //(*(manager->readpos_)) += inNumberFrames;  
+                
+				(*(manager->readpos_)) = pos; 
+				
+				//converts to int
+				for (int j = 0; j < 2*inNumberFrames; j++)
+					frameBuffer[j] = mult*(tempbuf[j]);
+                
+				
+				
+			} else {
+				
+				for (int j = 0; j < inNumberFrames; j++){
+					// get NextPacket returns a 32 bit value, one frame.
+					//frameBuffer[j] = [[remoteIOplayer inMemoryAudioFile] getNextPacket];
+					float value= 0.0; //32767.0*sin((400*2*3.14159)*(j/44100.0)); 
+					//float value= mult*tempbuf[j]; //sin((400*2*3.14159)*(g_countertest/44100.0)); 
+					
+					frameBuffer[2*j] = value; 
+					frameBuffer[2*j+1] = value; 
+					
+					//++g_countertest; 
+				}
+				
+			}
+			
+		}
+        
+		
+	} else {
+		
+		for (i = 0 ; i < ioData->mNumberBuffers; i++){
+			AudioBuffer buffer = ioData->mBuffers[i];
+            
+			short signed int *frameBuffer = (short signed int *)buffer.mData;
+            
+			//loop through the buffer and fill the frames
+			for (j = 0; j < inNumberFrames; j++){
+                
+				short signed int value= 0; //32767.0*0.0; 
+				frameBuffer[2*j] = value;	
+				frameBuffer[2*j+1] = value; 
+				
+				//++g_countertest; 
+			}
+			
+		}
+		
+	}
+	
+	
+    return noErr;
+}
+
+-(void)incrementTrackPositionWithFrameCountCh2:(UInt32)framesToAppend {
+    
+    if (currentCoreAudioSampleRate > 0)
+		self.trackPositionCh2 = self.trackPositionCh2 + (double)framesToAppend/currentCoreAudioSampleRate;
+    
+    //  NSLog(@"duration %f",main.currentTrack.duration - self.trackPosition);
+}
+
+
 
                               
 @end

@@ -16,10 +16,11 @@
 @implementation playbackViewController
 
 @synthesize artistLbl, titleLbl, selBtn;
-@synthesize trackControlBG, trackControlFG, controlView;
+@synthesize controlView;
 @synthesize timepitchController, lopassController, hipassController, channelOneVolController, effectParentView;
 @synthesize fftView;
 @synthesize crossfadeKnob;
+@synthesize playBtn, pauseBtn, playch2Btn, pausech2Btn;
 
 @synthesize line;
 @synthesize timepitchControllerCh2,lopassControllerCh2, hipassControllerCh2,controlViewCh2, channelTwoVolController;
@@ -60,6 +61,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
 	// Do any additional setup after loading the view.
     CGSize parentSize = self.view.frame.size;
     
@@ -76,17 +79,30 @@
     bgLogoRight.frame = CGRectMake(590, 140, 393, 319);
     bgLogoRight.hidden = YES;
     [self.view addSubview:bgLogoRight];
-    
     [bgLogoRight release];
     
+    timeRemainingCh1 = [[UILabel alloc]initWithFrame:CGRectMake(340, 360, 100, 30)];
+    timeRemainingCh1.textColor = [UIColor whiteColor];
+    timeRemainingCh1.textAlignment = UITextAlignmentCenter;
+    timeRemainingCh1.backgroundColor = [UIColor clearColor];
+    timeRemainingCh1.font =  [UIFont fontWithName:@"GothamHTF-BookItalic" size:(22.0)];
+    [self.view addSubview:timeRemainingCh1];
+    [timeRemainingCh1 release];
     
- 
-    //fft shieed
-    self.fftView = [[fftAnalyzerView alloc]initWithFrame:CGRectMake(100, 100, 200, 100)];
-    //    self.fftView.backgroundColor = [UIColor whiteColor];
-    //  [self addSubview:self.fftView];
-    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //[main.playbackManager setFFTView:self.fftView];
+    
+    effectParamCh1Nr1 = [[UILabel alloc]initWithFrame:CGRectMake(20, 20, 100, 20)];
+    effectParamCh1Nr1.textAlignment = UITextAlignmentLeft;
+    effectParamCh1Nr1.textColor = [UIColor whiteColor];
+    effectParamCh1Nr1.backgroundColor = [UIColor clearColor];
+    effectParamCh1Nr1.font = [UIFont fontWithName:@"GothamHTF-BookItalic" size:(16.0)];
+    [self.view addSubview:effectParamCh1Nr1];
+    
+    effectParamCh1Nr2 = [[UILabel alloc]initWithFrame:CGRectMake(20, 40, 100, 20)];
+    effectParamCh1Nr2.textAlignment = UITextAlignmentLeft;
+    effectParamCh1Nr2.textColor = [UIColor whiteColor];
+    effectParamCh1Nr2.backgroundColor = [UIColor clearColor];
+    effectParamCh1Nr2.font = [UIFont fontWithName:@"GothamHTF-BookItalic" size:(16.0)];
+    [self.view addSubview:effectParamCh1Nr2];
     
     self.artistLbl = [[UILabel alloc]initWithFrame:CGRectMake((parentSize.width/2)-(300/2),200,300,30)];
     self.artistLbl.textAlignment =  UITextAlignmentCenter;
@@ -105,7 +121,6 @@
     self.titleLbl.text = @"Title";
     
     [self.view addSubview:self.titleLbl];
-    
     
     UIView *cView = [[UIView alloc]initWithFrame:CGRectMake((parentSize.width/2)-(400/2), 430, 400, 70)];
     cView.backgroundColor = [UIColor clearColor];
@@ -126,16 +141,16 @@
     
     int btnsize = 63;
     
-    UIButton *playBtn = [[UIButton alloc]initWithFrame:CGRectMake(20, 13, btnsize, btnsize)];
-    [playBtn setBackgroundImage:playImg forState:UIControlStateNormal];
-    [self.controlView addSubview:playBtn];
-    [playBtn addTarget:self 
+    self.playBtn = [[UIButton alloc]initWithFrame:CGRectMake(60, 13, btnsize, btnsize)];
+    [self.playBtn setBackgroundImage:playImg forState:UIControlStateNormal];
+    [self.controlView addSubview:self.playBtn];
+    [self.playBtn addTarget:self 
                 action:@selector(playTrack:)
       forControlEvents:UIControlEventTouchDown];
     
-    [playBtn release];
+    [self.playBtn release];
     
-    UIButton *stopBtn = [[UIButton alloc]initWithFrame:CGRectMake(100, 13, btnsize, btnsize)];
+    UIButton *stopBtn = [[UIButton alloc]initWithFrame:CGRectMake(140, 13, btnsize, btnsize)];
     [stopBtn setBackgroundImage:stopImg forState:UIControlStateNormal];
     [self.controlView addSubview:stopBtn];
     [stopBtn addTarget:self 
@@ -144,16 +159,17 @@
     
     [stopBtn release];
     
-    UIButton *pauseBtn = [[UIButton alloc]initWithFrame:CGRectMake(180, 13, btnsize, btnsize)];
-    [pauseBtn setBackgroundImage:pauseImg forState:UIControlStateNormal];
-    [self.controlView addSubview:pauseBtn];
-    [pauseBtn addTarget:self 
+    self.pauseBtn = [[UIButton alloc]initWithFrame:CGRectMake(60, 13, btnsize, btnsize)];
+    [self.pauseBtn setBackgroundImage:pauseImg forState:UIControlStateNormal];
+    [self.controlView addSubview:self.pauseBtn];
+    self.pauseBtn.hidden = YES;
+    [self.pauseBtn addTarget:self 
                  action:@selector(pauseTrack:)
        forControlEvents:UIControlEventTouchDown];
     
-    [pauseBtn release];
+    [self.pauseBtn release];
     
-    UIButton *prevBtn = [[UIButton alloc]initWithFrame:CGRectMake(260, 13, btnsize, btnsize)];
+    UIButton *prevBtn = [[UIButton alloc]initWithFrame:CGRectMake(220, 13, btnsize, btnsize)];
     [prevBtn setBackgroundImage:prevImg forState:UIControlStateNormal];
     [self.controlView addSubview:prevBtn];
     [prevBtn addTarget:self 
@@ -162,7 +178,7 @@
     
     [prevBtn release];
     
-    UIButton *nextBtn = [[UIButton alloc]initWithFrame:CGRectMake(340, 13, btnsize, btnsize)];
+    UIButton *nextBtn = [[UIButton alloc]initWithFrame:CGRectMake(300, 13, btnsize, btnsize)];
     [nextBtn setBackgroundImage:nextImg forState:UIControlStateNormal];
     [self.controlView addSubview:nextBtn];
     [nextBtn addTarget:self 
@@ -178,10 +194,17 @@
     [self.view addSubview:self.effectParentView];
     
     
-    self.timepitchController = [[effectController alloc]initWithFrame:CGRectMake(10, (self.view.frame.size.height/2)-20, 63, 63)];
-    self.timepitchController.backgroundColor = [UIColor whiteColor];
+    UITapGestureRecognizer *doubletap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setDefaultPitchController:)];
+    [doubletap setNumberOfTapsRequired:2];
+   // [doubletap setNumberOfTouchesRequired:2];
+    
+    self.timepitchController = [[effectController alloc]initWithFrame:CGRectMake(10, (self.view.frame.size.height/2)-80, 63, 63)];
+    [self.timepitchController addGestureRecognizer:doubletap];
+    
     [self.effectParentView addSubview:self.timepitchController];
     [self.timepitchController setTag:1];
+    
+    [doubletap release];
     
     NSString* tempoImgStr = [[NSBundle mainBundle] pathForResource:@"tempo" ofType:@"png"];
     UIImage *tempoImg = [UIImage imageWithContentsOfFile:tempoImgStr];
@@ -189,7 +212,7 @@
     self.timepitchController.backgroundColor = [UIColor colorWithPatternImage:tempoImg];
     
     
-    self.lopassController = [[effectController alloc]initWithFrame:CGRectMake(216, 500, 63, 63)];
+    self.lopassController = [[effectController alloc]initWithFrame:CGRectMake(216, 786, 63, 63)];
     self.lopassController.backgroundColor = [UIColor whiteColor];
     [self.effectParentView addSubview:self.lopassController];
     [self.lopassController setTag:2];
@@ -199,7 +222,7 @@
     
     self.lopassController.backgroundColor = [UIColor colorWithPatternImage:lopassImg];
   
-    self.hipassController = [[effectController alloc]initWithFrame:CGRectMake(300, 10, 63, 63)];
+    self.hipassController = [[effectController alloc]initWithFrame:CGRectMake(400, 10, 63, 63)];
     self.hipassController.backgroundColor = [UIColor whiteColor];
     [self.effectParentView addSubview:self.hipassController];
     [self.hipassController setTag:3];
@@ -220,19 +243,6 @@
     
     self.channelOneVolController.backgroundColor = [UIColor colorWithPatternImage:volImg];
    
-    self.trackControlBG = [[UIView alloc]initWithFrame:CGRectMake(100, 860, 0, 50)];
-    self.trackControlBG.backgroundColor = [UIColor whiteColor];
-    
-    self.trackControlFG = [[UIView alloc]initWithFrame:CGRectMake(0, 5, 0, 40)];
-    [self.trackControlBG addSubview:trackControlFG];
-    self.trackControlFG.backgroundColor = [UIColor blackColor];
-    
-    
-    UIPanGestureRecognizer *pgr = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(trackdurationSwipe:)];
-    [self.trackControlBG addGestureRecognizer:pgr];
-    [pgr release];
-    
-    
     main.playbackManager.playbackIsPaused = NO;
     
     NSString* secchImgStr = [[NSBundle mainBundle] pathForResource:@"itunes channel" ofType:@"png"];
@@ -257,77 +267,6 @@
     
     
     //create mixermode channel 2 interface
-    UIView *c2View = [[UIView alloc]initWithFrame:CGRectMake(690, 430, 150, 70)];
-    c2View.backgroundColor = [UIColor clearColor];
-    self.controlViewCh2 = c2View;
-    self.controlViewCh2.hidden = YES;
-    [c2View release];
-    
-    
-    UIButton *stopch2Btn = [[UIButton alloc]initWithFrame:CGRectMake(15, 13, 63, 63)];
-    [stopch2Btn setBackgroundImage:stopImg forState:UIControlStateNormal];
-    [self.controlViewCh2 addSubview:stopch2Btn];
-    [stopch2Btn addTarget:self 
-                   action:@selector(stopTrackCh2:)
-         forControlEvents:UIControlEventTouchDown];
-    
-    [stopch2Btn release];
-    
-    UIButton *pausech2Btn = [[UIButton alloc]initWithFrame:CGRectMake(90, 13, 63, 63)];
-    [pausech2Btn setBackgroundImage:pauseImg forState:UIControlStateNormal];
-    [self.controlViewCh2 addSubview:pausech2Btn];
-    [pausech2Btn addTarget:self 
-                    action:@selector(pauseTrackCh2:)
-          forControlEvents:UIControlEventTouchDown];
-    
-    [pausech2Btn release];
-    
-    
-    self.effectParentViewCh2 = [[UIView alloc]initWithFrame:CGRectMake(590, 20, 350, 600)];
-    self.effectParentViewCh2.backgroundColor = [UIColor clearColor];
-    self.effectParentViewCh2.hidden = YES;
-    [self.view addSubview:self.effectParentViewCh2];
-    
-    
-    self.line = [[UIView alloc]initWithFrame:CGRectMake((1024/2)-1, 10, 2, 570)];
-    self.line.backgroundColor = [UIColor whiteColor];
-    self.line.hidden = YES;
-    [self.view addSubview:self.line];
-    
-    self.lopassControllerCh2 = [[effectController alloc]initWithFrame:CGRectMake(200, 500, 63, 63)];
-    self.lopassControllerCh2.backgroundColor = [UIColor colorWithPatternImage:lopassImg];
-    [self.lopassControllerCh2 setTag:6];
-    [self.effectParentViewCh2 addSubview:self.lopassControllerCh2];
-    
-    self.hipassControllerCh2 = [[effectController alloc]initWithFrame:CGRectMake(50, 0, 63, 63)];
-    self.hipassControllerCh2.backgroundColor = [UIColor colorWithPatternImage:hipassImg];
-    [self.hipassControllerCh2 setTag:8];
-    [self.effectParentViewCh2 addSubview:self.hipassControllerCh2];
-    
-    self.timepitchControllerCh2 = [[effectController alloc]initWithFrame:CGRectMake(100, 350, 63, 63)];
-    self.timepitchControllerCh2.backgroundColor = [UIColor colorWithPatternImage:tempoImg];
-    [self.timepitchControllerCh2 setTag:9];
-    [self.effectParentViewCh2 addSubview:self.timepitchControllerCh2];
-    
-    self.channelTwoVolController = [[effectController alloc]initWithFrame:CGRectMake(170, 0, 63, 63)];
-    self.channelTwoVolController.backgroundColor = [UIColor colorWithPatternImage:volImg];
-    [self.channelTwoVolController setTag:7];
-    [self.effectParentViewCh2 addSubview:self.channelTwoVolController];
-    
-    self.addtrack = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.addtrack.frame = CGRectMake(810, 22, 200, 30);// position in the parent view and set the size of the
-   // self.addtrack.backgroundColor = [UIColor blackColor];
-    [self.addtrack setTitle:[NSString stringWithFormat:@"Add track +"] forState:UIControlStateNormal];
-    [self.addtrack setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.addtrack.titleLabel.font =  [UIFont fontWithName:@"GothamHTF-Medium" size:(24.0)];
-    
-    [self.addtrack addTarget:self 
-                 action:@selector(showMediaPicker)
-       forControlEvents:UIControlEventTouchDown];
-    self.addtrack.hidden = YES;
-    [self.view addSubview:self.addtrack];
-    
-    
     
     self.artistlblCh2 = [[UILabel alloc]initWithFrame:CGRectMake(620, 205, 300, 30)];
     self.artistlblCh2.textColor = [UIColor whiteColor];
@@ -349,7 +288,122 @@
     
     [self.view addSubview:self.titlelblCh2];
     
+    
+    
+    
+    UIView *c2View = [[UIView alloc]initWithFrame:CGRectMake(690, 430, 150, 70)];
+    c2View.backgroundColor = [UIColor clearColor];
+    self.controlViewCh2 = c2View;
+    self.controlViewCh2.hidden = YES;
+    [c2View release];
+    
+    timeRemainingCh2 = [[UILabel alloc]initWithFrame:CGRectMake(740, 340, 100, 30)];
+    timeRemainingCh2.textColor = [UIColor whiteColor];
+    timeRemainingCh2.textAlignment = UITextAlignmentCenter;
+    timeRemainingCh2.backgroundColor = [UIColor clearColor];
+    timeRemainingCh2.font =  [UIFont fontWithName:@"GothamHTF-BookItalic" size:(22.0)];
+    timeRemainingCh2.hidden = YES;
+    [self.view addSubview:timeRemainingCh2];
+    [timeRemainingCh2 release];
+    
+    
+    UIButton *stopch2Btn = [[UIButton alloc]initWithFrame:CGRectMake(15, 13, 63, 63)];
+    [stopch2Btn setBackgroundImage:stopImg forState:UIControlStateNormal];
+    [self.controlViewCh2 addSubview:stopch2Btn];
+    [stopch2Btn addTarget:self 
+                   action:@selector(stopTrackCh2:)
+         forControlEvents:UIControlEventTouchDown];
+    
+    [stopch2Btn release];
+    
+    pausech2Btn = [[UIButton alloc]initWithFrame:CGRectMake(90, 13, 63, 63)];
+    [pausech2Btn setBackgroundImage:pauseImg forState:UIControlStateNormal];
+    [self.controlViewCh2 addSubview:pausech2Btn];
+    [pausech2Btn addTarget:self 
+                    action:@selector(pauseTrackCh2:)
+          forControlEvents:UIControlEventTouchDown];
+    
+    [pausech2Btn release];
+    
+    playch2Btn = [[UIButton alloc]initWithFrame:CGRectMake(90, 13, btnsize, btnsize)];
+    [playch2Btn setBackgroundImage:playImg forState:UIControlStateNormal];
+    [self.controlViewCh2 addSubview:playch2Btn];
+    playch2Btn.hidden = YES;
+    [playch2Btn addTarget:self 
+                action:@selector(pauseTrackCh2:)
+      forControlEvents:UIControlEventTouchDown];
+    
+    [playch2Btn release];
+    
     [self.view addSubview:self.controlViewCh2];
+    
+    
+    self.effectParentViewCh2 = [[UIView alloc]initWithFrame:CGRectMake(570, 170, 400, 450)];
+    self.effectParentViewCh2.backgroundColor = [UIColor clearColor];
+    self.effectParentViewCh2.hidden = YES;
+    [self.view addSubview:self.effectParentViewCh2];
+    
+    
+    self.line = [[UIView alloc]initWithFrame:CGRectMake((1024/2)-1, 10, 2, 570)];
+    self.line.backgroundColor = [UIColor whiteColor];
+    self.line.hidden = YES;
+    [self.view addSubview:self.line];
+    
+    self.lopassControllerCh2 = [[effectController alloc]initWithFrame:CGRectMake(200, 400, 63, 63)];
+    self.lopassControllerCh2.backgroundColor = [UIColor colorWithPatternImage:lopassImg];
+    [self.lopassControllerCh2 setTag:6];
+    [self.effectParentViewCh2 addSubview:self.lopassControllerCh2];
+    
+    self.hipassControllerCh2 = [[effectController alloc]initWithFrame:CGRectMake(50, 0, 63, 63)];
+    self.hipassControllerCh2.backgroundColor = [UIColor colorWithPatternImage:hipassImg];
+    [self.hipassControllerCh2 setTag:8];
+    [self.effectParentViewCh2 addSubview:self.hipassControllerCh2];
+    
+    UITapGestureRecognizer *doubletapCh2 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setDefaultPitchControllerCh2:)];
+    [doubletapCh2 setNumberOfTapsRequired:2];
+    
+    self.timepitchControllerCh2 = [[effectController alloc]initWithFrame:CGRectMake(100, 225, 63, 63)];
+    self.timepitchControllerCh2.backgroundColor = [UIColor colorWithPatternImage:tempoImg];
+    [self.timepitchControllerCh2 setTag:9];
+    [self.effectParentViewCh2 addSubview:self.timepitchControllerCh2];
+    [self.timepitchControllerCh2 addGestureRecognizer:doubletapCh2];
+    [doubletapCh2 release];
+    
+    self.channelTwoVolController = [[effectController alloc]initWithFrame:CGRectMake(170, 0, 63, 63)];
+    self.channelTwoVolController.backgroundColor = [UIColor colorWithPatternImage:volImg];
+    [self.channelTwoVolController setTag:7];
+    [self.effectParentViewCh2 addSubview:self.channelTwoVolController];
+    
+    self.addtrack = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.addtrack.frame = CGRectMake(810, 12, 200, 30);// position in the parent view and set the size of the
+   // self.addtrack.backgroundColor = [UIColor blackColor];
+    [self.addtrack setTitle:[NSString stringWithFormat:@"Add track +"] forState:UIControlStateNormal];
+    [self.addtrack setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.addtrack.titleLabel.font =  [UIFont fontWithName:@"GothamHTF-Medium" size:(24.0)];
+    
+    [self.addtrack addTarget:self 
+                 action:@selector(showMediaPicker)
+       forControlEvents:UIControlEventTouchDown];
+    self.addtrack.hidden = YES;
+    [self.view addSubview:self.addtrack];
+    
+    
+    effectParamCh2Nr1 = [[UILabel alloc]initWithFrame:CGRectMake(20, 20, 100, 20)];
+    effectParamCh2Nr1.textAlignment = UITextAlignmentLeft;
+    effectParamCh2Nr1.textColor = [UIColor whiteColor];
+    effectParamCh2Nr1.backgroundColor = [UIColor clearColor];
+    effectParamCh2Nr1.font = [UIFont fontWithName:@"GothamHTF-BookItalic" size:(16.0)];
+    [self.view addSubview:effectParamCh1Nr1];
+    
+    effectParamCh2Nr2 = [[UILabel alloc]initWithFrame:CGRectMake(20, 40, 100, 20)];
+    effectParamCh2Nr2.textAlignment = UITextAlignmentLeft;
+    effectParamCh2Nr2.textColor = [UIColor whiteColor];
+    effectParamCh2Nr2.backgroundColor = [UIColor clearColor];
+    effectParamCh2Nr2.font = [UIFont fontWithName:@"GothamHTF-BookItalic" size:(16.0)];
+    [self.view addSubview:effectParamCh1Nr2];
+    
+    
+   
     
     
     
@@ -396,8 +450,6 @@
     [self.artistLbl release];
     [self.titleLbl release];
     [self.selBtn release];
-    [self.trackControlBG release];
-    [self.trackControlFG release];
     [self.controlView release];
     [self.timepitchController release];
     [self.lopassController release];
@@ -415,6 +467,12 @@
     [self.controlViewCh2 release];
     [self.addtrack release];
     [self.crossfadeKnob release];
+    [effectParamCh1Nr1 release];
+    [effectParamCh1Nr2 release];
+    [effectParamCh2Nr1 release];
+    [effectParamCh2Nr2 release];
+    [playBtn removeFromSuperview];
+    [pauseBtn removeFromSuperview];
     
 }
 
@@ -481,6 +539,7 @@
             
             [piece setCenter:CGPointMake([piece center].x + translation.x, 640)];
             [recognizer setTranslation:CGPointZero inView:[piece superview]];
+            NSLog(@"center: %f",[piece center].x);
             [self setcrossfadeCurrVol:[piece center].x];
         }
         
@@ -490,33 +549,29 @@
 - (void)setcrossfadeCurrVol:(float)currXval{
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    float totDistance = 635 - 350;
+    float totDistance = 655 - 330;
     float currdiff = currXval - 350;
     float volch2 = currdiff/totDistance;
     float volch1 = 1 - volch2;
+    if (volch1 <= 0.09){
+        volch1 = 0.00001;
+        volch2 = 1 - volch1;
+    }
+    else if (volch2 <= 0.09){
+        volch2 = 0.00001;
+        volch1 = 1 - volch2;
+    }
     [main.playbackManager setMasterMixerPanning:volch1 :volch2];
     NSLog(@"ch1: %f ch2: %f",volch1, volch2);
     
     
 }
 
-- (void)trackdurationSwipe:(UIPanGestureRecognizer *)gesture{
-    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    if (gesture.state == UIGestureRecognizerStateChanged){
-        CGPoint panval;
-        panval = [gesture translationInView:self.view];
-        
-        [main setTrackPosition:(panval.x/10)];
-        
-    }
-}
 
 - (void)callmainplaytrack:(SPTrack *)track{
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-  
-    [main playnewTrack:track];
     
+    [main playnewTrack:track];    
 }
 
 -(void)callfadeInMusicCh1{
@@ -591,7 +646,15 @@
     // fadeAnimation.autoreverses=YES;
     [play.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
     
-    if (!main.playbackManager.isPlaying){
+    
+    if (main.playbackManager.playbackIsPaused){
+        [[SPSession sharedSession]setPlaying:YES];
+        main.playbackManager.playbackIsPaused = NO;
+        [main.mainViewController.tabController.cueController.tableView reloadData];
+        [self toggleplayandpause:YES];
+        
+    }
+    else if (!main.playbackManager.isPlaying){
         if ([[Shared sharedInstance].masterCue count] > 0){
             NSURL *url = [[Shared sharedInstance].masterCue objectAtIndex:0];
             
@@ -599,6 +662,8 @@
             
             SPTrack *trackToPlay = [SPTrack trackForTrackURL:url inSession:[SPSession sharedSession]];
             [main.playbackManager playTrack:trackToPlay error:nil];
+            
+            [self toggleplayandpause:YES];
             
         }
         
@@ -622,12 +687,12 @@
         // [main.playbackManager stopAUGraph];
         [main.playbackManager setIsPlaying:NO];
         [self resetTrackTitleAndArtist];
+        [self toggleplayandpause:NO];
     }
     
 }
 
 - (void)pauseTrack:(id)sender{
-    UIButton *pause = (UIButton *)sender;
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (!main.playbackManager.playbackIsPaused){
@@ -635,35 +700,26 @@
         if (main.playbackManager.isPlaying){
             main.playbackManager.playbackIsPaused = YES;
             [[SPSession sharedSession]setPlaying:NO];
-            
-            CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
-            fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
-            fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
-            fadeAnimation.duration=.7;
-            fadeAnimation.repeatCount=INFINITY;
-            fadeAnimation.autoreverses=YES;
-            
-            [pause.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
+             
+            [self toggleplayandpause:NO];
         }
     }
-    else{
+ /*   else{
         [[SPSession sharedSession]setPlaying:YES];
         main.playbackManager.playbackIsPaused = NO;
-        [main.cueController.tableView reloadData];
+        [main.mainViewController.tabController.cueController.tableView reloadData];
         
         [pause.layer removeAllAnimations];
         
-        
-    }
-    
-    
-    
+    }*/
 }
+
 
 - (void)resetTrackTitleAndArtist{
     
     self.artistLbl.text = @"Artist";
     self.titleLbl.text = @"Title";
+    timeRemainingCh1.text = @"";
 }
 
 - (void)setTrackTitleAndArtist:(SPTrack *)track{
@@ -674,106 +730,103 @@
     
 }
 
--(void)showEffectOptionsPitch:(UILongPressGestureRecognizer *)gestureRecognizer{
+-(void)setDefaultPitchController:(UITapGestureRecognizer *)gestureRecognizer{
     
-    
-    if(UIGestureRecognizerStateBegan == gestureRecognizer.state) {
-        UIView *piece = [gestureRecognizer view];
-        CGPoint pos = piece.frame.origin;
-        
-        UIView *effectOptionsView = [[UIView alloc]initWithFrame:CGRectMake(pos.x+60,pos.y-80, 200, 130)];
-        effectOptionsView.backgroundColor = [UIColor clearColor];
-        
-        [self.view insertSubview:effectOptionsView atIndex:0];
-        
-        UIButton *pitch1 = [UIButton buttonWithType:UIButtonTypeCustom];
-        pitch1.frame = CGRectMake(0, 30, 200, 40);// position in the parent view and set the size of the
-        pitch1.backgroundColor = [UIColor whiteColor];
-        [pitch1 setTitle:[NSString stringWithFormat:@"playbackrate"] forState:UIControlStateNormal];
-        [pitch1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        
-        [pitch1 addTarget:self 
-                   action:@selector(setTimePitchEffect:)
-         forControlEvents:UIControlEventTouchDown];
-        [pitch1 setTag:1000];
-        
-        [effectOptionsView addSubview:pitch1];
-        //  [pitch1 release];
-        
-        UIButton *pitch2 = [UIButton buttonWithType:UIButtonTypeCustom];
-        pitch2.frame = CGRectMake(0, 80, 200, 40);// position in the parent view and set the size of the
-        pitch2.backgroundColor = [UIColor whiteColor];
-        [pitch2 setTitle:[NSString stringWithFormat:@"playbackcents"] forState:UIControlStateNormal];
-        [pitch2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [pitch2 addTarget:self 
-                   action:@selector(setTimePitchEffect:)
-         forControlEvents:UIControlEventTouchDown];
-        
-        [pitch2 setTag:1001];
-        [effectOptionsView addSubview:pitch2];
-        //    [pitch2 release]; 
-        
-        [self.view bringSubviewToFront:effectOptionsView];
-        
-        [effectOptionsView release];
-        piece.backgroundColor = [UIColor whiteColor];
-        
-        
-    }
-    
-    if(UIGestureRecognizerStateChanged == gestureRecognizer.state) {
-    }
-    
-    if(UIGestureRecognizerStateEnded == gestureRecognizer.state) {
-        
-        
-    }
-    
-}
-
-- (void)setTimePitchEffect:(id)sender{
-    UIButton *btn = (UIButton*)sender;
-    
-    self.selBtn = btn;
-    
-    btn.backgroundColor = [UIColor grayColor];
-    
-    [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(removeTimePitchPopup) userInfo:nil repeats:NO];
-    
-}
-
-- (void)removeTimePitchPopup{
+   NSLog(@"test ch1");
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIView *piece = [gestureRecognizer view];
     
-    
-    if (self.selBtn.tag == 1000){
-        [main.playbackManager resetVarispeedUnit:1001];
-        [Shared sharedInstance].effectgridY = 400;
-        [Shared sharedInstance].curVariSpeedEffect = 0;
+    if (main.mainViewController.landscapeMode){
+        piece.frame = CGRectMake(12,224, 63, 63);
     }
     else{
-        [main.playbackManager resetVarispeedUnit:1000];
-        [Shared sharedInstance].effectgridY = 600;
-        [Shared sharedInstance].curVariSpeedEffect = 1;
-        
+        piece.frame = CGRectMake(60,422, 63, 63);
     }
-    UIView *parentView = [self.selBtn superview];
-    [parentView removeFromSuperview];
+    
+    
+    [main.playbackManager setPlaybackCents:0:1];
     
 }
+
+
+-(void)setDefaultPitchControllerCh2:(UITapGestureRecognizer *)gestureRecognizer{
+    
+    NSLog(@"test ch2");
+    UIView *piece = [gestureRecognizer view];
+    piece.frame = CGRectMake(46,225, 63, 63);
+    
+ 
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [main.playbackManager setPlaybackCents:0:2];
+}
+
+
 
 - (void)setPlayduration:(double)length{
     
-    NSLog(@"duration: %f",length);
-    self.trackControlBG.frame = CGRectMake(20, 860, length, 50);
+    NSTimeInterval interval = length;    
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];    
+    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    [dateFormatter setDateFormat:@"mm:ss"];
+    NSString *formattedDate = [dateFormatter stringFromDate:date];
+    NSLog(@"mm:ss %@", formattedDate);
+    timeRemainingCh1.text = [NSString stringWithFormat:@"-%@",formattedDate];
+    
+}
+
+- (void)setPlaydurationCh2:(double)length{
+    
+    currenttrackCh2Duration = length;
+    NSTimeInterval interval = length;    
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];    
+    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    [dateFormatter setDateFormat:@"mm:ss"];
+    NSString *formattedDate = [dateFormatter stringFromDate:date];
+    NSLog(@"mm:ss %@", formattedDate);
+    timeRemainingCh2.text = [NSString stringWithFormat:@"-%@",formattedDate];
     
 }
 
 - (void)updatePlayduration:(double)val{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    self.trackControlFG.frame = CGRectMake(0, 5, val, 40);
+    NSTimeInterval remainTime = main.playbackManager.currentTrack.duration - val;
+    NSTimeInterval interval = remainTime;    
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];    
+    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    [dateFormatter setDateFormat:@"mm:ss"];
+    NSString *formattedDate = [dateFormatter stringFromDate:date];
+  //  NSLog(@"mm:ss %@", formattedDate);
+    timeRemainingCh1.text = [NSString stringWithFormat:@"-%@",formattedDate];
+  //  timeRemainingCh1.text = [NSString stringWithFormat:@"-%f.%f",minutes,seconds];
     
 }
+
+- (void)updatePlaydurationCh2:(double)val{
+    
+    NSTimeInterval remainTime = currenttrackCh2Duration - val;
+    NSTimeInterval interval = remainTime;    
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];    
+    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    [dateFormatter setDateFormat:@"mm:ss"];
+    NSString *formattedDate = [dateFormatter stringFromDate:date];
+    //  NSLog(@"mm:ss %@", formattedDate);
+    timeRemainingCh2.text = [NSString stringWithFormat:@"-%@",formattedDate];
+    //  timeRemainingCh1.text = [NSString stringWithFormat:@"-%f.%f",minutes,seconds];
+    
+}
+
+- (void)toggleplayandpause:(BOOL)hidden{
+    
+    if (hidden){
+        self.playBtn.hidden = YES;
+        self.pauseBtn.hidden = NO;
+    }else {
+        self.playBtn.hidden = NO;
+        self.pauseBtn.hidden = YES;
+    }
+}
+
 
 
 - (void)setmixerModeOn{
@@ -782,6 +835,9 @@
     self.controlView.center = CGPointMake(250, 470);
     self.artistLbl.center = CGPointMake(250, 215);
     self.titleLbl.center = CGPointMake(250, 275);
+     
+    timeRemainingCh1.frame = CGRectMake(200, 350, 100, 30);
+    timeRemainingCh2.hidden = NO;
     
     self.effectParentViewCh2.hidden = NO;
     self.line.hidden = NO;
@@ -793,7 +849,7 @@
     crossfadeBg.hidden = NO;
     crossfadeKnob.hidden = NO;
     
-    self.effectParentView.frame = CGRectMake(20, 20, 440, 600);
+    self.effectParentView.frame = CGRectMake(50, 170, 400, 450);
     NSLog(@"mixer mode done");
     
     bgLogo.frame = CGRectMake(70, 140, 393, 319);
@@ -804,7 +860,8 @@
     self.controlView.center = CGPointMake(380, 470);
     self.artistLbl.center = CGPointMake(380, 215);
     self.titleLbl.center = CGPointMake(380, 275);
-  //  self.view.backgroundColor = [UIColor blackColor];
+    timeRemainingCh1.frame = CGRectMake(340, 360, 100, 30);
+    timeRemainingCh2.hidden = YES;
     
     self.effectParentViewCh2.hidden = YES;
     self.line.hidden = YES;
@@ -831,15 +888,30 @@
     
 	[mediaPicker dismissModalViewControllerAnimated:YES];
     
-    
-    // memset(data_, 0, datasize_);
-    [main.playbackManager toggleChannelTwoPlayingStatus:YES];
-    
     [self freeAudio];
     
     [self initDataVar];
     
-	for (MPMediaItem* item in mediaItemCollection.items) {
+    for (int i=0; i<datasize_; ++i){
+		data_[i]= 0.0; //zero out contents of buffer
+	}	
+  
+    if (main.playbackManager.graph == NULL){
+        NSError *error = nil;
+        if (![main.playbackManager setupAudioGraphWithAudioFormat:&error]) {
+            
+        }  
+        //initialise the audio player
+    }
+    [main.playbackManager connectSecChannelCallback];
+    [main.playbackManager connectSecMastermixerBus];
+    
+    [main.playbackManager toggleChannelTwoPlayingStatus:YES];
+    
+    pausech2Btn.hidden = NO;
+    playch2Btn.hidden = YES;
+    
+  	for (MPMediaItem* item in mediaItemCollection.items) {
 		//NSString *titletest = [item valueForProperty:MPMediaItemPropertyTitle];
 		//NSString *artisttest = [item valueForProperty:MPMediaItemPropertyArtist];
         
@@ -850,6 +922,8 @@
         self.titlelblCh2.text = glTitle;
         self.artistlblCh2.text = glArtist;
 		duration_ = [dur doubleValue]; 
+        
+        [self setPlaydurationCh2:duration_];
 		
 		//MPMediaItemPropertyArtist
 		glAssetURL = [item valueForProperty:MPMediaItemPropertyAssetURL];
@@ -858,6 +932,7 @@
 			 * !!!: When MPMediaItemPropertyAssetURL is nil, it typically means the file
 			 * in question is protected by DRM. (old m4p files)
 			 */
+            [self freeAudio];
 			return;
 		}
         NSLog(@"title: %@",glTitle);
@@ -867,11 +942,9 @@
 }
 
 - (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker {
-    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
 	[mediaPicker dismissModalViewControllerAnimated:YES];
     
-  
     importingflag_=0; 
 	
 }
@@ -887,10 +960,6 @@
    // mediaPicker.view.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 	[main.mainViewController presentModalViewController:mediaPicker animated:YES];
     
-    
-    main.cueController.view.hidden = YES;
-    main.airplayIcon.hidden = YES;
-    main.userTxtBtn.hidden = YES;
     
     MPMediaQuery *everything = [[MPMediaQuery alloc] init];
     [everything setGroupingType: MPMediaGroupingAlbum];
@@ -928,10 +997,8 @@
 	for (int i=0; i<datasize_; ++i){
 		data_[i]= 0.0; //zero out contents of buffer
 	}	
-	//initialise the audio player
-    [main.playbackManager connectSecChannelCallback];
-    [main.playbackManager connectSecMastermixerBus];
     
+     
 	playingflag_ =1; 
 	
 	//need to load the samples on a background thread
@@ -1148,7 +1215,9 @@
 					if(0 == frameCount) {
 						
 						actuallyfinished=1; 
-                        [self freeAudio];
+                //        [self initDataVar];
+                //        [self freeAudio];
+                        [main.playbackManager cantRead];
                         
                         [main.playbackManager toggleChannelTwoPlayingStatus:NO];
 						//in case user presses restart button! 
@@ -1158,10 +1227,11 @@
 					
 				} else {
 					
-					
+               //     [self initDataVar];
 					actuallyfinished=1;
-                    [self freeAudio];
-                    
+              //      [self freeAudio];
+                    [main.playbackManager cantRead];
+                   
                     [main.playbackManager toggleChannelTwoPlayingStatus:NO];
 				}
 				
@@ -1223,7 +1293,7 @@ audiofileProblem:
 	importingflag_ = 0; 
     
 	
-	//create here, not fully started yet
+	//  create here, not fully started yet
     //	audio = [[AudioDeviceManager alloc] init];
     //	[audio retain]; 
     
@@ -1237,26 +1307,20 @@ audiofileProblem:
 }
 
 - (void)pauseTrackCh2:(id)sender{
-    UIButton *pause = (UIButton *)sender;
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (isPaused){
         isPaused = NO;
         [main.playbackManager canRead];
+        pausech2Btn.hidden = NO;
+        playch2Btn.hidden = YES;
         
-        [pause.layer removeAllAnimations];
+        
     }else{
         isPaused = YES;
         [main.playbackManager cantRead];
-        
-        CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
-        fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
-        fadeAnimation.toValue=[NSNumber numberWithFloat:.6];   
-        fadeAnimation.duration=.7;
-        fadeAnimation.repeatCount=INFINITY;
-        fadeAnimation.autoreverses=YES;
-        
-        [pause.layer addAnimation:fadeAnimation forKey:@"fadeinout"];
+        pausech2Btn.hidden = YES;
+        playch2Btn.hidden = NO;
     }
     
 }
@@ -1268,6 +1332,10 @@ audiofileProblem:
     //update track and artist ui
     self.titlelblCh2.text = @"Title";
     self.artistlblCh2.text = @"Artist";
+    timeRemainingCh2.text = @"";
+    
+    pausech2Btn.hidden = YES;
+    playch2Btn.hidden = NO;
     
     CABasicAnimation *fadeAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"]; 
     fadeAnimation.fromValue=[NSNumber numberWithFloat:1];
@@ -1284,7 +1352,7 @@ audiofileProblem:
     [self initDataVar];
     
     //[main.playbackManager removeSecChannelCallback];
-    [main.playbackManager removeSecMastermixerBus];
+    //[main.playbackManager removeSecMastermixerBus];
     
     [main.playbackManager toggleChannelTwoPlayingStatus:NO];
     
@@ -1294,14 +1362,12 @@ audiofileProblem:
 - (void)freeAudio {
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    
     memset(data_, 0, datasize_);
     
     [main.playbackManager cantRead];
-    
     [main.playbackManager removeSecChannelCallback];
     
-    [main.playbackManager closeDownChannelTwo];
+  //  [main.playbackManager closeDownChannelTwo];
 	//stop audio if necessary
 	if(playingflag_==1) {
 		
@@ -1312,6 +1378,7 @@ audiofileProblem:
 	if(backgroundloadflag_ == 1)
 		earlyfinish_ = 1; 
 	
+    
 	while(backgroundloadflag_==1)
 	{
 		usleep(5000); //wait for file thread to finish

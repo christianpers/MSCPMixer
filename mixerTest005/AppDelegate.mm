@@ -21,13 +21,7 @@
 @synthesize playbackManager = _playbackManager;
 @synthesize currentTrack = _currentTrack;
 @synthesize loadPlaylist = loadPlaylist;
-@synthesize loadingView = _loadingView;
 @synthesize chTwoActive;
-@synthesize airplayIcon;
-@synthesize cueController;
-@synthesize logoutViewController;
-@synthesize userTxtBtn;
-@synthesize tabController;
 @synthesize trackimg;
 @synthesize imageContainer;
 
@@ -49,6 +43,8 @@
     
 	[self addObserver:self forKeyPath:@"currentTrack.duration" options:0 context:nil];
 	[self addObserver:self forKeyPath:@"playbackManager.trackPosition" options:0 context:nil];
+  //  [self addObserver:self forKeyPath:@"currentTrackCh2.duration" options:0 context:nil];
+	[self addObserver:self forKeyPath:@"playbackManager.trackPositionCh2" options:0 context:nil];
     
     
     [[SPSession sharedSession] setDelegate:self];
@@ -68,13 +64,19 @@
     if ([keyPath isEqualToString:@"currentTrack.duration"]) {
 	//	self.positionSlider.maximumValue = self.currentTrack.duration;
         [self.mainViewController.plbackViewController setPlayduration:self.currentTrack.duration];
-        NSLog(@"duration set");
+//        NSLog(@"duration set");
 	} else if ([keyPath isEqualToString:@"playbackManager.trackPosition"]) {
 		// Only update the slider if the user isn't currently dragging it.
 	//	if (!self.positionSlider.highlighted)
 	//		self.positionSlider.value = self.playbackManager.trackPosition;
      //   NSLog(@"trackposition: %f",self.playbackManager.trackPosition);
         [self.mainViewController.plbackViewController updatePlayduration:self.playbackManager.trackPosition];
+    } else if ([keyPath isEqualToString:@"playbackManager.trackPositionCh2"]) {
+		// Only update the slider if the user isn't currently dragging it.
+        //	if (!self.positionSlider.highlighted)
+        //		self.positionSlider.value = self.playbackManager.trackPosition;
+        //   NSLog(@"trackposition: %f",self.playbackManager.trackPosition);
+        [self.mainViewController.plbackViewController updatePlaydurationCh2:self.playbackManager.trackPositionCh2];
     }
     
     else if ([keyPath isEqualToString:@"self.trackimg.album.cover.image"]) {
@@ -85,19 +87,24 @@
             
             SPPlaylist *playlistDetail = [plContainer.playlists objectAtIndex:plCounter];
             SPPlaylistFolder *playlistFolder;
+            NSString *plName;
             
             if ([playlistDetail isKindOfClass:[SPPlaylistFolder class]]){
                 playlistFolder = [plContainer.playlists objectAtIndex:plCounter];
                 playlistDetail = [playlistFolder.playlists objectAtIndex:0];
-                
+                plName = playlistFolder.name;
+            }else {
+                plName = playlistDetail.name;
             }
-      
+            NSURL *idURL = playlistDetail.spotifyURL;
             NSMutableArray *innerDataContainer = [[NSMutableArray alloc]init];
             NSNumber *currplNum = [NSNumber numberWithInt:plCounter];
             [innerDataContainer addObject:currplNum];
-            [innerDataContainer addObject:playlistDetail.name];
+            [innerDataContainer addObject:plName];
             [innerDataContainer addObject:tempImg];
-            [imageContainer addObject:innerDataContainer];
+            [innerDataContainer addObject:idURL];
+      //      [imageContainer addObject:innerDataContainer];
+            [self insertObject:innerDataContainer inArrAtIndex:[imageContainer count]];
             [innerDataContainer release];
             
  //           [self createnewplBox:tempImg];
@@ -114,6 +121,10 @@
             
             [self setLoadedTrack:self.loadPlaylist];
         }
+    }
+    
+    else if ([keyPath isEqualToString:@"imageContainer"]) {
+        NSLog(@"test");
     }
     else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -157,8 +168,7 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
-   // [self.cueController.tableView reloadData];
-    [self.tabController.cueController.tableView reloadData];
+    [self.mainViewController.tabController.cueController.tableView reloadData];
     
 }
 
@@ -185,13 +195,11 @@
     [self performSelector:@selector(playnewTrack:) withObject:track afterDelay:.6];
     [self performSelector:@selector(callfadeInMusicCh1) withObject:nil afterDelay:.8];
     
-    
 }
 
 - (void)playnewTrack:(SPTrack *)track{
     // [self.playbackManager stopAUGraph];
     //  [self.mainViewController dismissModalViewControllerAnimated:YES];
-    
     
     SPTrack *trackToPlay = track;
     
@@ -218,7 +226,7 @@
         else {
             self.currentTrack = track;
             
-         //   [self.cueController.tableView reloadData];
+            [self.mainViewController.tabController.cueController.tableView reloadData];
             
         }
         
@@ -235,39 +243,7 @@
 }
 
 - (void)removeGUI{
-  //  [self.plbackViewController.view removeFromSuperview];
-   // [self.cueController.view removeFromSuperview];
- //   [self.airplayIcon removeFromSuperview];
     [[Shared sharedInstance].masterCue removeAllObjects];
- //   [self.userTxtBtn removeFromSuperview];
-    
-}
-
-- (void)initLoadGUI{
-    
-    NSLog(@"initloadgui");
-    //PLAYBACK viewcontroller
- //   self.plbackViewController = [[playbackViewController alloc]init];
-    
-    
-    //CUE controller
-//    self.cueController = [[cueViewController alloc]init];
-//    [self.mainViewController.view addSubview:self.cueController.view];
-//    self.cueController.view.hidden = YES;
-    
-      
-    //AIRPLAY view
-    UIView *mpVolumeViewParentView = [[UIView alloc]initWithFrame:CGRectMake(60, 30, 50, 50)];
-    mpVolumeViewParentView.backgroundColor = [UIColor clearColor];
-//    [self.mainViewController.view addSubview:mpVolumeViewParentView];
-    MPVolumeView *myVolumeView =
-    [[MPVolumeView alloc] initWithFrame: mpVolumeViewParentView.bounds];
-    [mpVolumeViewParentView addSubview: myVolumeView];
-    //myVolumeView.showsRouteButton = YES;
-    myVolumeView.showsVolumeSlider = NO;
-    self.airplayIcon = mpVolumeViewParentView;
-    [myVolumeView release];
-    [mpVolumeViewParentView release];
     
 }
 
@@ -278,7 +254,7 @@
     if (![playlistDetail isKindOfClass:[SPPlaylistFolder class]]){
         
         if (!playlistDetail.isLoaded){
-   
+            self.loadPlaylist = playlistDetail;
         }
         else{
             [self setLoadedTrack:playlistDetail];
@@ -297,6 +273,7 @@
     SPPlaylistFolder *playlistFolder;
     SPPlaylistItem *playlistItem;
     Boolean foundValidTrack = NO;
+    NSString *plName;
     
     NSURL *trackURL;
     
@@ -304,7 +281,10 @@
     if ([playlistDetail isKindOfClass:[SPPlaylistFolder class]]){
         playlistFolder = [plContainer.playlists objectAtIndex:plCounter];
         playlistDetail = [playlistFolder.playlists objectAtIndex:0];
+        plName = playlistFolder.name;
         
+    }else {
+        plName = playlistDetail.name;
     }
     
     NSLog(@"fucking shit: %@",playlistDetail.name);
@@ -351,12 +331,17 @@
                 }
 
             }else {
+                NSURL *idURL = playlistDetail.spotifyURL;
                 NSMutableArray *innerDataContainer = [[NSMutableArray alloc]init];
                 NSNumber *currplNum = [NSNumber numberWithInt:plCounter];
                 [innerDataContainer addObject:currplNum];
-                [innerDataContainer addObject:playlistDetail.name];
+                [innerDataContainer addObject:plName];
                 [innerDataContainer addObject:track.album.cover.image];
-                [imageContainer addObject:innerDataContainer];
+                [innerDataContainer addObject:idURL];
+         //       [imageContainer addObject:innerDataContainer];
+         //       [imageContainer insertObject:innerDataContainer atIndex:[imageContainer count]];
+                [self insertObject:innerDataContainer inArrAtIndex:[imageContainer count]];
+                
                 [innerDataContainer release];
                 
                 plCounter++;
@@ -375,6 +360,31 @@
     }
 }
 
+/* array kvo helpers imagecontainer */
+
+- (NSUInteger)countOfArr {       
+    return [self.imageContainer count];
+}    
+
+- (id)objectInArrAtIndex:(NSUInteger)index {       
+    return [self.imageContainer objectAtIndex:index];
+}    
+
+- (void)insertObject:(id)obj inArrAtIndex:(NSUInteger)index {       
+    [self.imageContainer insertObject:obj atIndex:index];
+    [self.imageContainer willChangeValueForKey:@"imageContainer"];
+    [self.imageContainer didChangeValueForKey:@"imageContainer"];
+    
+}    
+
+- (void)removeObjectFromArrAtIndex:(NSUInteger)index {       
+    [self.imageContainer removeObjectAtIndex:index];
+}    
+
+- (void)replaceObjectInArrAtIndex:(NSUInteger)index withObject:(id)obj {       
+    [self.imageContainer replaceObjectAtIndex:index withObject:obj];
+} 
+
 
 NSUInteger playlistsAttempts;
 NSUInteger loadplAttempts;
@@ -386,12 +396,8 @@ NSUInteger loadTrack;
 -(void)sessionDidLoginSuccessfully:(SPSession *)aSession; {
     
     if (![Shared sharedInstance].hasLoggedin){
-        
-        [self initLoadGUI];
-       // [self createLoadingPlView];
-        
         [Shared sharedInstance].hasLoggedin = true;
-        
+ 
     } 
     
     // Invoked by SPSession after a successful login.
@@ -407,50 +413,43 @@ NSUInteger loadTrack;
             return;
         }
         else{
-          //  self.cueController.view.hidden = NO;
             
             [self.mainViewController.loadingView removeFromSuperview];
+            plContainer = [[SPSession sharedSession] userPlaylists];
+            NSLog(@"logging in problem %d",[[plContainer playlists]count]);
         }
     }
     else{
         NSLog(@"loaded playlists");
         
-        imageContainer = [[NSMutableArray alloc]init];
+        self.imageContainer = [NSMutableArray array];
         
-        [self addObserver:self forKeyPath:@"self.loadPlaylist.items" options:NSKeyValueObservingOptionNew context:NULL];
-        [self addObserver:self forKeyPath:@"self.trackimg.album.cover.image" options:NSKeyValueObservingOptionNew context:NULL];
-        
-        plCounter = 0;
-        plContainer = [[SPSession sharedSession] userPlaylists];
-        nrOfPl = [[plContainer playlists] count];
-        
-        [self checkPlLoad:plContainer];
-        
-        
-    
-        NSString* infoImgStr = [[NSBundle mainBundle] pathForResource:@"info" ofType:@"png"];
-        UIImage *infoImg = [UIImage imageWithContentsOfFile:infoImgStr];
-        
-        self.userTxtBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.userTxtBtn.frame = CGRectMake(10, 25, 36, 36);
-        self.userTxtBtn.backgroundColor = [UIColor clearColor];
-       // [self.userTxtBtn setTitle:[NSString stringWithFormat:@"i"] forState:UIControlStateNormal];
-        [self.userTxtBtn setBackgroundImage:infoImg forState:UIControlStateNormal];
-        self.userTxtBtn.titleLabel.textAlignment = UITextAlignmentLeft;
-        [self.userTxtBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        self.userTxtBtn.titleLabel.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(30.0)];
-       
-        [self.userTxtBtn addTarget:self 
-                   action:@selector(showlogoutViewController)
-         forControlEvents:UIControlEventTouchDown];
-        
-     //   [self.mainViewController.view addSubview:self.userTxtBtn];
-        
-        
-        [self.mainViewController.loadingView removeFromSuperview];
-       
+        [self doLoadingOnNewThread];
              
   }  
+}
+
+- (void) doLoadingOnNewThread {
+	[NSThread detachNewThreadSelector:@selector(startTheProcess) toTarget:self withObject:nil];
+}
+- (void) startTheProcess {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    [self addObserver:self forKeyPath:@"self.loadPlaylist.items" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"self.trackimg.album.cover.image" options:NSKeyValueObservingOptionNew context:NULL];
+    
+    
+    plCounter = 0;
+    plContainer = [[SPSession sharedSession] userPlaylists];
+    NSLog(@"length container:%d",[plContainer.playlists count]);
+    nrOfPl = [[plContainer playlists] count];
+    
+    [self checkPlLoad:plContainer];
+    
+    [self.mainViewController.loadingView removeFromSuperview];
+   
+    
+	[pool release];
 }
 
 /*----playlist pictures loader functions-----*/
@@ -469,7 +468,7 @@ NSUInteger loadTrack;
     
     [[Shared sharedInstance].masterCue addObject:trackURL];
     
-    [self.cueController.tableView reloadData];
+    [self.mainViewController.tabController.cueController.tableView reloadData];
     
     SPTrack *track = [[SPSession sharedSession] trackForURL:trackURL];
     
@@ -490,7 +489,7 @@ NSUInteger loadTrack;
         
     }
     
-  //  [self.cueController.tableView reloadData];
+    [self.mainViewController.tabController.cueController.tableView reloadData];
 }
 
 
@@ -516,71 +515,14 @@ NSUInteger loadTrack;
 }
 
 
-- (void)showlogoutViewController{
-    
-    self.logoutViewController = [[UIViewController alloc] init];
-    self.logoutViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-    self.logoutViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    [self.mainViewController presentModalViewController:self.logoutViewController animated:YES];
-    self.logoutViewController.view.superview.frame = CGRectMake(0, 0, 240, 190); //it's important to do this after presentModalViewController
-    self.logoutViewController.view.superview.center = self.mainViewController.view.center;
-    
-    SPUser *user = [[SPSession sharedSession]user];
-    NSString *userName = user.displayName;
-    UILabel *loggedInUser = [[UILabel alloc] initWithFrame:CGRectMake(30, 7, 180, 30)];
-    loggedInUser.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
-    loggedInUser.text = [NSString stringWithFormat:@"Logged in as: %@",userName];
-    loggedInUser.textColor = [UIColor blackColor];
-    loggedInUser.backgroundColor = [UIColor clearColor];
-    [self.logoutViewController.view addSubview:loggedInUser];
-    [loggedInUser release];
-    
-  
-    UIButton *logoutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    logoutBtn.frame = CGRectMake(30, 50, 180, 55);
-    logoutBtn.backgroundColor = [UIColor blackColor];
-    logoutBtn.layer.cornerRadius = 5;
-    [logoutBtn setTitle:[NSString stringWithFormat:@"Switch user"] forState:UIControlStateNormal];
-    logoutBtn.titleLabel.textAlignment = UITextAlignmentCenter;
-    logoutBtn.titleLabel.font =  [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
-    [logoutBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-   // logoutBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-  //  [logoutBtn sizeToFit];
-    [logoutBtn addTarget:self 
-               action:@selector(userLogout)
-     forControlEvents:UIControlEventTouchDown];
-    
-    [self.logoutViewController.view addSubview:logoutBtn];
-    
-    UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    cancelBtn.frame = CGRectMake(30, 115, 180, 55);
-    cancelBtn.backgroundColor = [UIColor blackColor];
-    cancelBtn.layer.cornerRadius = 5;
-    [cancelBtn setTitle:[NSString stringWithFormat:@"Cancel"] forState:UIControlStateNormal];
-    cancelBtn.titleLabel.textAlignment = UITextAlignmentCenter;
-    cancelBtn.titleLabel.font =  [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
-    [cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-  //  cancelBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-  //  [cancelBtn sizeToFit];
-    [cancelBtn addTarget:self 
-                  action:@selector(removeLogoutView)
-        forControlEvents:UIControlEventTouchDown];
-
-     [self.logoutViewController.view addSubview:cancelBtn];
-    
-}
-
--(void)removeLogoutView{
-    
-    [self.logoutViewController dismissModalViewControllerAnimated:YES];
-}
-
 -(void)setNotPlaying{
     
     [self.playbackManager setIsPlaying:NO];
 }
 
 -(void)userLogout{
+    [self.mainViewController.tabController removeLogoutView];
+    
     
     if ([SPSession sharedSession].isPlaying){
         
@@ -591,7 +533,6 @@ NSUInteger loadTrack;
     }
     
     [[SPSession sharedSession] logout];
-    [self removeLogoutView];
     
     
 }
@@ -608,7 +549,16 @@ NSUInteger loadTrack;
 -(void)sessionDidLogOut:(SPSession *)aSession {
     NSLog(@"session logged out");
     
+    [self removeObserver:self forKeyPath:@"self.loadPlaylist.items"];
+	[self removeObserver:self forKeyPath:@"self.trackimg.album.cover.image"];
+    
+    [self.mainViewController removeGUI];
+    [self.mainViewController.plViewController setplaylistsloaded:NO];
+    
+    [self showLogin];
     [self removeGUI];
+    [self.mainViewController.tabController.cueController.tableView reloadData];
+    
     [self.playbackManager stopAUGraph];
     for (UIView *view in [self.mainViewController.plViewController.view subviews]){
         
@@ -616,8 +566,8 @@ NSUInteger loadTrack;
     }
  //   [self.mainViewController.plViewController.plMainView removeFromSuperview];
     [Shared sharedInstance].relogin = true;
-    [self.mainViewController presentModalViewController:[[[LoginViewController alloc] init] autorelease]
-											   animated:YES];
+    
+    
 }
 
 -(void)session:(SPSession *)aSession didEncounterNetworkError:(NSError *)error; {
@@ -648,7 +598,6 @@ NSUInteger loadTrack;
 	[self removeObserver:self forKeyPath:@"currentTrack.album.cover.image"];
 	[self removeObserver:self forKeyPath:@"playbackManager.trackPosition"];
     */
-   // [_loadingView release];
     [imageContainer release];
     [loadPlaylist release];
  	[_currentTrack release];

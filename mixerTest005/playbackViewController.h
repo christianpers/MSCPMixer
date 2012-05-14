@@ -22,8 +22,10 @@
     UILabel *artistLbl;
     UILabel *titleLbl;
     UIButton *selBtn;
-    UIView *trackControlBG;
-    UIView *trackControlFG;
+    UIButton *playBtn;
+    UIButton *pauseBtn;
+    UIButton *playch2Btn;
+    UIButton *pausech2Btn;
     UIView *secChannelView;
     double durationNum;
     UIView *controlView;
@@ -31,6 +33,9 @@
     effectController *lopassController;
     effectController *hipassController;
     effectController *channelOneVolController;
+    
+    UILabel *effectParamCh1Nr1;
+    UILabel *effectParamCh1Nr2;
     //fft analyzing
     fftAnalyzerView *fftView;
     
@@ -76,6 +81,13 @@
     UIImageView *bgLogo;
     
     UIImageView *bgLogoRight;
+    UILabel *effectParamCh2Nr1;
+    UILabel *effectParamCh2Nr2;
+    
+    UILabel *timeRemainingCh1;
+    UILabel *timeRemainingCh2;
+    
+    NSTimeInterval currenttrackCh2Duration;
     
   
 }
@@ -83,8 +95,6 @@
 @property(nonatomic, retain) UILabel *artistLbl;
 @property(nonatomic, retain) UILabel *titleLbl;
 @property(nonatomic, retain) UIButton *selBtn;
-@property(nonatomic, retain) UIView *trackControlBG;
-@property(nonatomic, retain) UIView *trackControlFG;
 @property(nonatomic, retain) UIView *controlView;
 @property(nonatomic, retain) UIView *effectParentView;
 
@@ -94,6 +104,11 @@
 @property(nonatomic, retain) effectController *channelOneVolController;
 @property(nonatomic, retain) fftAnalyzerView *fftView;
 
+@property(nonatomic, retain) UIButton *playBtn;
+@property(nonatomic, retain) UIButton *pauseBtn;
+
+@property(nonatomic, retain) UIButton *playch2Btn;
+@property(nonatomic, retain) UIButton *pausech2Btn;
 
 
 
@@ -118,15 +133,12 @@
 - (void)playnextTrack:(id)sender;
 - (void)playprevTrack:(id)sender;
 - (void)setTrackTitleAndArtist:(SPTrack *)track;
-- (void)showEffectOptionsPitch:(UILongPressGestureRecognizer *)gestureRecognizer;
-- (void)setTimePitchEffect:(id)sender;
-- (void)removeTimePitchPopup;
+- (void)setDefaultPitchController:(UITapGestureRecognizer *)gestureRecognizer;
 - (void)playTrack:(id)sender;
 - (void)stopTrack:(id)sender;
 - (void)pauseTrack:(id)sender;
 - (void)setPlayduration:(double)length;
 - (void)updatePlayduration:(double)val;
-- (void)trackdurationSwipe:(UISwipeGestureRecognizer *)gesture;
 
 - (void)callmainplaytrack:(SPTrack *)track;
 - (void)callfadeInMusicCh1;
@@ -135,6 +147,7 @@
 - (void)setmixerModeOn;
 - (void)setonechannelmodeOn;
 
+- (void)toggleplayandpause:(BOOL)hidden;
 
 //channel two stuff
 - (void)showMediaPicker;
@@ -145,5 +158,8 @@
 - (void)stopTrack:(id)sender;
 - (void)pauseTrack:(id)sender;
 - (void)freeAudio;
+- (void)setPlaydurationCh2:(double)length;
+- (void)updatePlaydurationCh2:(double)val;
+
 
 @end

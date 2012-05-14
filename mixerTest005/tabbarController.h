@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "cueViewController.h"
+#import "logoutViewController.h"
 
 @interface tabbarController : UITabBarController <UITabBarControllerDelegate>{
     
@@ -18,15 +19,18 @@
     UIImageView *activeImg;
     cueViewController *cueController;
     BOOL appStarted;
-    UIView *loadplaylistView;
+    UIView *airplayIcon;
+    UIButton *userTxtBtn;
+    logoutViewController *logoutVController;
+    
 }
 
 @property (nonatomic, retain) cueViewController *cueController;
 @property (nonatomic, retain) UIView *menuBg;
-@property (nonatomic, retain) UIView *loadplaylistView;
 
 -(void) hideTabBar;
 -(void) addCustomElements;
 -(void) selectTab:(int)tabID;
+-(void)removeLogoutView;
 
 @end

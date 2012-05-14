@@ -182,6 +182,7 @@
     self.searchField.textColor = [UIColor blackColor]; //text color
     self.searchField.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(30.0)];
     self.searchField.placeholder = @"Do some crate diggin..";  //place holder
+    self.searchField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.searchField.backgroundColor = [UIColor whiteColor]; //background color
     self.searchField.textAlignment = UITextAlignmentCenter;
  //   self.searchField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;

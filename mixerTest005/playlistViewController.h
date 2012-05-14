@@ -33,6 +33,8 @@
     BOOL createStarredBox;
     UIView *loadingView;
     BOOL orientationIsLandscape;
+    
+    BOOL playlistsLoaded;
 }
 
 
@@ -46,7 +48,7 @@
 - (NSString *)getTrackStr:(SPPlaylistItem *)plItem;
 - (void)createStarredTracksPlaylist:(SPPlaylistContainer *)playlistContainer;
 - (void)starredClicked;
-
+- (void)setplaylistsloaded:(BOOL)val;
 
 
 

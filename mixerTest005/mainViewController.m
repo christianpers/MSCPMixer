@@ -106,6 +106,17 @@
         
 }
 
+- (void)removeGUI{
+    
+    appStarted = NO;
+    [self.plViewController.view removeFromSuperview];
+    [self.plbackViewController.view removeFromSuperview];
+    [self.searchController.view removeFromSuperview];
+    [self.plbackViewController release];
+    [self.plViewController release];
+    [self.searchController release];
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];

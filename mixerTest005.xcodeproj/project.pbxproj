@@ -16,6 +16,7 @@
 		AA5B97DF150E92700061D969 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA5B97DE150E92700061D969 /* Accelerate.framework */; };
 		AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA5B97E6150EAF950061D969 /* fftAnalyzerView.mm */; };
 		AA65633A154A48EE0030711C /* tabbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA656339154A48EE0030711C /* tabbarController.m */; };
+		AA68A4091555E457005647D4 /* logoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA68A4081555E457005647D4 /* logoutViewController.m */; };
 		AA74232B1544C68800FF43AC /* GothamHTF-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA74232A1544C68800FF43AC /* GothamHTF-Book.otf */; };
 		AA74232E1544D4BF00FF43AC /* queue arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = AA74232D1544D4BF00FF43AC /* queue arrow.png */; };
 		AA742330154507EE00FF43AC /* appiconMSCP.png in Resources */ = {isa = PBXBuildFile; fileRef = AA74232F154507EE00FF43AC /* appiconMSCP.png */; };
@@ -77,7 +78,6 @@
 		AAA411D91550BCBE006BF7EA /* mediaPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA411D81550BCBE006BF7EA /* mediaPickerController.m */; };
 		AAAD79C114F0EE6B00E337E9 /* mainwindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */; };
 		AAB46C0215465C6D003634BF /* itunes channel.png in Resources */ = {isa = PBXBuildFile; fileRef = AAB46C0115465C6D003634BF /* itunes channel.png */; };
-		AAB46C0715466108003634BF /* mixerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB46C0615466108003634BF /* mixerViewController.m */; };
 		AAB46C0A15467860003634BF /* mainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB46C091546785F003634BF /* mainViewController.m */; };
 		AAEFA25D151E63ED0066AC86 /* cueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA25C151E63ED0066AC86 /* cueViewController.m */; };
 		AAEFA263151F84BD0066AC86 /* playbackViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAEFA262151F84BC0066AC86 /* playbackViewController.mm */; };
@@ -102,6 +102,8 @@
 		AA5B97E6150EAF950061D969 /* fftAnalyzerView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = fftAnalyzerView.mm; sourceTree = "<group>"; };
 		AA656338154A48EE0030711C /* tabbarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tabbarController.h; sourceTree = "<group>"; };
 		AA656339154A48EE0030711C /* tabbarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tabbarController.m; sourceTree = "<group>"; };
+		AA68A4071555E457005647D4 /* logoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logoutViewController.h; sourceTree = "<group>"; };
+		AA68A4081555E457005647D4 /* logoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = logoutViewController.m; sourceTree = "<group>"; };
 		AA74232A1544C68800FF43AC /* GothamHTF-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamHTF-Book.otf"; sourceTree = "<group>"; };
 		AA74232D1544D4BF00FF43AC /* queue arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "queue arrow.png"; sourceTree = "<group>"; };
 		AA74232F154507EE00FF43AC /* appiconMSCP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appiconMSCP.png; sourceTree = "<group>"; };
@@ -202,8 +204,6 @@
 		AAA411D81550BCBE006BF7EA /* mediaPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mediaPickerController.m; sourceTree = "<group>"; };
 		AAAD79C014F0EE6B00E337E9 /* mainwindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = mainwindow.xib; sourceTree = "<group>"; };
 		AAB46C0115465C6D003634BF /* itunes channel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "itunes channel.png"; sourceTree = "<group>"; };
-		AAB46C0515466108003634BF /* mixerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mixerViewController.h; sourceTree = "<group>"; };
-		AAB46C0615466108003634BF /* mixerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mixerViewController.m; sourceTree = "<group>"; };
 		AAB46C081546785F003634BF /* mainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mainViewController.h; sourceTree = "<group>"; };
 		AAB46C091546785F003634BF /* mainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mainViewController.m; sourceTree = "<group>"; };
 		AAEFA25B151E63ED0066AC86 /* cueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cueViewController.h; sourceTree = "<group>"; };
@@ -313,6 +313,8 @@
 				AAB46C091546785F003634BF /* mainViewController.m */,
 				AA656338154A48EE0030711C /* tabbarController.h */,
 				AA656339154A48EE0030711C /* tabbarController.m */,
+				AA68A4071555E457005647D4 /* logoutViewController.h */,
+				AA68A4081555E457005647D4 /* logoutViewController.m */,
 				AA97EF1314F0BE0100A2B892 /* cocoaWrapper */,
 				AA97EEEF14F0B06500A2B892 /* Supporting Files */,
 			);
@@ -411,7 +413,6 @@
 		AA97EF4E14F0D0AA00A2B892 /* playbackView */ = {
 			isa = PBXGroup;
 			children = (
-				AAB46C04154660E9003634BF /* mixerView */,
 				AA5B97E4150EAF160061D969 /* fftAnalyzer */,
 				AA97EF7714F0D1DE00A2B892 /* effectController.h */,
 				AA97EF7814F0D1DE00A2B892 /* effectController.mm */,
@@ -497,15 +498,6 @@
 				AA97EF8614F0D20700A2B892 /* audioControl.mm */,
 			);
 			name = playbackHelpers;
-			sourceTree = "<group>";
-		};
-		AAB46C04154660E9003634BF /* mixerView */ = {
-			isa = PBXGroup;
-			children = (
-				AAB46C0515466108003634BF /* mixerViewController.h */,
-				AAB46C0615466108003634BF /* mixerViewController.m */,
-			);
-			name = mixerView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -628,10 +620,10 @@
 				AAEFA263151F84BD0066AC86 /* playbackViewController.mm in Sources */,
 				AA27039D154120990019BC73 /* trackTableViewController.m in Sources */,
 				AA2703A0154120CE0019BC73 /* reSearchTableViewController.m in Sources */,
-				AAB46C0715466108003634BF /* mixerViewController.m in Sources */,
 				AAB46C0A15467860003634BF /* mainViewController.m in Sources */,
 				AA65633A154A48EE0030711C /* tabbarController.m in Sources */,
 				AAA411D91550BCBE006BF7EA /* mediaPickerController.m in Sources */,
+				AA68A4091555E457005647D4 /* logoutViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

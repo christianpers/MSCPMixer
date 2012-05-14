@@ -26,8 +26,8 @@
         //     headerLabel.opaque = NO;
         self.param1Lbl.textColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
        // param1.highlightedTextColor = [UIColor whiteColor];
-        self.param1Lbl.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
-        self.param1Lbl.frame = CGRectMake(size.width-260, 240, 200, 30.0);
+        self.param1Lbl.font = [UIFont fontWithName:@"GothamHTF-BookItalic" size:(16.0)];
+        self.param1Lbl.frame = CGRectMake(70, -40, 100, 20.0);
         [self addSubview:self.param1Lbl];
         
         self.param2Lbl = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -35,8 +35,8 @@
         //     headerLabel.opaque = NO;
         self.param2Lbl.textColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
         // param1.highlightedTextColor = [UIColor whiteColor];
-        self.param2Lbl.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(28.0)];
-        self.param2Lbl.frame = CGRectMake(size.width-260, 280, 200, 30.0);
+        self.param2Lbl.font = [UIFont fontWithName:@"GothamHTF-BookItalic" size:(16.0)];
+        self.param2Lbl.frame = CGRectMake(70, -20, 100, 20.0);
         [self addSubview:self.param2Lbl];
         
     }

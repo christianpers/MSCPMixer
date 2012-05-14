@@ -63,13 +63,16 @@
     AudioUnit                   converterUnitChTwo;
     NSTimer                     *timer;
     AudioUnitParameterValue     masterVol;
-   // SPCircularBuffer            *audioBufferCh1, *audioBufferCh2;
     
     //second channel stuff
    
     AURenderCallbackStruct          rcbsFirst;
     AURenderCallbackStruct          rcbsSecond; //second channel
     AURenderCallbackStruct          ioRenderCallback; //mastermixerCallbackStruckt
+    NSMethodSignature           *incrementTrackPositionMethodSignatureCh2;
+    NSInvocation                *incrementTrackPositionInvocationCh2;
+    NSTimeInterval              currentTrackPositionCh2;
+    NSTimeInterval              trackPositionCh2;
     
     
     CFArrayRef audioOutputRoutes;
@@ -107,6 +110,7 @@
 	
 }
 
+@property (nonatomic) AUGraph graph;
 @property (nonatomic) AudioUnit mixerUnit;
 @property (nonatomic) AudioUnit mixerUnitChOne;
 @property (nonatomic) AudioUnit mixerUnitChTwo;
@@ -163,6 +167,8 @@
  @param offset The time at which to seek to. Must be between 0.0 and the duration of the playing track.
  */
 
+- (BOOL)setupAudioGraphWithAudioFormat:(NSError **)err;
+
 - (void)fadeOutMusicCh1;
 - (void)fadeOutMusicCh2;
 - (void)fadeInMusicCh1;
@@ -196,7 +202,6 @@
 - (void)setPlaybackRate: (AudioUnitParameterValue)val:(int)channel;
 -(void)setPlaybackCents:(AudioUnitParameterValue)val:(int)channel;
 
--(void)checkavailableOutputRoutes;
 
 //second channel stuff
 - (void) setMasterVolCh2:(AudioUnitParameterValue)val;
@@ -217,12 +222,16 @@
 
 - (void)incrementTrackPositionWithFrameCount:(UInt32)framesToAppend;
 
+- (void)incrementTrackPositionWithFrameCountCh2:(UInt32)framesToAppend;
+
 - (void)enableInput: (UInt32)inputNum isOn:(AudioUnitParameterValue)isONValue;
 
 - (void)seekToTrackPosition:(NSTimeInterval)newPosition;
 
 /** Returns the playback position of the current track, in the range 0.0 to the current track's duration. */
 @property (readonly) NSTimeInterval trackPosition;
+
+@property (readonly) NSTimeInterval trackPositionCh2;
 
 /** Returns the current playback volume, in the range 0.0 to 1.0. */
 @property (readwrite) AudioUnitParameterValue volume;

@@ -10,13 +10,15 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "effectgridView.h"
 
-@interface effectController : UIView{
+@interface effectController : UIView <UIGestureRecognizerDelegate>{
     
     effectgridView *gridView;
     
 }
 
 @property (nonatomic, retain) effectgridView *gridView;
+
+-(void)setDefaultPitchController:(UITapGestureRecognizer *)gestureRecognizer;
 
 - (void)variSpeedUnit;
 - (void)lopassUnit;
