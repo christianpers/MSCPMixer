@@ -15,6 +15,7 @@
 
 @synthesize plMainView;
 @synthesize plViewController = _plViewController;
+@synthesize plContainer;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -51,10 +52,10 @@
     CGSize winSize = window.frame.size;
     self.plMainView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, winSize.width,winSize.height)];
     self.plMainView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
+    [self.plMainView setTag:500000];
     self.plMainView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view = self.plMainView;
     
-   
 }
 
 
@@ -66,14 +67,18 @@
     
     NSLog(@"viewdidload playlistview");
     playlistsLoaded = NO;
-    [self createloadingview];
-    
-    
-    
-    
-   
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  
+    [self doLoadingOnNewThread];
+    [main startloadingOfPlaylists];
+
     
 }
+
+-(void)initPlContainer:(SPPlaylistContainer *)plContainerIn{
+    self.plContainer = plContainerIn;
+}
+
 
 - (void)createloadingview{
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -92,7 +97,7 @@
     
     UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
     av.frame=CGRectMake((widthL/2)-(85/2), (heightL/2)-(85/2), 85, 85);
-    av.tag  = 1;
+  //  av.tag  = 1;
     [loadingView addSubview:av];
     [av startAnimating];
     
@@ -104,12 +109,9 @@
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
  
     NSLog(@"imagecontainer length: %d",[main.imageContainer count]);
-    NSMutableArray *dataContainer = [[NSMutableArray alloc]initWithArray:main.imageContainer];
-    for (NSMutableArray *data in dataContainer){
-        
-        NSInteger plNumber = [(NSNumber *)[data objectAtIndex:0] integerValue];
-        NSString *plName = (NSString *)[data objectAtIndex:1];
-        UIImage *plImage = (UIImage *)[data objectAtIndex:2];
+    
+    int i = 0;
+    while (i <= [plContainer.playlists count]){
         
         if (x >= parentWidth){
             x=margin;
@@ -118,43 +120,83 @@
         }
         UIButton *myButton = [UIButton buttonWithType:UIButtonTypeCustom];
         myButton.frame = CGRectMake(x, y, width, height);// position in the parent view and set the size of the
-        [myButton setTag:plNumber];
-        [myButton setBackgroundImage:plImage forState:UIControlStateNormal];
-        
-        [myButton addTarget:self 
-                     action:@selector(plClicked:)
-           forControlEvents:UIControlEventTouchDown];
-        
-        CGSize size = myButton.frame.size;
-        
-        //create the label for the playlist
-        UILabel *plTitle = [[ [UILabel alloc ] initWithFrame:CGRectMake(0, (size.height/2)-(30/2), size.width, 30)]autorelease];
-        plTitle.textAlignment =  UITextAlignmentCenter;
-        plTitle.textColor = [UIColor blackColor];
-        plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
-        plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
-        plTitle.text = [NSString stringWithFormat: @"%@",plName];
-        [myButton addSubview:plTitle];
-        
+        [myButton setTag:i];
+        myButton.backgroundColor = [UIColor blackColor];
         [self.plMainView addSubview:myButton];
+        
+        UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+        av.frame=CGRectMake((width/2)-(85/2), (height/2)-(85/2), 85, 85);
+        //  av.tag  = 1;
+        [myButton addSubview:av];
+        [av startAnimating];
         
         x = x+width+margin;
         
+        i++;
     }
 }
+
+- (void)setArrayOnPlaylist:(NSMutableArray *)array{
+    
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:array];
+    NSInteger plNumber = [(NSNumber *)[arr objectAtIndex:0] integerValue];
+    NSString *plName = (NSString *)[arr objectAtIndex:1];
+    UIImage *plImage = (UIImage *)[arr objectAtIndex:2];
+    
+    UIButton *btn = (UIButton *)[self.plMainView viewWithTag:plNumber];
+    
+    for (UIView *view in [btn subviews]){
+        
+        [view removeFromSuperview];
+    }
+    
+    CGSize size = btn.frame.size;
+    
+    //create the label for the playlist
+    UILabel *plTitle = [[ [UILabel alloc ] initWithFrame:CGRectMake(0, (size.height/2)-(30/2), size.width, 30)]autorelease];
+    plTitle.textAlignment =  UITextAlignmentCenter;
+    plTitle.textColor = [UIColor blackColor];
+    plTitle.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.8];
+    plTitle.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(16.0)];
+    plTitle.text = [NSString stringWithFormat: @"%@",plName];
+    [btn addSubview:plTitle];
+
+    [btn addTarget:self 
+                 action:@selector(plClicked:)
+       forControlEvents:UIControlEventTouchDown];
+    
+    [btn setBackgroundImage:plImage forState:UIControlStateNormal];
+}
+
+- (void)setemptyPlaylist:(NSInteger)num{
+    
+    UIButton *btn = (UIButton *)[self.plMainView viewWithTag:num];
+    
+    for (UIView *view in [btn subviews]){
+        
+        [view removeFromSuperview];
+    }
+    
+    
+}
+
+
 
 - (void) doLoadingOnNewThread {
 	[NSThread detachNewThreadSelector:@selector(startTheProcess) toTarget:self withObject:nil];
 }
 - (void) startTheProcess {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    [self initGridParams];
+    [self loadplaylists];
+   
     
     if (createStarredBox){
         [self createStarredTracksPlaylist:[[SPSession sharedSession] userPlaylists]];
         
     }
-    [self loadplaylists];
-    [loadingView removeFromSuperview];
     
 	[pool release];
 }
@@ -189,17 +231,9 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     NSLog(@"viewwillappear playlist view");
     orientationIsLandscape = UIInterfaceOrientationIsLandscape(self.interfaceOrientation);
-    if ([main.imageContainer count] > 0){
-        if(!playlistsLoaded){
-            [self initGridParams];
-            [self doLoadingOnNewThread];
-            playlistsLoaded = YES;
-        }
-    }
  
 }
 
@@ -240,10 +274,10 @@
     int nrofViewChilds = [[self.plMainView subviews]count];
     NSLog(@"bitch: %d",nrofViewChilds);
     
-    plContainer = [[SPSession sharedSession] userPlaylists];
+   // plContainer = [[SPSession sharedSession] userPlaylists];
     
-    //nrOfPl = [[plContainer playlists] count];
-    nrOfPl = [main.imageContainer count];
+    nrOfPl = [[plContainer playlists] count];
+    //nrOfPl = [main.imageContainer count];
     NSLog(@"nrofPl:%f",nrOfPl);
     
     //adding the starred tracks to get correct numbahs

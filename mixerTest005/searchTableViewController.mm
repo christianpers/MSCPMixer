@@ -71,6 +71,12 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+ 
+    offsetAlbum = 0;
+    offsetTracks = 0;
+    offsetArtists = 0;
+    //sessionArr = [NSMutableArray arrayWithArray:self.detailArr];
+    
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -153,6 +159,20 @@
         }
         
     }
+    else if ([keyPath isEqualToString:@"arrayUpdated"]) {
+        NSLog(@"array updated");
+    //    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [self setData];
+      //  self.detailArr = context.mainViewController.searchController.model.resultArray;
+        
+    }   
+    else if ([keyPath isEqualToString:@"albBrowseUpdated"]) {
+        NSLog(@"albBrowse updated");
+        //    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [self loadtrackTableViewController];
+        //  self.detailArr = context.mainViewController.searchController.model.resultArray;
+        
+    }
 }
 
 - (void)viewDidUnload
@@ -162,6 +182,7 @@
     
     self.albBrowse = nil;
     self.artBrowse = nil;
+    
     
     [super viewDidUnload];
     
@@ -194,6 +215,38 @@
         
     }else if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
         return YES;
+    }
+}
+
+- (void)setData{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    if (![self.detailArr isEqualToArray:main.mainViewController.searchController.model.resultArray]){
+        self.detailArr = main.mainViewController.searchController.model.resultArray;
+        //   NSMutableArray *arr = [NSMutableArray arrayWithArray:sessionArr];
+        //   [detailArr addObject:sessionArr];
+        //   [detailArr insertObject:arr atIndex:0];
+        switch (getmoreSectionNum) {
+            case 0:
+                offsetAlbum += 25;
+                break;
+                
+            case 1:
+                offsetTracks += 25;
+                break;
+                
+            case 2:
+                offsetArtists += 25;
+                break;
+                
+            default:
+                break;
+        }
+        NSLog(@"offsetalbum: %d",offsetAlbum);
+        
+        NSLog(@"number albums: %d, number tracks: %d ",[[self.detailArr objectAtIndex:0] count], [[self.detailArr objectAtIndex:1]count]);
+        
+        [self.tableView reloadData];
     }
 }
 
@@ -266,12 +319,36 @@
     
     // return [[detailArr objectAtIndex:section]count];
     int nrOfObjects = [[detailArr objectAtIndex:section]count];
-    if (nrOfObjects > 20){
-        return 20;
-    }
-    else{
-       return nrOfObjects;     
-    }
+    NSMutableArray *sectionArr = [NSMutableArray arrayWithArray:[detailArr objectAtIndex:section]];
+    if ([sectionArr count]>0){
+        if([[sectionArr objectAtIndex:0] isKindOfClass:[SPAlbum class]]){
+            if (nrOfObjects-offsetAlbum < 25){
+                return nrOfObjects;
+            }
+            else{
+                return nrOfObjects+1;     
+            }
+            
+        }else if ([[sectionArr objectAtIndex:0] isKindOfClass:[SPTrack class]]) {
+            if (nrOfObjects-offsetTracks < 25){
+                return nrOfObjects;
+            }
+            else{
+                return nrOfObjects+1;     
+            }
+            
+        }else if ([[sectionArr objectAtIndex:0] isKindOfClass:[SPArtist class]]) {
+            if (nrOfObjects-offsetArtists < 25){
+                return nrOfObjects;
+            }
+            else{
+                return nrOfObjects+1;     
+            }
+            
+        }
+        
+    
+     }
     
 }
 
@@ -291,8 +368,14 @@
     
     NSString *lbl;
     
+    NSLog(@"indexpath.section %d",indexPath.section);
+    NSLog(@"indexpath.row %d",indexPath.row);
+    NSLog(@"arr length: %d",[self.detailArr count]);
+    NSMutableArray *sectionArr = [NSMutableArray arrayWithArray:[self.detailArr objectAtIndex:indexPath.section]];
+    
     //check if last line. Create a showmore btn if true
-    if (indexPath.row == 19){
+    //check here if more results is available ?? TODO
+    if (indexPath.row == [sectionArr count]){
       
         UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.view.frame.size.width, 30)];
         title.text = @"Show more results  +";
@@ -305,11 +388,6 @@
         
         
     }else {
-        
-        
-        
-        NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[detailArr objectAtIndex:indexPath.section]];
-        
         if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPAlbum class]]){
             SPAlbum *album = [sectionArr objectAtIndex:indexPath.row];
             
@@ -347,7 +425,7 @@
             long sec = (long)interval % 60;    // remainder of long divide
             NSString* str = [[NSString alloc] initWithFormat:@"%02d:%02d", min, sec];
             
-            UILabel *trackDuration = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-200, 5, 50, 30)];
+            UILabel *trackDuration = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-200, 5, 100, 30)];
             trackDuration.text = str;
             trackDuration.textColor = [UIColor whiteColor];
             trackDuration.backgroundColor = [UIColor clearColor];
@@ -371,17 +449,7 @@
         [cell.contentView addSubview:title];
         [title release];
         
-        
-        
-        
-        //cell.textLabel.text = lbl;
-        // Configure the cell...
-        
-        [sectionArr release];
-   
-    
-
-        
+       
      }
     //cell.contentView.backgroundColor = [UIColor blackColor];
    // cell.backgroundColor = [UIColor blackColor];
@@ -396,49 +464,14 @@
     
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     UITableViewCell* theCell = [tableView cellForRowAtIndexPath:indexPath];
     
     //Then you change the properties (label, text, color etc..) in your case, the background color
@@ -447,71 +480,109 @@
     //Deselect the cell so you can see the color change
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    if (indexPath.row == 19){
-        NSLog(@"showmore btn was clicked");
-        
-        //the maximum number of cells needs to be changed before this. Global variable I guess would do it. TODO
-        [self.tableView setNeedsDisplay];
-    }else {
-        /*
-         Loading view
-         */
-        CGSize winSize = self.tableView.frame.size;
-        CGPoint offsetPnt = self.tableView.contentOffset;
-        self.loadingView = [[UIView alloc]initWithFrame:CGRectMake(offsetPnt.x, offsetPnt.y, winSize.width, winSize.height)];
-        self.loadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
-        [self.view addSubview:self.loadingView];
-        
-        UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
-        av.frame=CGRectMake((winSize.width/2)-(85/2), ((winSize.height/2)-(85/2))-40, 85, 85);
-        av.tag  = 1;
-        [self.loadingView addSubview:av];
-        [av startAnimating];
-        
-        NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[detailArr objectAtIndex:indexPath.section]];
-        
-        if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPAlbum class]]){
-            [self addObserver:self forKeyPath:@"albBrowse.tracks" options:0 context:nil];
-            
-            SPAlbum *album = [sectionArr objectAtIndex:indexPath.row];
-            SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
-            self.albBrowse = albumBrowse;
-            
-        }
-        else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPTrack class]]){
-            AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            
-            SPTrack *track = [sectionArr objectAtIndex:indexPath.row];
-            [main addSongFromSearch:track.spotifyURL];
-            
-            [self.loadingView removeFromSuperview];
-            self.loadingView = nil;
-            
-            
-        }
-        else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPArtist class]]){
-            [self addObserver:self forKeyPath:@"artBrowse.albums" options:0 context:nil];
-            [self addObserver:self forKeyPath:@"artBrowse.relatedArtists" options:0 context:nil];
-            
-            
-            SPArtist *artist = [sectionArr objectAtIndex:indexPath.row];
-            SPArtistBrowse *artistBrowse = [SPArtistBrowse browseArtist:artist inSession:[SPSession sharedSession] type:SP_ARTISTBROWSE_FULL];
-            self.artBrowse = artistBrowse;
-            
-        }
-        
-        [sectionArr release];
+    NSMutableArray *sectionArr = [[NSMutableArray alloc]initWithArray:[self.detailArr objectAtIndex:indexPath.section]];
     
     
+    //the maximum number of cells needs to be changed before this. Global variable I guess would do it. TODO
+    
+    /*
+     Loading view
+     */
+    CGSize winSize = self.tableView.frame.size;
+    CGPoint offsetPnt = self.tableView.contentOffset;
+    self.loadingView = [[UIView alloc]initWithFrame:CGRectMake(offsetPnt.x, offsetPnt.y, winSize.width, winSize.height)];
+    self.loadingView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:.9];
+    [self.view addSubview:self.loadingView];
+    
+    UIActivityIndicatorView  *av = [[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+    av.frame=CGRectMake((winSize.width/2)-(85/2), ((winSize.height/2)-(85/2))-40, 85, 85);
+    av.tag  = 1;
+    [self.loadingView addSubview:av];
+    [av startAnimating];
+    
+    NSLog(@"indexpath %d",indexPath.row);
+    if (indexPath.row == [sectionArr count]){
+        //  maxresultAlbums += 20;
+        getmoreSectionNum = indexPath.section;
+        [self loadmoreresults];
+        [self.loadingView removeFromSuperview];
     }
-
+    else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPAlbum class]]){
+     
+        [main.mainViewController.searchController.model addObserver:self forKeyPath:@"albBrowseUpdated" options:NSKeyValueObservingOptionNew context:nil];
+        
+        SPAlbum *album = [sectionArr objectAtIndex:indexPath.row];
+        
+        [main.mainViewController.searchController.model setAlbumToBrowse:album];
+        SEL func = @selector(browseAlbum);
+        [main.mainViewController.searchController.model doSearchOnNewThread:func];
+        
+    }
+    else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPTrack class]]){
+     
+        SPTrack *track = [sectionArr objectAtIndex:indexPath.row];
+        [main addSongFromSearch:track.spotifyURL];
+        
+        [self.loadingView removeFromSuperview];
+        self.loadingView = nil;
+        
+    }
+    else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPArtist class]]){
+        [self addObserver:self forKeyPath:@"artBrowse.albums" options:0 context:nil];
+        [self addObserver:self forKeyPath:@"artBrowse.relatedArtists" options:0 context:nil];
+        
+        
+        SPArtist *artist = [sectionArr objectAtIndex:indexPath.row];
+        SPArtistBrowse *artistBrowse = [SPArtistBrowse browseArtist:artist inSession:[SPSession sharedSession] type:SP_ARTISTBROWSE_FULL];
+        self.artBrowse = artistBrowse;
+        
+    }
+    [sectionArr release];
     
 }
 
 - (void)loadmoreresults{
     
-   // [];
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    SEL func;
+    switch (getmoreSectionNum) {
+        case 0:
+            func = @selector(getMoreAlbums);
+            [main.mainViewController.searchController.model doSearchOnNewThread:func];
+            break;
+        
+        case 1:
+            func = @selector(getMoreTracks);
+            [main.mainViewController.searchController.model doSearchOnNewThread:func];
+            
+            break;
+        
+        case 2:
+            func = @selector(getMoreArtists);
+            [main.mainViewController.searchController.model doSearchOnNewThread:func];
+            
+            break;
+            
+        default:
+            break;
+    }
+    
+    [main.mainViewController.searchController.model addObserver:self forKeyPath:@"arrayUpdated" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)loadtrackTableViewController{
+    
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    trackTableViewController *trackTableController = [[trackTableViewController alloc]init];
+    NSMutableArray *wrapper = [NSMutableArray arrayWithArray:main.mainViewController.searchController.model.resultArray];
+    NSMutableArray *detail = [[NSMutableArray alloc]init];
+    [detail addObject:wrapper];
+    trackTableController.detailArr = detail;
+    trackTableController.tableView.backgroundColor = [UIColor blackColor];
+    [self.navigationController pushViewController:trackTableController animated:YES];
+    [trackTableController release];
+   
 }
 
 -(void)dealloc{

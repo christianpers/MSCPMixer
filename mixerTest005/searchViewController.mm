@@ -10,10 +10,11 @@
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
+
 @implementation searchViewController
 
-@synthesize search;
 @synthesize searchField;
+@synthesize model;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,6 +56,8 @@
 }
 
 - (void)searchClicked:(UIButton *)btn{
+    [model addObserver:self forKeyPath:@"arrayUpdated" options:NSKeyValueObservingOptionNew context:nil];
+    
     NSLog(@"clicked");
     
     searchCount = 0;
@@ -69,102 +72,63 @@
     
     [self.view endEditing:YES];
     
-    if (![self.search searchInProgress]){
-        
-        if ([self.searchField.text length] > 0) {
-            self.search = [SPSearch searchWithSearchQuery:self.searchField.text inSession:[SPSession sharedSession]];
-            
-            }
-    }    
+    if ([self.searchField.text length] > 0) {
+        //  self.search = [SPSearch searchWithSearchQuery:self.searchField.text inSession:[SPSession sharedSession]];
+        if (![model searchInProgress]){
+            [model setSearchString:self.searchField.text];
+            SEL func = @selector(startNewSearch);
+            [model doSearchOnNewThread:func];
+        }
+    }
+       
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"search.tracks"]) {
-        SPSearch *searchCallback = self.search;
-        noResult = YES;
+    if ([keyPath isEqualToString:@"arrayUpdated"]) {
         
-        if([searchCallback.tracks count] > 0){
-            
-            [self createSearchList:searchCallback];
-            noResult = NO;
-            
-        }
-        else if([searchCallback.albums count] > 0){
-            
-            [self createSearchList:searchCallback];
-            noResult = NO;
-            
-        }
-        else if([searchCallback.artists count] > 0){
-            
-            [self createSearchList:searchCallback];
-            noResult = NO;
-            
-        }
-        
-        else if (noResult && !self.search.searchInProgress){
-            NSLog(@"no result");
-           // searchCount++;
-        }
-    }
-    else if([keyPath isEqualToString:@"search.searchInProgress"]){
-        SPSearch *searchCallback = self.search;
-        
-        if (noResult && !searchCallback.searchInProgress){
-            NSLog(@"no matches");
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Results"
-                                                            message:nil
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [[alert autorelease] show];
-        }
-      
+        NSLog(@"testing");
+        NSLog(@"arr length %d",[[model resultArray] count]);
+        [self initTableView:model.resultArray];
     }
 }
--(void)createSearchList:(SPSearch *)returnObj{
+
+- (void)showNoResult{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Results"
+                                                    message:nil
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [[alert autorelease] show];
+
     
-    NSMutableArray *albumarr;
-    NSMutableArray *trackarr;
-    NSMutableArray *artistsarr;
-    NSMutableArray *arr = [[NSMutableArray alloc]init];
-    
-    if (returnObj.albums > 0){
-         albumarr = [[NSMutableArray alloc]initWithArray:returnObj.albums];
-        [arr addObject:albumarr];
-    }
-    if (returnObj.tracks > 0){
-        trackarr = [[NSMutableArray alloc]initWithArray:returnObj.tracks];
-        [arr addObject:trackarr];
-    }
-    if (returnObj.artists > 0){
-        artistsarr = [[NSMutableArray alloc]initWithArray:returnObj.artists];
-        [arr addObject:artistsarr];
-    }
-    
+}
+
+- (void)initTableView:(NSMutableArray *)returnArr{
+    [model removeObserver:self forKeyPath:@"arrayUpdated"];
     searchTableViewController *rootSearchView = [[searchTableViewController alloc]init];
     
- //   rootSearchView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    
-    rootSearchView.detailArr = arr;
+    rootSearchView.detailArr = returnArr;
     rootSearchView.tableView.backgroundColor = [UIColor blackColor];
     
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:rootSearchView];
     
-   // navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    // navController.modalPresentationStyle = UIModalPresentationFormSheet;
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    
     [main.mainViewController presentViewController:navController animated:YES completion:nil];
-  
+    
     [rootSearchView release];
     [navController release];
+    
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    model = [[searchmodel alloc]init]; 
+    
     NSString* mscpImgStr = [[NSBundle mainBundle] pathForResource:@"msco based" ofType:@"png"];
     UIImage *mscpImage = [UIImage imageWithContentsOfFile:mscpImgStr];
     
@@ -174,7 +138,6 @@
     self.searchField = [[UITextField alloc]initWithFrame:CGRectMake(130, 400, 340, 50)];
     searchBtn.frame = CGRectMake(490, 400, 120, 50);// position in the parent view and set the size of the
     mscpImg.frame = CGRectMake(40, 600, 342, 346);
-
     
     self.view.backgroundColor = [UIColor blackColor];
     
@@ -202,11 +165,10 @@
     
     [self.view addSubview:searchBtn];
     
-    [self addObserver:self forKeyPath:@"search.tracks" options:0 context:nil];
-    [self addObserver:self forKeyPath:@"search.searchInProgress" options:0 context:nil];
+   // [self addObserver:self forKeyPath:@"search.tracks" options:0 context:nil];
+   // [self addObserver:self forKeyPath:@"search.searchInProgress" options:0 context:nil];
     
     //  [super viewDidLoad];
-    
     
  //   mscpImg.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
     [self.view addSubview:mscpImg];
@@ -260,7 +222,6 @@
     [self.searchField removeFromSuperview];
     [searchBtn removeFromSuperview];
     [mscpImg removeFromSuperview];
-    self.search = nil;
    
     
 }
@@ -292,8 +253,8 @@
 -(void)dealloc{
     
     [self.searchField release];
-    [self.search release];
-    [self removeObserver:self forKeyPath:@"search.tracks"];
+    [model release];
+ //   [self removeObserver:self forKeyPath:@"search.tracks"];
     
    
     [super dealloc];

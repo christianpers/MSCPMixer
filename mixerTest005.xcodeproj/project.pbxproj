@@ -17,6 +17,7 @@
 		AA5B97E7150EAF950061D969 /* fftAnalyzerView.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA5B97E6150EAF950061D969 /* fftAnalyzerView.mm */; };
 		AA65633A154A48EE0030711C /* tabbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA656339154A48EE0030711C /* tabbarController.m */; };
 		AA68A4091555E457005647D4 /* logoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA68A4081555E457005647D4 /* logoutViewController.m */; };
+		AA6B18751564BA6B0082B6F6 /* searchmodel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6B18741564BA6B0082B6F6 /* searchmodel.m */; };
 		AA74232B1544C68800FF43AC /* GothamHTF-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA74232A1544C68800FF43AC /* GothamHTF-Book.otf */; };
 		AA74232E1544D4BF00FF43AC /* queue arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = AA74232D1544D4BF00FF43AC /* queue arrow.png */; };
 		AA742330154507EE00FF43AC /* appiconMSCP.png in Resources */ = {isa = PBXBuildFile; fileRef = AA74232F154507EE00FF43AC /* appiconMSCP.png */; };
@@ -104,6 +105,8 @@
 		AA656339154A48EE0030711C /* tabbarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tabbarController.m; sourceTree = "<group>"; };
 		AA68A4071555E457005647D4 /* logoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logoutViewController.h; sourceTree = "<group>"; };
 		AA68A4081555E457005647D4 /* logoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = logoutViewController.m; sourceTree = "<group>"; };
+		AA6B18731564BA6B0082B6F6 /* searchmodel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = searchmodel.h; sourceTree = "<group>"; };
+		AA6B18741564BA6B0082B6F6 /* searchmodel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = searchmodel.m; sourceTree = "<group>"; };
 		AA74232A1544C68800FF43AC /* GothamHTF-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamHTF-Book.otf"; sourceTree = "<group>"; };
 		AA74232D1544D4BF00FF43AC /* queue arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "queue arrow.png"; sourceTree = "<group>"; };
 		AA74232F154507EE00FF43AC /* appiconMSCP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appiconMSCP.png; sourceTree = "<group>"; };
@@ -448,6 +451,8 @@
 				AA27039C154120990019BC73 /* trackTableViewController.m */,
 				AA27039E154120CE0019BC73 /* reSearchTableViewController.h */,
 				AA27039F154120CE0019BC73 /* reSearchTableViewController.m */,
+				AA6B18731564BA6B0082B6F6 /* searchmodel.h */,
+				AA6B18741564BA6B0082B6F6 /* searchmodel.m */,
 			);
 			name = searchView;
 			sourceTree = "<group>";
@@ -624,6 +629,7 @@
 				AA65633A154A48EE0030711C /* tabbarController.m in Sources */,
 				AAA411D91550BCBE006BF7EA /* mediaPickerController.m in Sources */,
 				AA68A4091555E457005647D4 /* logoutViewController.m in Sources */,
+				AA6B18751564BA6B0082B6F6 /* searchmodel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

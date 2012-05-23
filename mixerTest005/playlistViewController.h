@@ -35,12 +35,16 @@
     BOOL orientationIsLandscape;
     
     BOOL playlistsLoaded;
+    
+    
 }
 
 
 @property (nonatomic, retain) UIScrollView *plMainView;
 
 @property (nonatomic, retain) UIViewController *plViewController;
+
+@property (nonatomic, retain) SPPlaylistContainer *plContainer;
 
 
 - (void)initGridParams;
@@ -49,7 +53,9 @@
 - (void)createStarredTracksPlaylist:(SPPlaylistContainer *)playlistContainer;
 - (void)starredClicked;
 - (void)setplaylistsloaded:(BOOL)val;
-
-
+- (void)loadplaylists;
+- (void)initPlContainer:(SPPlaylistContainer *)plContainerIn;
+- (void)setArrayOnPlaylist:(NSMutableArray *)array;
+- (void)setemptyPlaylist:(NSInteger)num;
 
 @end

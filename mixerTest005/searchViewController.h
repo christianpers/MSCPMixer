@@ -9,30 +9,32 @@
 #import <UIKit/UIKit.h>
 #import "CocoaLibSpotify.h"
 #import "searchTableViewController.h"
+#import "searchmodel.h"
 
 @interface searchViewController : UIViewController{
     
     UITextField *searchField;
-    SPSearch *search;
     int searchCount;
     BOOL noResult;
     UIButton *searchBtn;
     UIImageView *mscpImg;
     BOOL appStarted;
+    searchmodel *model;
 }
 
 @property (nonatomic, retain) UITextField *searchField;
-@property (nonatomic, retain) SPSearch *search;
+@property (nonatomic, retain) searchmodel *model;
 
 
 
 -(void)searchClicked:(UIButton *)btn;
--(void)createSearchList:(SPSearch *)returnObj;
 -(void)closeResultView;
 -(void)createDetailView:(NSMutableArray *)resultArr;
+- (void)initTableView:(NSMutableArray *)returnArr;
 
 - (void)setlandscapemode;
 - (void)setportraitmode;
 
+- (void)showNoResult;
 
 @end

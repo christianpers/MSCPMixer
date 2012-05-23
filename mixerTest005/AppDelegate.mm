@@ -104,7 +104,7 @@
             [innerDataContainer addObject:tempImg];
             [innerDataContainer addObject:idURL];
       //      [imageContainer addObject:innerDataContainer];
-            [self insertObject:innerDataContainer inArrAtIndex:[imageContainer count]];
+            [self insertObject:innerDataContainer];
             [innerDataContainer release];
             
  //           [self createnewplBox:tempImg];
@@ -231,8 +231,7 @@
         }
         
         return;
-    }
-	
+    }	
 }
 
 
@@ -302,6 +301,10 @@
         }
     }
     if (!foundValidTrack){
+        
+        NSNumber *num = [NSNumber numberWithInt:plCounter];
+        [self performSelectorOnMainThread:@selector(setemptyPlaylist:) withObject:num waitUntilDone:NO];
+        
         plCounter++;
         
         [self checkPlLoad:plContainer];
@@ -340,7 +343,7 @@
                 [innerDataContainer addObject:idURL];
          //       [imageContainer addObject:innerDataContainer];
          //       [imageContainer insertObject:innerDataContainer atIndex:[imageContainer count]];
-                [self insertObject:innerDataContainer inArrAtIndex:[imageContainer count]];
+                [self insertObject:innerDataContainer];
                 
                 [innerDataContainer release];
                 
@@ -352,7 +355,9 @@
         }
         else
         {
-              plCounter++;
+            NSNumber *num = [NSNumber numberWithInt:plCounter];
+            [self performSelectorOnMainThread:@selector(setemptyPlaylist:) withObject:num waitUntilDone:NO];
+            plCounter++;
             [self checkPlLoad:plContainer];
             
         }   
@@ -370,12 +375,27 @@
     return [self.imageContainer objectAtIndex:index];
 }    
 
-- (void)insertObject:(id)obj inArrAtIndex:(NSUInteger)index {       
-    [self.imageContainer insertObject:obj atIndex:index];
-    [self.imageContainer willChangeValueForKey:@"imageContainer"];
-    [self.imageContainer didChangeValueForKey:@"imageContainer"];
+- (void)insertObject:(NSMutableArray *)obj{       
+  //  [self.imageContainer insertObject:obj atIndex:index];
+//    NSMutableArray *arr = [NSMutableArray arrayWithArray:obj];
+ //   UIImage *img = [arr objectAtIndex:0];
+ //   NSString *plTitle = [arr objectAtIndex:1];
+    [self performSelectorOnMainThread:@selector(setplaylistImage:) withObject:obj waitUntilDone:NO];
+  //  [self.imageContainer willChangeValueForKey:@"imageContainer"];
+  //  [self.imageContainer didChangeValueForKey:@"imageContainer"];
     
-}    
+} 
+
+- (void)setplaylistImage:(NSMutableArray *)arr{
+    [self.mainViewController.plViewController setArrayOnPlaylist:arr];    
+    
+}
+
+- (void)setemptyPlaylist:(NSNumber *)num{
+    
+    NSInteger intnum = [num integerValue];
+    [self.mainViewController.plViewController setemptyPlaylist:intnum];
+}
 
 - (void)removeObjectFromArrAtIndex:(NSUInteger)index {       
     [self.imageContainer removeObjectAtIndex:index];
@@ -423,10 +443,18 @@ NSUInteger loadTrack;
         NSLog(@"loaded playlists");
         
         self.imageContainer = [NSMutableArray array];
-        
-        [self doLoadingOnNewThread];
-             
+        [self.mainViewController.loadingView removeFromSuperview];
+        [self.mainViewController.plViewController initPlContainer:[[SPSession sharedSession] userPlaylists]];
+
   }  
+}
+
+- (void)startloadingOfPlaylists{
+  //  [self.mainViewController.plViewController initGridParams];
+  //  [self.mainViewController.plViewController loadplaylists];
+    
+    [self doLoadingOnNewThread];
+    
 }
 
 - (void) doLoadingOnNewThread {
@@ -446,7 +474,7 @@ NSUInteger loadTrack;
     
     [self checkPlLoad:plContainer];
     
-    [self.mainViewController.loadingView removeFromSuperview];
+   
    
     
 	[pool release];

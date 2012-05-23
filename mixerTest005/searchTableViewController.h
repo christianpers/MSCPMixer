@@ -17,6 +17,12 @@
     SPAlbumBrowse *albBrowse;
     SPArtistBrowse *artBrowse;
     UIView *loadingView;
+  
+    
+    NSInteger offsetAlbum;
+    NSInteger offsetTracks;
+    NSInteger offsetArtists;
+    NSInteger getmoreSectionNum;
     
 }
 
