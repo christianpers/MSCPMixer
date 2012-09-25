@@ -45,6 +45,8 @@
 
 - (void)viewDidUnload
 {
+    
+    [self.detailArr release];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -63,6 +65,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    NSLog(@"viewwillappear tracktableviewcoontroller");
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -73,6 +77,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+    NSLog(@"viewwilldisappear tracktableviewcoontroller");
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -95,12 +101,7 @@
     
     //  return [[detailArr objectAtIndex:section]count];
     int nrOfObjects = [[detailArr objectAtIndex:section]count];
-    if (nrOfObjects > 20){
-        return 20;
-    }
-    else{
-        return nrOfObjects;     
-    }
+    return nrOfObjects;
     
 }
 
@@ -168,12 +169,11 @@
         NSString *artists = [[track.artists valueForKey:@"name"] componentsJoinedByString:@","];
         lbl = [NSString stringWithFormat:@"%@ - %@",artists,track.name];
         
-        UILabel *cue = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-110, 10, 100, 20)];
+        UILabel *cue = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-110, 10, 60, 20)];
         cue.text = @"Cue Song";
         cue.textAlignment = UITextAlignmentCenter;
         cue.textColor = [UIColor blackColor];
-        cue.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(18.0)];
-        
+        cue.font = [UIFont fontWithName:@"GothamHTF-Medium" size:(12.0)];
         cue.backgroundColor = [UIColor whiteColor];
         [cell.contentView addSubview:cue];
         [cue release];
@@ -183,7 +183,7 @@
         long sec = (long)interval % 60;    // remainder of long divide
         NSString* str = [[NSString alloc] initWithFormat:@"%02d:%02d", min, sec];
         
-        UILabel *trackDuration = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-170, 5, 50, 30)];
+        UILabel *trackDuration = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-200, 5, 100, 30)];
         trackDuration.text = str;
         trackDuration.textColor = [UIColor whiteColor];
         trackDuration.backgroundColor = [UIColor clearColor];
@@ -192,10 +192,6 @@
         [trackDuration release];
         
         
-    }
-    
-    if ([lbl length]== 0){
-        NSLog(@"fuck");
     }
     
     UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.view.frame.size.width-220, 30)];
@@ -210,44 +206,6 @@
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -276,10 +234,13 @@
 
 - (void)cancel:(id)sender{
     
-    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    main.mainViewController.tabController.cueController.view.hidden = NO;
+    
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    [main.mainViewController.searchController.model releaseSearchObject];
+    // main.mainViewController.tabController.cueController.view.hidden = NO;
     
 }
 

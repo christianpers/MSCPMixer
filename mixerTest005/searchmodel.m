@@ -11,10 +11,10 @@
 
 @implementation searchmodel
 
-@synthesize arrayUpdated, albBrowseUpdated;
+@synthesize arrayUpdated, albBrowseUpdated, artBrowseUpdated;
 @synthesize search;
 @synthesize resultArray;
-@synthesize albBrowse;
+@synthesize albBrowse, artBrowse;
 
 - (void)setSearchString:(NSString *)searchquery{
     
@@ -27,6 +27,35 @@
     
     albumToBrowse = album;
 }
+
+- (void)setArtistToBrowse:(SPArtist *)artist{
+    
+    artistToBrowse = artist;
+    currAlbumLimit = 25;
+    currTrackLimit = 25;
+    currRelArtistLimit = 25;
+}
+
+- (void)setArtBrowseLimit:(NSInteger)typeToSet{
+    
+    switch (typeToSet) {
+        case 0:
+            currAlbumLimit += 25;
+            break;
+        
+        case 1:
+            currTrackLimit += 25;
+            break;
+        
+        case 2:
+            currRelArtistLimit += 25;
+            break;
+            
+        default:
+            break;
+    }
+}
+
 
 - (void) doSearchOnNewThread:(SEL)selector {
 	[NSThread detachNewThreadSelector:selector toTarget:self withObject:nil];
@@ -95,6 +124,19 @@
     self.albBrowse = albumBrowse;
     
     [self addObserver:self forKeyPath:@"self.albBrowse.tracks" options:0 context:nil];
+    
+    [pool release];
+}
+
+- (void)browseArtist{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    SPArtistBrowse *artistBrowse = [SPArtistBrowse browseArtist:artistToBrowse inSession:[SPSession sharedSession] type:SP_ARTISTBROWSE_FULL];
+    self.artBrowse = artistBrowse;
+    
+    [self addObserver:self forKeyPath:@"self.artBrowse.albums" options:0 context:nil];
+    [self addObserver:self forKeyPath:@"self.artBrowse.tracks" options:0 context:nil];
+    [self addObserver:self forKeyPath:@"self.artBrowse.relatedArtists" options:0 context:nil];
     
     [pool release];
 }
@@ -174,6 +216,117 @@
             [self performSelectorOnMainThread:@selector(returnBrowseResults:) withObject:albumCallback.tracks waitUntilDone:NO];
         }
     }
+    else if([keyPath isEqualToString:@"self.artBrowse.tracks"]){
+        SPArtistBrowse *artistCallback = self.artBrowse;
+        if([artistCallback.tracks count] > 0){
+            
+            if (([artistCallback.relatedArtists count] > 0 || artistCallback.relatedArtists != nil) && ([artistCallback.albums count] > 0 || artistCallback.albums != nil)){
+                [self setupArtistBrowseResults:NO];
+            }
+        }
+    }
+    else if([keyPath isEqualToString:@"self.artBrowse.albums"]){
+        SPArtistBrowse *artistCallback = self.artBrowse;
+        if([artistCallback.albums count] > 0){
+            
+            if (([artistCallback.relatedArtists count] > 0 || artistCallback.relatedArtists != nil) && ([artistCallback.tracks count] > 0 || artistCallback.tracks != nil)){
+                [self setupArtistBrowseResults:NO];
+            }
+        }
+    }
+    else if([keyPath isEqualToString:@"self.artBrowse.relatedArtists"]){
+        SPArtistBrowse *artistCallback = self.artBrowse;
+        if([artistCallback.relatedArtists count] > 0){
+            
+            if (([artistCallback.tracks count] > 0 || artistCallback.tracks != nil) && ([artistCallback.albums count] > 0 || artistCallback.albums != nil)){
+                [self setupArtistBrowseResults:NO];
+            }
+        }
+    }
+}
+
+- (void)getmoreArtistBrowseResults{
+    
+    [self setupArtistBrowseResults:YES];
+    
+}
+
+
+-(void)setupArtistBrowseResults:(BOOL)updateArray{
+    
+    SPArtistBrowse *currBrowse = self.artBrowse;
+    if (!updateArray){
+        [self removeObserver:self forKeyPath:@"self.artBrowse.tracks"];
+        [self removeObserver:self forKeyPath:@"self.artBrowse.albums"];
+        [self removeObserver:self forKeyPath:@"self.artBrowse.relatedArtists"];
+        
+    }
+    NSMutableArray *artbrowseArray = [NSMutableArray array];
+    
+    
+    if ([currBrowse.albums count] > 0){
+        NSInteger i = 0;
+        NSMutableArray *albums = [NSMutableArray array];
+        if ([currBrowse.albums count]>=currAlbumLimit){
+            while (i<currAlbumLimit){
+                [albums addObject:[currBrowse.albums objectAtIndex:i]];
+                i++;
+            }
+            
+        }else {
+            albums = [NSMutableArray arrayWithArray:currBrowse.albums];
+        }
+        
+        [artbrowseArray addObject:albums];
+    }
+    if ([currBrowse.tracks count] > 0){
+        NSInteger i = 0;
+        NSMutableArray *tracks = [NSMutableArray array];
+        if ([currBrowse.tracks count]>=currTrackLimit){
+            while (i<currTrackLimit){
+                [tracks addObject:[currBrowse.tracks objectAtIndex:i]];
+                i++;
+            }
+            
+        }else {
+            tracks = [NSMutableArray arrayWithArray:currBrowse.tracks];
+        }
+        
+        [artbrowseArray addObject:tracks];
+    }
+    if ([currBrowse.relatedArtists count] > 0){
+        NSInteger i = 0;
+        NSMutableArray *relatedArtists = [NSMutableArray array];
+        if ([currBrowse.relatedArtists count]>=currRelArtistLimit){
+            while (i<currRelArtistLimit){
+                [relatedArtists addObject:[currBrowse.relatedArtists objectAtIndex:i]];
+                i++;
+            }
+            
+        }else {
+            relatedArtists = [NSMutableArray arrayWithArray:currBrowse.relatedArtists];
+        }
+        
+        [artbrowseArray addObject:relatedArtists];
+    }
+    if (!updateArray){
+        [self performSelectorOnMainThread:@selector(returnArtistBrowseResults:) withObject:artbrowseArray waitUntilDone:NO];
+    }else {
+        [self performSelectorOnMainThread:@selector(updateArtistBrowseResults:) withObject:artbrowseArray waitUntilDone:NO];
+    }
+    
+}
+
+-(void)updateArtistBrowseResults:(NSMutableArray *)arr{
+    resultArray = [NSMutableArray arrayWithArray:arr];
+    self.arrayUpdated = YES;
+    
+}
+
+-(void)returnArtistBrowseResults:(NSMutableArray *)arr{
+    
+    resultArray = [NSMutableArray arrayWithArray:arr];
+    self.artBrowseUpdated = YES;
 }
 
 -(void)returnBrowseResults:(NSArray *)arr{
@@ -231,6 +384,11 @@
 -(BOOL)searchInProgress{
     
     return search.searchInProgress;
+}
+
+-(void)releaseSearchObject{
+    
+    [search release];
 }
 
 - (void)dealloc{

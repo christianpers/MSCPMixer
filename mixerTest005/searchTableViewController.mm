@@ -11,7 +11,6 @@
 @implementation searchTableViewController
 
 @synthesize detailArr;
-@synthesize albBrowse, artBrowse;
 @synthesize loadingView;
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -80,86 +79,7 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"albBrowse.tracks"]) {
-        SPAlbumBrowse *albumCallback = self.albBrowse;
-        if([albumCallback.tracks count] > 0){
-            
-            trackTableViewController *trackTableController = [[trackTableViewController alloc]init];
-            
-          //  detailTableViewController *detailViewController = [[detailTableViewController alloc]init];
-         //   SPAlbum *album = [arr objectAtIndex:indexPath.row];
-         //   SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
-            NSArray *array = albumCallback.tracks;
-            NSMutableArray *detail = [[NSMutableArray alloc]init];
-            [detail addObject:array];
-            trackTableController.detailArr = detail;
-            trackTableController.tableView.backgroundColor = [UIColor blackColor];
-            [self.navigationController pushViewController:trackTableController animated:YES];
-            [trackTableController release];
-            [detail release];
-            [self removeObserver:self forKeyPath:@"albBrowse.tracks"];
-        }
-        
-    }
-    else if ([keyPath isEqualToString:@"artBrowse.albums"]) {
-     //   [self addObserver:self forKeyPath:@"artBrowse.relatedArtists" options:0 context:nil];
-        SPArtistBrowse *artistCallback = self.artBrowse;
-        if([artistCallback.albums count] > 0){
-         /*   
-            detailTableViewController *detailViewController = [[detailTableViewController alloc]init];
-            //   SPAlbum *album = [arr objectAtIndex:indexPath.row];
-            //   SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
-            NSArray *albums = artistCallback.albums;
-            NSArray *tracks = artistCallback.tracks;
-            NSArray *related = artistCallback.relatedArtists;
-            NSMutableArray *detail = [[NSMutableArray alloc]init];
-            
-            if (albums)
-                [detail addObject:albums];
-            if (tracks)
-                [detail addObject:tracks];
-            if (related)
-                [detail addObject:related];
-            
-            detailViewController.detailArr = detail;
-            detailViewController.tableView.backgroundColor = [UIColor blackColor];
-            [self.navigationController pushViewController:detailViewController animated:YES];
-            [detailViewController release];
-            [detail release];
-            */
-            [self removeObserver:self forKeyPath:@"artBrowse.albums"];
-        }
-    }
-    else if ([keyPath isEqualToString:@"artBrowse.relatedArtists"]) {
-        SPArtistBrowse *artistCallback = self.artBrowse;
-        if ([artistCallback.relatedArtists count] > 0){
-              
-             reSearchTableViewController *detailViewController = [[reSearchTableViewController alloc]init];
-             //   SPAlbum *album = [arr objectAtIndex:indexPath.row];
-             //   SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
-             NSArray *albums = artistCallback.albums;
-             NSArray *tracks = artistCallback.tracks;
-             NSArray *related = artistCallback.relatedArtists;
-             NSMutableArray *detail = [[NSMutableArray alloc]init];
-             
-             if (albums)
-                 [detail addObject:albums];
-             if (tracks)
-                 [detail addObject:tracks];
-             if (related)
-                 [detail addObject:related];
-             
-             detailViewController.detailArr = detail;
-             detailViewController.tableView.backgroundColor = [UIColor blackColor];
-             [self.navigationController pushViewController:detailViewController animated:YES];
-             [detailViewController release];
-             [detail release];
-          //   [self removeObserver:self forKeyPath:@"artBrowse.albums"];
-             [self removeObserver:self forKeyPath:@"artBrowse.relatedArtists"];
-        }
-        
-    }
-    else if ([keyPath isEqualToString:@"arrayUpdated"]) {
+    if ([keyPath isEqualToString:@"arrayUpdated"]) {
         NSLog(@"array updated");
     //    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [self setData];
@@ -168,8 +88,17 @@
     }   
     else if ([keyPath isEqualToString:@"albBrowseUpdated"]) {
         NSLog(@"albBrowse updated");
+        
         //    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [self loadtrackTableViewController];
+        //  self.detailArr = context.mainViewController.searchController.model.resultArray;
+        
+        
+    }
+    else if ([keyPath isEqualToString:@"artBrowseUpdated"]) {
+        NSLog(@"albBrowse updated");
+        //    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [self loadartBrowseTableViewController];
         //  self.detailArr = context.mainViewController.searchController.model.resultArray;
         
     }
@@ -179,11 +108,8 @@
 {
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-    
-    self.albBrowse = nil;
-    self.artBrowse = nil;
-    
-    
+    [self.detailArr release];
+     
     [super viewDidUnload];
     
 }
@@ -460,6 +386,10 @@
 - (void)cancel:(id)sender{
     
     [self dismissViewControllerAnimated:YES completion:nil];
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    [main.mainViewController.searchController.model releaseSearchObject];
+    
  //   main.cueController.view.hidden = NO;
     
 }
@@ -528,13 +458,15 @@
         
     }
     else if([[sectionArr objectAtIndex:indexPath.row] isKindOfClass:[SPArtist class]]){
-        [self addObserver:self forKeyPath:@"artBrowse.albums" options:0 context:nil];
-        [self addObserver:self forKeyPath:@"artBrowse.relatedArtists" options:0 context:nil];
         
+        [main.mainViewController.searchController.model addObserver:self forKeyPath:@"artBrowseUpdated" options:NSKeyValueObservingOptionNew context:nil];
         
         SPArtist *artist = [sectionArr objectAtIndex:indexPath.row];
-        SPArtistBrowse *artistBrowse = [SPArtistBrowse browseArtist:artist inSession:[SPSession sharedSession] type:SP_ARTISTBROWSE_FULL];
-        self.artBrowse = artistBrowse;
+   
+        [main.mainViewController.searchController.model setArtistToBrowse:artist];
+        SEL func = @selector(browseArtist);
+        [main.mainViewController.searchController.model doSearchOnNewThread:func];
+        
         
     }
     [sectionArr release];
@@ -574,6 +506,8 @@
     
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    [main.mainViewController.searchController.model removeObserver:self forKeyPath:@"albBrowseUpdated"];
+    
     trackTableViewController *trackTableController = [[trackTableViewController alloc]init];
     NSMutableArray *wrapper = [NSMutableArray arrayWithArray:main.mainViewController.searchController.model.resultArray];
     NSMutableArray *detail = [[NSMutableArray alloc]init];
@@ -583,6 +517,25 @@
     [self.navigationController pushViewController:trackTableController animated:YES];
     [trackTableController release];
    
+}
+
+- (void)loadartBrowseTableViewController{
+    AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [main.mainViewController.searchController.model removeObserver:self forKeyPath:@"artBrowseUpdated"];
+    
+    reSearchTableViewController *detailViewController = [[reSearchTableViewController alloc]init];
+    //   SPAlbum *album = [arr objectAtIndex:indexPath.row];
+    //   SPAlbumBrowse *albumBrowse = [SPAlbumBrowse browseAlbum:album inSession:[SPSession sharedSession]];
+    NSMutableArray *detail = [NSMutableArray arrayWithArray:main.mainViewController.searchController.model.resultArray];
+  //  NSMutableArray *detail = [[NSMutableArray alloc]init];
+  //  [detail addObject:wrapper];
+    detailViewController.detailArr = detail;
+    detailViewController.tableView.backgroundColor = [UIColor blackColor];
+    [self.navigationController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
+   // [detail release];
+    
+    
 }
 
 -(void)dealloc{

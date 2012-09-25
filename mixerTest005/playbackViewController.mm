@@ -955,8 +955,10 @@
     AppDelegate *main = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
 	mediaPickerController* mediaPicker = [[[mediaPickerController alloc] initWithMediaTypes:MPMediaTypeMusic] autorelease];
+    mediaPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+    mediaPicker.view.frame = CGRectMake(0, 0, 600, 600);
 	mediaPicker.delegate = self;
-    mediaPicker.view.frame = CGRectMake(0, 0, 1024, 768);
+  //  mediaPicker.view.frame = CGRectMake(0, 0, 1024, 768);
    // mediaPicker.view.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 	[main.mainViewController presentModalViewController:mediaPicker animated:YES];
     

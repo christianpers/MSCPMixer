@@ -14,14 +14,15 @@
 @interface reSearchTableViewController : UITableViewController{
     
     NSMutableArray *detailArr;
-    SPAlbumBrowse *albBrowse;
-    SPArtistBrowse *artBrowse;
     UIView *loadingView;
+    
+    NSInteger offsetAlbum;
+    NSInteger offsetTracks;
+    NSInteger offsetArtists;
+    NSInteger getmoreSectionNum;
 }
 
 @property (nonatomic, retain) NSMutableArray *detailArr;
-@property (nonatomic, retain) SPAlbumBrowse *albBrowse;
-@property (nonatomic, retain) SPArtistBrowse *artBrowse;
 @property (nonatomic, retain) UIView *loadingView;
 
 -(void)cancel:(id)sender;

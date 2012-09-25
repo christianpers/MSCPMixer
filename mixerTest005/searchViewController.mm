@@ -74,11 +74,11 @@
     
     if ([self.searchField.text length] > 0) {
         //  self.search = [SPSearch searchWithSearchQuery:self.searchField.text inSession:[SPSession sharedSession]];
-        if (![model searchInProgress]){
+      //  if (![model searchInProgress]){
             [model setSearchString:self.searchField.text];
             SEL func = @selector(startNewSearch);
             [model doSearchOnNewThread:func];
-        }
+     //   }
     }
        
 }
@@ -222,6 +222,7 @@
     [self.searchField removeFromSuperview];
     [searchBtn removeFromSuperview];
     [mscpImg removeFromSuperview];
+    [model release];
    
     
 }

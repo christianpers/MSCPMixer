@@ -14,8 +14,6 @@
 @interface searchTableViewController : UITableViewController{
     
     NSMutableArray *detailArr;
-    SPAlbumBrowse *albBrowse;
-    SPArtistBrowse *artBrowse;
     UIView *loadingView;
   
     
@@ -27,8 +25,6 @@
 }
 
 @property (nonatomic, retain) NSMutableArray *detailArr;
-@property (nonatomic, retain) SPAlbumBrowse *albBrowse;
-@property (nonatomic, retain) SPArtistBrowse *artBrowse;
 @property (nonatomic, retain) UIView *loadingView;
 
 -(void)cancel:(id)sender;
